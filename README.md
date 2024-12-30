@@ -17,10 +17,11 @@ So this is my review of these cards.
 ### Table Of Contents
 
 * [New Ethereum Wallet Setup](#new-ethereum-wallet-setup)
-
----
+* [Duplicating A Card](#duplicating-a-card)
 
 <br />
+
+---
 
 ##### New Ethereum Wallet Setup
 
@@ -59,3 +60,25 @@ New wallet has been setup
 Burner OS menu
 
 <kbd><img src="images/setup9.jpg" width="200" /></kbd>
+
+<br />
+
+---
+
+##### Duplicating A Card
+
+Select CARD DUPLICATION from the Burner OS menu. Swipe the source card
+
+<kbd><img src="images/duplicate1.jpg" width="200" /></kbd>
+
+Swipe the duplicate card
+
+<kbd><img src="images/duplicate2.jpg" width="200" /></kbd>
+
+Enter your PIN code
+
+<kbd><img src="images/duplicate3.jpg" width="200" /></kbd>
+
+Swipe the source and duplicate cards a few more times and the new card is now a duplicate.
+
+<kbd><img src="images/duplicate4.jpg" width="200" /></kbd>
