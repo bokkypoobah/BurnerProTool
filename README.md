@@ -23,7 +23,7 @@ So this is my review of these cards.
 
 ---
 
-##### New Ethereum Wallet Setup
+#### New Ethereum Wallet Setup
 
 Swipe your NFC card to the phone and the website [os.burner.pro](https://os.burner.pro/) is loaded. During this setup you may be prompted to re-swipe your NFC card
 
@@ -65,7 +65,7 @@ Burner OS menu
 
 ---
 
-##### Duplicating A Card
+#### Duplicating A Card
 
 Select CARD DUPLICATION from the Burner OS menu. Swipe the source card
 
