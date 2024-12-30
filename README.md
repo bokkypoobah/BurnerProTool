@@ -16,10 +16,46 @@ So this is my review of these cards.
 
 ### Table Of Contents
 
-* [Blah](#blah)
+* [New Ethereum Wallet Setup](#new-ethereum-wallet-setup)
 
 ---
 
 <br />
 
-##### Blah
+##### New Ethereum Wallet Setup
+
+Swipe your NFC card to the phone and the website [os.burner.pro](https://os.burner.pro/) is loaded. During this setup you may be prompted to re-swipe your NFC card
+
+<kbd><img src="images/setup1.jpg" width="200" /></kbd>
+
+I selected "Setup as a Wallet"
+
+<kbd><img src="images/setup2.jpg" width="200" /></kbd>
+
+Generate key
+
+<kbd><img src="images/setup3.jpg" width="200" /></kbd>
+
+Add some randomness
+
+<kbd><img src="images/setup4.jpg" width="200" /></kbd>
+
+Confirm
+
+<kbd><img src="images/setup5.jpg" width="200" /></kbd>
+
+Setup a PIN code
+
+<kbd><img src="images/setup6.jpg" width="200" /></kbd>
+
+Name your wallet
+
+<kbd><img src="images/setup7.jpg" width="200" /></kbd>
+
+New wallet has been setup
+
+<kbd><img src="images/setup8.jpg" width="200" /></kbd>
+
+Burner OS menu
+
+<kbd><img src="images/setup9.jpg" width="200" /></kbd>
