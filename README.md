@@ -16,8 +16,17 @@ So this is my review of these cards.
 
 ### Table Of Contents
 
+* [Price](#price)
 * [New Ethereum Wallet Setup](#new-ethereum-wallet-setup)
 * [Duplicating A Card](#duplicating-a-card)
+
+<br />
+
+---
+
+#### Price
+
+From the product website [burner.pro/product](https://burner.pro/product), single cards sell for USD 9 and packs of 6 sell for USD 49. There may be some discounts for bulk purchases. Postage varies according to desired delivery timeframe
 
 <br />
 
