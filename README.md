@@ -104,11 +104,21 @@ Swipe the source and duplicate cards a few more times and the new card is now a 
 
 #### Questions
 
+###### 1. How many passcode fail attempts?
+
+If you fail the passcode 20 times the product will lock permanently - [reference](https://www.producthunt.com/products/burner-2?comment=4121354#burner-2)
+
 <br />
 
 ---
 
 #### References
+
+* [Show HN: Burner – A low cost wallet to gift crypto (burner.pro)](https://news.ycombinator.com/item?id=42127787) - Nov 13 2024
+
+* [Product Hunt: Burner - A low cost wallet to gift crypto](https://www.producthunt.com/products/burner-2#burner-2)
+
+* [help.burner.pro](https://help.burner.pro)
 
 <br />
 
