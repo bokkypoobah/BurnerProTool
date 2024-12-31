@@ -1,6 +1,6 @@
 # Burner.pro NFC Card Review (WIP)
 
-[burner.pro](https://burner.pro/) provide Ethereum wallet functionality on a [NFC](https://en.wikipedia.org/wiki/Near-field_communication) card
+[burner.pro](https://burner.pro/) provides Ethereum wallet functionality on a [NFC](https://en.wikipedia.org/wiki/Near-field_communication) card
 
 <kbd><img src="images/BurnerCard.jpg" width="200" /></kbd>
 
@@ -14,11 +14,17 @@ And my Burner cards have just arrived
 
 So this is my review of these cards.
 
+<br />
+
+---
+
 ### Table Of Contents
 
 * [Price](#price)
 * [New Ethereum Wallet Setup](#new-ethereum-wallet-setup)
 * [Duplicating A Card](#duplicating-a-card)
+* [Questions](#questions)
+* [References](#references)
 
 <br />
 
@@ -34,41 +40,41 @@ From the product website [burner.pro/product](https://burner.pro/product), singl
 
 #### New Ethereum Wallet Setup
 
-Swipe your NFC card to the phone and the website [os.burner.pro](https://os.burner.pro/) is loaded. During this setup you may be prompted to re-swipe your NFC card
+Swipe your NFC card with the phone and the website [os.burner.pro](https://os.burner.pro/) is loaded. During this setup you may be prompted to re-swipe your NFC card
 
-<kbd><img src="images/setup1.jpg" width="200" /></kbd>
+<kbd><img src="images/setupwallet1.jpg" width="200" /></kbd>
 
-I selected "Setup as a Wallet"
+Select "Setup as a Wallet"
 
-<kbd><img src="images/setup2.jpg" width="200" /></kbd>
+<kbd><img src="images/setupwallet2.jpg" width="200" /></kbd>
 
 Generate key
 
-<kbd><img src="images/setup3.jpg" width="200" /></kbd>
+<kbd><img src="images/setupwallet3.jpg" width="200" /></kbd>
 
 Add some randomness
 
-<kbd><img src="images/setup4.jpg" width="200" /></kbd>
+<kbd><img src="images/setupwallet4.jpg" width="200" /></kbd>
 
 Confirm
 
-<kbd><img src="images/setup5.jpg" width="200" /></kbd>
+<kbd><img src="images/setupwallet5.jpg" width="200" /></kbd>
 
 Setup a PIN code
 
-<kbd><img src="images/setup6.jpg" width="200" /></kbd>
+<kbd><img src="images/setupwallet6.jpg" width="200" /></kbd>
 
 Name your wallet
 
-<kbd><img src="images/setup7.jpg" width="200" /></kbd>
+<kbd><img src="images/setupwallet7.jpg" width="200" /></kbd>
 
 New wallet has been setup
 
-<kbd><img src="images/setup8.jpg" width="200" /></kbd>
+<kbd><img src="images/setupwallet8.jpg" width="200" /></kbd>
 
 Burner OS menu
 
-<kbd><img src="images/setup9.jpg" width="200" /></kbd>
+<kbd><img src="images/setupwallet9.jpg" width="200" /></kbd>
 
 <br />
 
@@ -91,3 +97,23 @@ Enter your PIN code
 Swipe the source and duplicate cards a few more times and the new card is now a duplicate.
 
 <kbd><img src="images/duplicate4.jpg" width="200" /></kbd>
+
+<br />
+
+---
+
+#### Questions
+
+<br />
+
+---
+
+#### References
+
+<br />
+
+<br />
+
+Enjoy!
+
+(c) BokkyPooBah / Bok Consulting Pty Ltd 2024
