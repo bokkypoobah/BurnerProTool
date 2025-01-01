@@ -391,7 +391,7 @@
                 </template>
               </b-table>
 
-              <b-table v-if="settings.tabIndex == 2 && !settings.showInfo && accounts" small fixed striped responsive hover :fields="accountsFields" :items="pagedFilteredSortedAccounts" show-empty empty-html="Click Sync above to retrieve ERC-20, ERC-721 and ERC-1155 approval events" head-variant="light" class="mx-0 my-1">
+              <b-table v-if="false && settings.tabIndex == 2 && !settings.showInfo && accounts" small fixed striped responsive hover :fields="accountsFields" :items="pagedFilteredSortedAccounts" show-empty empty-html="Click Sync above to retrieve ERC-20, ERC-721 and ERC-1155 approval events" head-variant="light" class="mx-0 my-1">
                 <template #cell(number)="data">
                   <font size="-1">
                     {{ parseInt(data.index) + ((settings.accountsTable.currentPage - 1) * settings.accountsTable.pageSize) + 1 }}
