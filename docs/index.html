@@ -902,7 +902,11 @@
         // --- METHODS ---
         methods: {
           async scanNFC() {
+            // https://github.com/arx-research/libhalo/blob/master/docs/api-web.md#debugging-through-the-developers-console
             localStorage.setItem('DEBUG_LIBHALO_WEB', '1');
+
+            const result = ethers.utils.computeAddress("0x0376698beebe8ee5c74d8cc50ab84ac301ee8f10af6f28d0ffd6adf4d6d3b9b762");
+            console.log("result: " + result);
             // this.debug = "DFSLKJFKDSJF";
             console.log(moment().format("HH:mm:ss") + " scanNFC - blah: " + JSON.stringify(this.modalApproval));
             let command = {
@@ -1454,40 +1458,40 @@
 
         // --- MOUNTED ---
         mounted() {
-          (async() => {
-            await this.connectToWeb3();
-          })();
-          if ('approvalToolChainId' in localStorage) {
-            this.chainId = localStorage.approvalToolChainId;
-          }
-          if ('approvalToolCoinbase' in localStorage) {
-            this.coinbase = localStorage.approvalToolCoinbase;
-          }
-          if ('approvalToolSettings' in localStorage) {
-            const tempSettings = JSON.parse(localStorage.approvalToolSettings);
-            if ('version' in tempSettings && tempSettings.version == this.settings.version) {
-              this.settings = tempSettings;
-              if (this.settings.approvalsTable.currentPage > 1) {
-                this.settings.approvalsTable.currentPage = 1;
-              }
-              if (this.settings.eventsTable.currentPage > 1) {
-                this.settings.eventsTable.currentPage = 1;
-              }
-              if (this.settings.accountsTable.currentPage > 1) {
-                this.settings.accountsTable.currentPage = 1;
-              }
-              // Restore other settings for the same version
-              if ('approvalEvents' in localStorage) {
-                this.events = JSON.parse(localStorage.approvalEvents);
-              }
-              if ('approvalAccounts' in localStorage) {
-                this.accounts = JSON.parse(localStorage.approvalAccounts);
-              }
-              if ('approvalBlockTimestamps' in localStorage) {
-                this.blockTimestamps = JSON.parse(localStorage.approvalBlockTimestamps);
-              }
-            }
-          }
+          // (async() => {
+          //   await this.connectToWeb3();
+          // })();
+          // if ('approvalToolChainId' in localStorage) {
+          //   this.chainId = localStorage.approvalToolChainId;
+          // }
+          // if ('approvalToolCoinbase' in localStorage) {
+          //   this.coinbase = localStorage.approvalToolCoinbase;
+          // }
+          // if ('approvalToolSettings' in localStorage) {
+          //   const tempSettings = JSON.parse(localStorage.approvalToolSettings);
+          //   if ('version' in tempSettings && tempSettings.version == this.settings.version) {
+          //     this.settings = tempSettings;
+          //     if (this.settings.approvalsTable.currentPage > 1) {
+          //       this.settings.approvalsTable.currentPage = 1;
+          //     }
+          //     if (this.settings.eventsTable.currentPage > 1) {
+          //       this.settings.eventsTable.currentPage = 1;
+          //     }
+          //     if (this.settings.accountsTable.currentPage > 1) {
+          //       this.settings.accountsTable.currentPage = 1;
+          //     }
+          //     // Restore other settings for the same version
+          //     if ('approvalEvents' in localStorage) {
+          //       this.events = JSON.parse(localStorage.approvalEvents);
+          //     }
+          //     if ('approvalAccounts' in localStorage) {
+          //       this.accounts = JSON.parse(localStorage.approvalAccounts);
+          //     }
+          //     if ('approvalBlockTimestamps' in localStorage) {
+          //       this.blockTimestamps = JSON.parse(localStorage.approvalBlockTimestamps);
+          //     }
+          //   }
+          // }
         },
       })
     </script>
