@@ -19,6 +19,7 @@
     <script src="js/bootstrap-vue-icons.min.js"></script>
     <script src="js/ethers-5.7.umd.min.js" type="application/javascript"></script>
     <script src="js/moment.min.js"></script>
+    <script src="js/libhalo.js"></script>
     <script src="globals.js"></script>
     <script src="customNames.js"></script>
     <script src="deploymentData.js"></script>
@@ -898,6 +899,19 @@
         methods: {
           async scanNFC() {
             console.log(moment().format("HH:mm:ss") + " scanNFC - blah: " + JSON.stringify(this.modalApproval));
+            let command = {
+                name: "sign",
+                keyNo: 1,
+                digest: "6e76e202b71892e9ee32a634eefcf522ba1c4cb4eadd7e4562ced1270214c41e"
+            };
+            try {
+                let res = await execHaloCmdWeb(command);
+                // display operation result
+                console.log(JSON.stringify(res, null, 4));
+            } catch (e) {
+                // display error
+                console.log(e);
+            }
           },
 
           approvalsRowSelected(item) {
