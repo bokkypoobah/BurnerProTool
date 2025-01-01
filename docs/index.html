@@ -227,6 +227,8 @@
                 </div>
               </b-card>
 
+              <b-form-textarea readonly size="sm" v-model.trim="debug" rows="3" max-rows="10"></b-form-textarea>
+
               <!-- :INFO -->
               <b-card v-if="false && (settings.showInfo || coinbase == null)" no-body class="my-1 p-1">
                 <b-card-body class="mt-1 p-1">
@@ -330,7 +332,7 @@
                 </template>
               </b-table>
 
-              <b-table v-if="settings.tabIndex == 1 && !settings.showInfo && events" small fixed striped responsive hover :fields="eventsFields" :items="pagedFilteredSortedEvents" show-empty empty-html="Click Sync above to retrieve ERC-20, ERC-721 and ERC-1155 approval events" head-variant="light" class="mx-0 my-1">
+              <b-table v-if="false && settings.tabIndex == 1 && !settings.showInfo && events" small fixed striped responsive hover :fields="eventsFields" :items="pagedFilteredSortedEvents" show-empty empty-html="Click Sync above to retrieve ERC-20, ERC-721 and ERC-1155 approval events" head-variant="light" class="mx-0 my-1">
                 <template #cell(number)="data">
                   <font size="-1">
                     {{ parseInt(data.index) + ((settings.eventsTable.currentPage - 1) * settings.eventsTable.pageSize) + 1 }}
@@ -465,6 +467,8 @@
         el: '#app',
         // --- DATA ---
         data: {
+
+          debug: "Blah",
 
           keySlotNumber: 9,
 
@@ -898,6 +902,8 @@
         // --- METHODS ---
         methods: {
           async scanNFC() {
+            localStorage.setItem('DEBUG_LIBHALO_WEB', '1');
+            // this.debug = "DFSLKJFKDSJF";
             console.log(moment().format("HH:mm:ss") + " scanNFC - blah: " + JSON.stringify(this.modalApproval));
             let command = {
                 name: "sign",
@@ -908,9 +914,11 @@
                 let res = await execHaloCmdWeb(command);
                 // display operation result
                 console.log(JSON.stringify(res, null, 4));
+                this.debug = JSON.stringify(res, null, 4);
             } catch (e) {
                 // display error
                 console.log(e);
+                this.debug = e.message;
             }
           },
 
