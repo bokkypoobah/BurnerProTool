@@ -123,11 +123,11 @@ Select TRANSACTIONS from the Burner OS menu to view transactions
 
 <kbd><img src="images/purchasenft02.png" width="200" /></kbd>
 
-Viewing Fast Food Punks Gen2 on [blur.io](https://blur.io/eth/collection/fastfoodpunks2). Click on CONNECT on the top right
+Viewing Fast Food Punks Gen2 on [blur.io](https://blur.io/eth/collection/fastfoodpunks2). Click on [CONNECT] on the top right
 
 <kbd><img src="images/purchasenft03.png" width="200" /></kbd>
 
-Click on WALLETCONNECT
+Click on [WALLETCONNECT]
 
 <kbd><img src="images/purchasenft04.png" width="200" /></kbd>
 
