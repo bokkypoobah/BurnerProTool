@@ -233,7 +233,20 @@
 
 
                 <!-- <b-table small fixed striped responsive hover :fields="approvalsFields" :items="pagedFilteredSortedApprovals" show-empty empty-html="Click Sync above to retrieve ERC-20, ERC-721 and ERC-1155 approval events" head-variant="light" class="mx-0 my-1"> -->
-                <b-table fixed striped responsive hover :items="filteredSortedSlots" show-empty empty-html="Scan your Burner.pro NFC card to view the addresses at each slot" head-variant="light" class="mx-0 my-1">
+                <b-table fixed striped responsive hover :fields="slotsFields" :items="filteredSortedSlots" show-empty empty-html="Scan your Burner.pro NFC card to view the addresses at each slot" head-variant="light" class="mx-0 my-1">
+                  <template #cell(slot)="data">
+                    <b-badge pill variant="transparent" class="px-0">{{ data.item.slot }}</b-badge>
+                  </template>
+                  <template #cell(address)="data">
+                    <b-link :href="'https://etherscan.io/address/' + data.item.address" target="_blank">
+                      <b-badge pill variant="transparent" v-b-popover.hover="data.item.address" class="px-0">{{ data.item.address }}</b-badge>
+                    </b-link>
+                  </template>
+                  <template #cell(info)="data">
+                    <b-form-checkbox disabled v-model="data.item.isPasswordProtected">Password Protected</b-form-checkbox>
+                    <b-form-checkbox disabled v-model="data.item.isImported">Imported</b-form-checkbox>
+                    <b-form-checkbox disabled v-model="data.item.isExported">Exported</b-form-checkbox> 
+                  </template>
                   <!-- <template #cell(number)="data">
                     <font size="-1">
                       {{ parseInt(data.index) + ((settings.approvalsTable.currentPage - 1) * settings.approvalsTable.pageSize) + 1 }}
@@ -644,6 +657,19 @@
             { value: "17", text: '17' },
             { value: "18", text: '18 (common)' },
           ],
+
+          slotsFields: [
+            { key: 'slot', label: 'Slot', sortable: false, thStyle: 'width: 10%;', tdClass: 'text-truncate' },
+            { key: 'address', label: 'Address', sortable: false, thStyle: 'width: 40%;', thClass: 'text-left', tdClass: 'text-left' },
+            { key: 'info', label: 'Info', sortable: false, thStyle: 'width: 50%;', thClass: 'text-left', tdClass: 'text-left' },
+            // { key: 'symbol', label: 'Symbol', sortable: false, thStyle: 'width: 10%;', thClass: 'text-left', tdClass: 'text-left' },
+            // { key: 'name', label: 'Name', sortable: false, thStyle: 'width: 20%;', thClass: 'text-left', tdClass: 'text-left' },
+            // { key: 'approvalType', label: 'Approval Type', sortable: false, thStyle: 'width: 10%;', thClass: 'text-left', tdClass: 'text-left' },
+            // { key: 'owner', label: 'Owner', sortable: false, thStyle: 'width: 15%;', thClass: 'text-left', tdClass: 'text-truncate' },
+            // { key: 'spender', label: 'Spender', sortable: false, thStyle: 'width: 15%;', thClass: 'text-left', tdClass: 'text-truncate' },
+            // { key: 'approved', label: 'Approved', sortable: false, thStyle: 'width: 20%;', thClass: 'text-left', tdClass: 'text-left' },
+          ],
+
           approvalsFields: [
             { key: 'number', label: '#', sortable: false, thStyle: 'width: 5%;', tdClass: 'text-truncate' },
             { key: 'type', label: 'Type', sortable: false, thStyle: 'width: 5%;', thClass: 'text-left', tdClass: 'text-left' },
