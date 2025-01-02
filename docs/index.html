@@ -222,10 +222,18 @@
             </b-card-text>
 
             <b-card-text class="m-0 p-0">
-              <b-card v-if="settings.tabIndex == 0" no-body class="my-1 p-1">
-                <div>
-                  <b-button size="sm" :disabled="false" @click="scanNFC();" variant="primary" v-b-popover.hover.bottom="'Scan NFC'">Scan NFC</b-button>
-                  <b-button size="sm" :disabled="false" @click="scanNFCTest();" variant="primary" v-b-popover.hover.bottom="'Scan NFC Test'">Scan NFC Test</b-button>
+              <b-card v-if="settings.tabIndex == 0" no-body class="my-0 p-1">
+                <div class="d-flex flex-wrap m-0 p-0">
+                  <div class="mt-1 pr-1">
+                    <b-button size="sm" :disabled="false" @click="scanNFC();" variant="primary" v-b-popover.hover.bottom="'Scan NFC'">Scan NFC</b-button>
+                  </div>
+                  <div class="mt-0 flex-grow-1">
+                  </div>
+                  <div class="mt-1 pr-1">
+                    <b-button size="sm" :disabled="false" @click="scanNFCTest();" variant="primary" v-b-popover.hover.bottom="'Scan NFC Test'">Scan NFC Test</b-button>
+                  </div>
+                  <div class="mt-0 flex-grow-1">
+                  </div>
                 </div>
                 <!-- <b-form-textarea readonly size="sm" v-model.trim="debug" rows="3" max-rows="10" class="mt-2"></b-form-textarea>
                 <b-form-textarea readonly size="sm" :value="JSON.stringify(slots, null, 2)" rows="3" max-rows="10" class="mt-2"></b-form-textarea> -->
