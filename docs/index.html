@@ -250,6 +250,10 @@
                     <b-link :href="'https://etherscan.io/address/' + data.item.address" target="_blank" v-b-popover.hover="data.item.address">
                       {{ data.item.address.substring(0, 8) + '...' + data.item.address.slice(-6) }}
                     </b-link>
+                    <br />
+                    <font v-if="data.item.balance" size="-1">
+                      Balance: {{ formatETH(data.item.balance) }}
+                    </font>
                   </template>
                   <template #cell(info)="data">
                     <font size="-1">
@@ -1154,9 +1158,13 @@
             if (!this.connected) {
               alert("Please use the Opera or any other other web3 browser with NFC tag reading capabilities, and refresh!");
             } else {
+              const provider = new ethers.providers.Web3Provider(window.ethereum);
               for (const [slot, slotData] of Object.entries(this.slots)) {
-                console.log("slot: " + slot + " => " + JSON.stringify(slotData));
+                // console.log("slot: " + slot + " => " + JSON.stringify(slotData));
+                const balance = await provider.getBalance(slotData.address);
+                Vue.set(this.slots[slot], 'balance', balance.toString());
               }
+              // console.log("this.slots: " + JSON.stringify(this.slots, null, 2));
             }
           },
 
