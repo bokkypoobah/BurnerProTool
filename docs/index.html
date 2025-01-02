@@ -230,6 +230,59 @@
                 <!-- <b-form-textarea readonly size="sm" v-model.trim="debug" rows="3" max-rows="10" class="mt-2"></b-form-textarea>
                 <b-form-textarea readonly size="sm" :value="JSON.stringify(slots, null, 2)" rows="3" max-rows="10" class="mt-2"></b-form-textarea> -->
                 <b-form-textarea readonly size="sm" :value="JSON.stringify(filteredSortedSlots, null, 2)" rows="3" max-rows="10" class="mt-2"></b-form-textarea>
+
+
+                <!-- <b-table small fixed striped responsive hover :fields="approvalsFields" :items="pagedFilteredSortedApprovals" show-empty empty-html="Click Sync above to retrieve ERC-20, ERC-721 and ERC-1155 approval events" head-variant="light" class="mx-0 my-1"> -->
+                <b-table small fixed striped responsive hover :items="filteredSortedSlots" show-empty empty-html="Scan your Burner.pro NFC card" head-variant="light" class="mx-0 my-1">
+                  <!-- <template #cell(number)="data">
+                    <font size="-1">
+                      {{ parseInt(data.index) + ((settings.approvalsTable.currentPage - 1) * settings.approvalsTable.pageSize) + 1 }}
+                    </font>
+                  </template> -->
+                  <!-- <template #cell(type)="data">
+                    <b-badge pill variant="transparent" class="px-0">{{ accountTypeOptions.filter(e => e.value == data.item.type)[0].text }}</b-badge>
+                  </template> -->
+                  <!-- <template #cell(symbol)="data">
+                    <b-badge pill variant="transparent" class="px-0">{{ data.item.symbol }}</b-badge>
+                  </template> -->
+                  <!-- <template #cell(name)="data">
+                    <b-link :href="'https://etherscan.io/address/' + data.item.contract" target="_blank">
+                      <b-badge pill variant="transparent" v-b-popover.hover="addressDescription(data.item.contract)" class="px-0">{{ data.item.name }}</b-badge>
+                    </b-link>
+                  </template> -->
+                  <!-- <template #cell(approvalType)="data">
+                    <b-badge pill variant="transparent" class="px-0">{{ data.item.approvalType }}</b-badge>
+                  </template> -->
+                  <!-- <template #cell(owner)="data">
+                    <b-link :href="'https://etherscan.io/address/' + data.item.owner" target="_blank">
+                      <b-badge pill variant="transparent" v-b-popover.hover="addressDescription(data.item.owner)" class="px-0">{{ data.item.owner == coinbase ? "(Attached)" : nameOrAddress(data.item.owner, 24) }}</b-badge>
+                    </b-link>
+                  </template> -->
+                  <!-- <template #cell(spender)="data">
+                    <b-link :href="'https://etherscan.io/address/' + data.item.spender" target="_blank">
+                      <b-badge pill variant="transparent" v-b-popover.hover="addressDescription(data.item.spender)" class="px-0">{{ nameOrAddress(data.item.spender, 24) }}</b-badge>
+                    </b-link>
+                  </template> -->
+                  <!-- <template #cell(approved)="data">
+                    <span v-if="data.item.type == 'erc20'">
+                      <span v-if="data.item.value.toString().length > 30">
+                        <b-badge pill variant="transparent" v-b-popover.hover="formatDecimals(data.item.value, data.item.decimals)" class="px-0">&infin;</b-badge>
+                      </span>
+                      <span v-else>
+                        <b-badge pill variant="transparent" class="px-0">{{ formatDecimals(data.item.value, data.item.decimals) }}</b-badge>
+                      </span>
+                    </span>
+                    <span v-else-if="data.item.approvalType == 'Approval'">
+                      <b-link :href="'https://opensea.io/assets/ethereum/' + data.item.contract + '/' + data.item.value" target="_blank">
+                        <b-badge pill variant="transparent" v-b-popover.hover="'View in opensea.io'" class="px-0">{{ '#' + commify0(data.item.value) }}</b-badge>
+                      </b-link>
+                    </span>
+                    <span v-else>
+                      <b-badge pill variant="transparent" class="px-0">{{ data.item.value ==  1 ? "true" : "false" }}</b-badge>
+                    </span>
+                  </template> -->
+                </b-table>
+
               </b-card>
 
               <!-- :INFO -->
