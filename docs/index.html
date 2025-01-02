@@ -909,10 +909,14 @@
             console.log("result: " + result);
             // this.debug = "DFSLKJFKDSJF";
             console.log(moment().format("HH:mm:ss") + " scanNFC - blah: " + JSON.stringify(this.modalApproval));
+            // let command = {
+            //     name: "sign",
+            //     keyNo: 1,
+            //     digest: "6e76e202b71892e9ee32a634eefcf522ba1c4cb4eadd7e4562ced1270214c41e"
+            // };
             let command = {
-                name: "sign",
-                keyNo: 1,
-                digest: "6e76e202b71892e9ee32a634eefcf522ba1c4cb4eadd7e4562ced1270214c41e"
+                name: "get_data_struct",
+                spec: "compressedPublicKey:1,compressedPublicKey:2,compressedPublicKey:3,compressedPublicKey:4,compressedPublicKey:5,compressedPublicKey:6,compressedPublicKey:7,compressedPublicKey:8",
             };
             try {
                 let res = await execHaloCmdWeb(command);
