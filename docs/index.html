@@ -970,6 +970,42 @@
         // --- METHODS ---
         methods: {
           async scanNFCTest() {
+            this.slots = {
+              "1": {
+                "compressedPublicKey": "111111111111111111111111111111111111111111111111111111111111111111",
+                "address": "0x1111111111111111111111111111111111111111",
+                "isPasswordProtected": false,
+                "rawSignCommandNotUsed": false,
+                "isImported": false,
+                "isExported": false
+              },
+              "2": {
+                "compressedPublicKey": "222222222222222222222222222222222222222222222222222222222222222222",
+                "address": "0x2222222222222222222222222222222222222222",
+                "isPasswordProtected": false,
+                "rawSignCommandNotUsed": false,
+                "isImported": false,
+                "isExported": false
+              },
+              "8": {
+                "compressedPublicKey": "888888888888888888888888888888888888888888888888888888888888888888",
+                "address": "0x8888888888888888888888888888888888888888",
+                "isPasswordProtected": true,
+                "rawSignCommandNotUsed": true,
+                "isImported": false,
+                "isExported": false
+              },
+              "9": {
+                "compressedPublicKey": "999999999999999999999999999999999999999999999999999999999999999999",
+                "address": "0x9999999999999999999999999999999999999999",
+                "isPasswordProtected": true,
+                "rawSignCommandNotUsed": false,
+                "isImported": false,
+                "isExported": true
+              }
+            };
+          },
+          async scanNFCTestOld() {
             // TEST: Replace below with test data
             const result = {};
             // this.debug = JSON.stringify(result, null, 4);
