@@ -2,9 +2,9 @@
 
 Load on NFC reader enabled device, with Burner.pro NFC card: https://bokkypoobah.github.io/BurnerProTool/
 
-Sample screen after scanning a Burner Pro NFC
+Sample screen after scanning a Burner Pro NFC card:
 
-<kbd><img src="images/scanNFC1.jpg" width="400" /></kbd>
+<kbd><img src="images/scanNFC1.jpg?a" width="400" /></kbd>
 
 <br />
 
