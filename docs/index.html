@@ -227,8 +227,9 @@
                   <b-button size="sm" :disabled="false" @click="scanNFC();" variant="primary" v-b-popover.hover.bottom="'Scan NFC'">Scan NFC</b-button>
                   <b-button size="sm" :disabled="false" @click="scanNFCTest();" variant="primary" v-b-popover.hover.bottom="'Scan NFC Test'">Scan NFC Test</b-button>
                 </div>
-                <b-form-textarea readonly size="sm" v-model.trim="debug" rows="3" max-rows="10" class="mt-2"></b-form-textarea>
-                <b-form-textarea readonly size="sm" :value="JSON.stringify(slots, null, 2)" rows="3" max-rows="10" class="mt-2"></b-form-textarea>
+                <!-- <b-form-textarea readonly size="sm" v-model.trim="debug" rows="3" max-rows="10" class="mt-2"></b-form-textarea>
+                <b-form-textarea readonly size="sm" :value="JSON.stringify(slots, null, 2)" rows="3" max-rows="10" class="mt-2"></b-form-textarea> -->
+                <b-form-textarea readonly size="sm" :value="JSON.stringify(filteredSortedSlots, null, 2)" rows="3" max-rows="10" class="mt-2"></b-form-textarea>
               </b-card>
 
               <!-- :INFO -->
@@ -630,6 +631,18 @@
 
         // --- COMPUTED ---
         computed: {
+
+          filteredSortedSlots() {
+            const results = [];
+            for (const [slot, slotData] of Object.entries(this.slots)) {
+              results.push( { slot, ...slotData } );
+            }
+            results.sort((a, b) => {
+              return a.slot - b.slot;
+            });
+            return results;
+          },
+
           accountsToSearch() {
             return this.settings.searchAttachedAccount ? [ this.coinbase ] : (this.settings.searchAccounts && this.settings.searchAccounts.split(/[, \t\n]+/).filter(name => name.match(/0x[0-9a-fA-F]{40}/)) || []);
           },
