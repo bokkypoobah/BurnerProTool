@@ -93,7 +93,7 @@ Burner OS menu
 
 #### Duplicating A Card
 
-Select CARD DUPLICATION from the Burner OS menu. Swipe the source card
+Select [CARD DUPLICATION] from the Burner OS menu. Swipe the source card
 
 <kbd><img src="images/duplicate1.jpg" width="200" /></kbd>
 
@@ -119,7 +119,7 @@ ETH sent to Burner.pro address
 
 <kbd><img src="images/purchasenft01.png" width="200" /></kbd>
 
-Select TRANSACTIONS from the Burner OS menu to view transactions
+Select [TRANSACTIONS] from the Burner OS menu to view transactions
 
 <kbd><img src="images/purchasenft02.png" width="200" /></kbd>
 
