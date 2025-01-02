@@ -2,9 +2,9 @@
 
 Load on NFC reader enabled mobile phone, with Burner.pro NFC card: https://bokkypoobah.github.io/BurnerProTool/
 
-Sample screen after scanning a Burner Pro NFC card:
+Sample screen after scanning a Burner Pro NFC card. When using with a web3 enabled browser like Brave that can scan NFC cards, balances can be retrieved using [Retrieve Balances]
 
-<kbd><img src="images/scanNFC1.jpg?a" width="400" /></kbd>
+<kbd><img src="images/scanNFC1.png" width="400" /></kbd>
 
 <br />
 
