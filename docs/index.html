@@ -905,7 +905,7 @@
             // https://github.com/arx-research/libhalo/blob/master/docs/api-web.md#debugging-through-the-developers-console
             localStorage.setItem('DEBUG_LIBHALO_WEB', '1');
 
-            const result = ethers.utils.computeAddress("0x0376698beebe8ee5c74d8cc50ab84ac301ee8f10af6f28d0ffd6adf4d6d3b9b762");
+            const result = ethers.utils.computeAddress("0x028efa8726964184dba9c863dfac81342b9295fd222d76e8041c8a4646aa655fdf");
             console.log("result: " + result);
             // this.debug = "DFSLKJFKDSJF";
             console.log(moment().format("HH:mm:ss") + " scanNFC - blah: " + JSON.stringify(this.modalApproval));
@@ -916,7 +916,7 @@
             // };
             let command = {
                 name: "get_data_struct",
-                spec: "compressedPublicKey:1,compressedPublicKey:2,compressedPublicKey:3,compressedPublicKey:4,compressedPublicKey:5,compressedPublicKey:6,compressedPublicKey:7,compressedPublicKey:8",
+                spec: "compressedPublicKey:1,compressedPublicKey:2,compressedPublicKey:3,compressedPublicKey:4,compressedPublicKey:5,compressedPublicKey:6,compressedPublicKey:7,compressedPublicKey:8,compressedPublicKey:9",
             };
             try {
                 let res = await execHaloCmdWeb(command);
