@@ -180,7 +180,7 @@ In Blur, you can see "TRANSACTION PENDING"
 
 <kbd><img src="images/purchasenft16.png" width="200" /></kbd>
 
-In Blur, you can see "TRANSACTION CONFIRMED"
+In Blur, you can see "TRANSACTION CONFIRMED". Transaction [0x4191...5cad](https://etherscan.io/tx/0x41915a00b30fffda911c8ac3e4ce12903a30b225ca772b6ca24f9fc892c75cad)
 
 <kbd><img src="images/purchasenft17.png" width="200" /></kbd>
 
@@ -214,7 +214,7 @@ Transaction sent
 
 <kbd><img src="images/withdraw04.png" width="200" /></kbd>
 
-Transaction mined
+Transaction mined. Transaction [0xf25c...546d](https://etherscan.io/tx/0xf25cbf043f346dd5e1fad56f185f9a49e8a61d4193dd1e0d3a5df21259aa546d)
 
 <kbd><img src="images/withdraw05.png" width="200" /></kbd>
 
