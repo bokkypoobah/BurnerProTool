@@ -33,6 +33,7 @@ So this is my review of these cards.
 * [Price](#price)
 * [New Ethereum Wallet Setup](#new-ethereum-wallet-setup)
 * [Duplicating A Card](#duplicating-a-card)
+* [Purchase NFT](#purchase-nft)
 * [Questions](#questions)
 * [References](#references)
 
@@ -107,6 +108,50 @@ Enter your PIN code
 Swipe the source and duplicate cards a few more times and the new card is now a duplicate.
 
 <kbd><img src="images/duplicate4.jpg" width="200" /></kbd>
+
+<br />
+
+---
+
+#### Purchase NFT
+
+<kbd><img src="images/purchasenft01.png" width="200" /></kbd>
+
+<kbd><img src="images/purchasenft02.png" width="200" /></kbd>
+
+<kbd><img src="images/purchasenft03.png" width="200" /></kbd>
+
+<kbd><img src="images/purchasenft04.png" width="200" /></kbd>
+
+<kbd><img src="images/purchasenft05.png" width="200" /></kbd>
+
+<kbd><img src="images/purchasenft06.png" width="200" /></kbd>
+
+<kbd><img src="images/purchasenft07.png" width="200" /></kbd>
+
+<kbd><img src="images/purchasenft08.png" width="200" /></kbd>
+
+<kbd><img src="images/purchasenft09.png" width="200" /></kbd>
+
+<kbd><img src="images/purchasenft10.png" width="200" /></kbd>
+
+<kbd><img src="images/purchasenft11.png" width="200" /></kbd>
+
+<kbd><img src="images/purchasenft12.png" width="200" /></kbd>
+
+<kbd><img src="images/purchasenft13.png" width="200" /></kbd>
+
+<kbd><img src="images/purchasenft14.png" width="200" /></kbd>
+
+<kbd><img src="images/purchasenft15.png" width="200" /></kbd>
+
+<kbd><img src="images/purchasenft16.png" width="200" /></kbd>
+
+<kbd><img src="images/purchasenft17.png" width="200" /></kbd>
+
+<kbd><img src="images/purchasenft18.png" width="200" /></kbd>
+
+<kbd><img src="images/purchasenft19.png" width="200" /></kbd>
 
 <br />
 
