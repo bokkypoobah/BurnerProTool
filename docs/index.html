@@ -238,14 +238,16 @@
                     <b-badge pill variant="transparent" class="px-0">{{ data.item.slot }}</b-badge>
                   </template>
                   <template #cell(address)="data">
-                    <b-link :href="'https://etherscan.io/address/' + data.item.address" target="_blank">
-                      <b-badge pill variant="transparent" v-b-popover.hover="data.item.address" class="px-0">{{ data.item.address }}</b-badge>
+                    <b-link :href="'https://etherscan.io/address/' + data.item.address" target="_blank" v-b-popover.hover="data.item.address">
+                      {{ data.item.address.substring(0, 8) + '...' + data.item.address.slice(-6) }}
                     </b-link>
                   </template>
                   <template #cell(info)="data">
-                    <b-form-checkbox disabled v-model="data.item.isPasswordProtected">Password Protected</b-form-checkbox>
-                    <b-form-checkbox disabled v-model="data.item.isImported">Imported</b-form-checkbox>
-                    <b-form-checkbox disabled v-model="data.item.isExported">Exported</b-form-checkbox> 
+                    <font size="-1">
+                      <b-form-checkbox disabled v-model="data.item.isPasswordProtected">Password Protected</b-form-checkbox>
+                      <b-form-checkbox disabled v-model="data.item.isImported">Imported</b-form-checkbox>
+                      <b-form-checkbox disabled v-model="data.item.isExported">Exported</b-form-checkbox>
+                    </font>
                   </template>
                   <!-- <template #cell(number)="data">
                     <font size="-1">
@@ -659,8 +661,8 @@
           ],
 
           slotsFields: [
-            { key: 'slot', label: 'Slot', sortable: false, thStyle: 'width: 10%;', tdClass: 'text-truncate' },
-            { key: 'address', label: 'Address', sortable: false, thStyle: 'width: 40%;', thClass: 'text-left', tdClass: 'text-left' },
+            { key: 'slot', label: 'Slot', sortable: false, thStyle: 'width: 20%;', tdClass: 'text-truncate' },
+            { key: 'address', label: 'Address', sortable: false, thStyle: 'width: 30%;', thClass: 'text-left', tdClass: 'text-left' },
             { key: 'info', label: 'Info', sortable: false, thStyle: 'width: 50%;', thClass: 'text-left', tdClass: 'text-left' },
             // { key: 'symbol', label: 'Symbol', sortable: false, thStyle: 'width: 10%;', thClass: 'text-left', tdClass: 'text-left' },
             // { key: 'name', label: 'Name', sortable: false, thStyle: 'width: 20%;', thClass: 'text-left', tdClass: 'text-left' },
