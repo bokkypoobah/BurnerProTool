@@ -115,41 +115,79 @@ Swipe the source and duplicate cards a few more times and the new card is now a 
 
 #### Purchase NFT
 
+ETH sent to Burner.pro address
+
 <kbd><img src="images/purchasenft01.png" width="200" /></kbd>
+
+Select TRANSACTIONS from the Burner OS menu to view transactions
 
 <kbd><img src="images/purchasenft02.png" width="200" /></kbd>
 
+Viewing Fast Food Punks Gen2 on [blur.io](https://blur.io/eth/collection/fastfoodpunks2). Click on CONNECT on the top right
+
 <kbd><img src="images/purchasenft03.png" width="200" /></kbd>
+
+Click on WALLETCONNECT
 
 <kbd><img src="images/purchasenft04.png" width="200" /></kbd>
 
+Click on the [Copy] button to the right of the text "Connect your wallet"
+
 <kbd><img src="images/purchasenft05.png" width="200" /></kbd>
+
+Copy the "code" by clicking on the [Copy] button to the right of the text "Scan the code"
 
 <kbd><img src="images/purchasenft06.png" width="200" /></kbd>
 
+In Burner OS, paste the copied information from above into the "Paste WalletConnect Pairing URL" text and click [PAIR MANUALLY]
+
 <kbd><img src="images/purchasenft07.png" width="200" /></kbd>
+
+Click [ACCEPT]
 
 <kbd><img src="images/purchasenft08.png" width="200" /></kbd>
 
+Burner OS screen reverts back to the main menu
+
 <kbd><img src="images/purchasenft09.png" width="200" /></kbd>
+
+Blur is now connected to your wallet
 
 <kbd><img src="images/purchasenft10.png" width="200" /></kbd>
 
+Select an NFT to purchase
+
 <kbd><img src="images/purchasenft11.png" width="200" /></kbd>
+
+Click [BUY NOW], then confirm in Burner OS
 
 <kbd><img src="images/purchasenft12.png" width="200" /></kbd>
 
+In Burner OS, click [ACCEPT]. You may have to scan your NFC card
+
 <kbd><img src="images/purchasenft13.png" width="200" /></kbd>
+
+Passcode is required
 
 <kbd><img src="images/purchasenft14.png" width="200" /></kbd>
 
+Enter passcode
+
 <kbd><img src="images/purchasenft15.png" width="200" /></kbd>
+
+In Blur, you can see "TRANSACTION PENDING"
 
 <kbd><img src="images/purchasenft16.png" width="200" /></kbd>
 
+In Blur, you can see "TRANSACTION CONFIRMED"
+
 <kbd><img src="images/purchasenft17.png" width="200" /></kbd>
 
+From the Burner OS menu, select NFTS
+
 <kbd><img src="images/purchasenft18.png" width="200" /></kbd>
+
+And here is Fast Food Punk Gen2 #1678
 
 <kbd><img src="images/purchasenft19.png" width="200" /></kbd>
 
