@@ -230,6 +230,11 @@
                   <div class="mt-0 flex-grow-1">
                   </div>
                   <div class="mt-1 pr-1">
+                    <b-button size="sm" :disabled="filteredSortedSlots.length == 0" @click="retrieveBalances();" variant="primary" v-b-popover.hover.bottom="'Retrieve Balances'">Retrieve Balances</b-button>
+                  </div>
+                  <div class="mt-0 flex-grow-1">
+                  </div>
+                  <div class="mt-1 pr-1">
                     <b-button size="sm" :disabled="false" @click="scanNFCTest();" variant="primary" v-b-popover.hover.bottom="'Scan NFC Test'">Scan NFC Test</b-button>
                   </div>
                   <div class="mt-0 flex-grow-1">
@@ -1130,6 +1135,28 @@
                 // display error
                 console.log(e);
                 this.debug = e.message;
+            }
+          },
+
+          async retrieveBalances() {
+            console.log(moment().format("HH:mm:ss") + " retrieveBalances");
+            if (!window.ethereum) {
+              this.connected = false;
+            } else {
+              try {
+                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                this.connected = window.ethereum.isConnected();
+              } catch (e) {
+                console.log("window.ethereum.request error: " + e.message);
+                this.connected = false;
+              }
+            }
+            if (!this.connected) {
+              alert("Please use the Opera or any other other web3 browser with NFC tag reading capabilities, and refresh!");
+            } else {
+              for (const [slot, slotData] of Object.entries(this.slots)) {
+                console.log("slot: " + slot + " => " + JSON.stringify(slotData));
+              }
             }
           },
 

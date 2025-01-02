@@ -1,6 +1,6 @@
 # Burner.pro NFC Card Tool (WIP)
 
-Load on NFC reader enabled device, with Burner.pro NFC card: https://bokkypoobah.github.io/BurnerProTool/
+Load on NFC reader enabled mobile phone, with Burner.pro NFC card: https://bokkypoobah.github.io/BurnerProTool/
 
 Sample screen after scanning a Burner Pro NFC card:
 
@@ -34,6 +34,7 @@ So this is my review of these cards.
 * [New Ethereum Wallet Setup](#new-ethereum-wallet-setup)
 * [Duplicating A Card](#duplicating-a-card)
 * [Purchase NFT](#purchase-nft)
+* [Withdraw ETH](#withdraw-eth)
 * [Questions](#questions)
 * [References](#references)
 
@@ -190,6 +191,36 @@ From the Burner OS menu, select NFTS
 And here is Fast Food Punk Gen2 #1678
 
 <kbd><img src="images/purchasenft19.png" width="200" /></kbd>
+
+<br />
+
+---
+
+#### Withdraw ETH
+
+Click [WITHDRAW] from the Burner OS menu. Enter destination ENS name or ETH address
+
+<kbd><img src="images/withdraw01.png" width="200" /></kbd>
+
+Enter amount
+
+<kbd><img src="images/withdraw02.png" width="200" /></kbd>
+
+Enter passcode, and scan your NFC card
+
+<kbd><img src="images/withdraw03.png" width="200" /></kbd>
+
+Transaction sent
+
+<kbd><img src="images/withdraw04.png" width="200" /></kbd>
+
+Transaction mined
+
+<kbd><img src="images/withdraw05.png" width="200" /></kbd>
+
+View [TRANSACTIONS] from the Burner OS menu
+
+<kbd><img src="images/withdraw06.png" width="200" /></kbd>
 
 <br />
 
