@@ -43,11 +43,12 @@
             <em v-b-popover.hover.bottom="'gm gm gm'">BurnerProTool</em>
           </b-navbar-brand>
           <b-navbar-nav class="ml-auto">
+            <b-nav-item size="sm" @click="settings.tabIndex = 0; saveSettings();" :active="settings.tabIndex == 0" active-class="active" v-b-popover.hover="'Scan NFC'">Scan NFC</b-nav-item>
             <!-- <b-nav-item size="sm" @click="settings.tabIndex = 0; saveSettings();" :active="settings.tabIndex == 0" active-class="active" v-b-popover.hover="'Approvals'">Approvals</b-nav-item>
             <b-nav-item size="sm" @click="settings.tabIndex = 1; saveSettings();" :active="settings.tabIndex == 1" active-class="active" v-b-popover.hover="'Events'">Events</b-nav-item>
             <b-nav-item size="sm" @click="settings.tabIndex = 2; saveSettings();" :active="settings.tabIndex == 2" active-class="active" v-b-popover.hover="'Accounts'">Accounts</b-nav-item> -->
-            <b-avatar v-if="coinbase && coinbase != nameOrAddress(coinbase)" rounded variant="light" size="3.0rem" :src="'https://metadata.ens.domains/mainnet/avatar/' + nameOrAddress(coinbase, 100)" v-b-popover.hover="'Your ENS avatar if set'"></b-avatar>
-            <b-button size="sm" variant="outline-primary" class="ml-1" @click="connectToWeb3(); processNewBlock(0);" v-b-popover.hover.bottom="'Click to update wallet'">{{ coinbase ? nameOrAddress(coinbase, 16) : 'Connect' }}</b-button>
+            <!-- <b-avatar v-if="coinbase && coinbase != nameOrAddress(coinbase)" rounded variant="light" size="3.0rem" :src="'https://metadata.ens.domains/mainnet/avatar/' + nameOrAddress(coinbase, 100)" v-b-popover.hover="'Your ENS avatar if set'"></b-avatar> -->
+            <!-- <b-button size="sm" variant="outline-primary" class="ml-1" @click="connectToWeb3(); processNewBlock(0);" v-b-popover.hover.bottom="'Click to update wallet'">{{ coinbase ? nameOrAddress(coinbase, 16) : 'Connect' }}</b-button> -->
           </b-navbar-nav>
         </b-navbar>
 
@@ -221,13 +222,14 @@
             </b-card-text>
 
             <b-card-text class="m-0 p-0">
-              <b-card v-if="true" no-body class="my-1 p-1">
+              <b-card v-if="settings.tabIndex == 0" no-body class="my-1 p-1">
                 <div>
                   <b-button size="sm" :disabled="false" @click="scanNFC();" variant="primary" v-b-popover.hover.bottom="'Scan NFC'">Scan NFC</b-button>
+                  <b-button size="sm" :disabled="false" @click="scanNFCTest();" variant="primary" v-b-popover.hover.bottom="'Scan NFC Test'">Scan NFC Test</b-button>
                 </div>
+                <b-form-textarea readonly size="sm" v-model.trim="debug" rows="3" max-rows="10" class="mt-2"></b-form-textarea>
+                <b-form-textarea readonly size="sm" :value="JSON.stringify(slots, null, 2)" rows="3" max-rows="10" class="mt-2"></b-form-textarea>
               </b-card>
-
-              <b-form-textarea readonly size="sm" v-model.trim="debug" rows="3" max-rows="10"></b-form-textarea>
 
               <!-- :INFO -->
               <b-card v-if="false && (settings.showInfo || coinbase == null)" no-body class="my-1 p-1">
@@ -468,8 +470,8 @@
         // --- DATA ---
         data: {
 
-          debug: "Blah",
-
+          debug: "Debug",
+          slots: {},
           keySlotNumber: 9,
 
           connected: false,
@@ -901,12 +903,46 @@
 
         // --- METHODS ---
         methods: {
+          async scanNFCTest() {
+            // TEST: Replace below with test data
+            const result = {};
+            // this.debug = JSON.stringify(result, null, 4);
+            if (result.data) {
+              const slots = {};
+              this.debug = "";
+              for (const [key, value] of Object.entries(result.data)) {
+                const [k, i] = key.split(/:/);
+                if (k == "compressedPublicKey") {
+                  if (!value.error) {
+                    this.debug = this.debug + "k: " + k + ", i: " + i + ", value: " + value;
+                    if (!(('' + i) in slots)) {
+                      slots[i] = {
+                        compressedPublicKey: value,
+                        address: ethers.utils.computeAddress("0x" + value),
+                      };
+                    }
+                  }
+                } else {
+                  if (!value.error) {
+                    this.debug = this.debug + "k: " + k + ", i: " + i + ", value: " + JSON.stringify(value);
+                    if (('' + i) in slots) {
+                      slots[i].isPasswordProtected = value.isPasswordProtected;
+                      slots[i].rawSignCommandNotUsed = value.rawSignCommandNotUsed;
+                      slots[i].isImported = value.isImported;
+                      slots[i].isExported = value.isExported;
+                    }
+                  }
+                }
+              }
+              this.slots = slots;
+            }
+          },
           async scanNFC() {
             // https://github.com/arx-research/libhalo/blob/master/docs/api-web.md#debugging-through-the-developers-console
             localStorage.setItem('DEBUG_LIBHALO_WEB', '1');
 
-            const result = ethers.utils.computeAddress("0x028efa8726964184dba9c863dfac81342b9295fd222d76e8041c8a4646aa655fdf");
-            console.log("result: " + result);
+            // const result = ethers.utils.computeAddress("0x028efa8726964184dba9c863dfac81342b9295fd222d76e8041c8a4646aa655fdf");
+            // console.log("result: " + result);
             // this.debug = "DFSLKJFKDSJF";
             console.log(moment().format("HH:mm:ss") + " scanNFC - blah: " + JSON.stringify(this.modalApproval));
             // let command = {
@@ -919,10 +955,39 @@
                 spec: "compressedPublicKey:1,compressedPublicKey:2,compressedPublicKey:3,compressedPublicKey:4,compressedPublicKey:5,compressedPublicKey:6,compressedPublicKey:7,compressedPublicKey:8,compressedPublicKey:9,keySlotFlags:1,keySlotFlags:2,keySlotFlags:3,keySlotFlags:4,keySlotFlags:5,keySlotFlags:6,keySlotFlags:7,keySlotFlags:8,keySlotFlags:9",
             };
             try {
-                let res = await execHaloCmdWeb(command);
-                // display operation result
-                console.log(JSON.stringify(res, null, 4));
-                this.debug = JSON.stringify(res, null, 4);
+                const result = await execHaloCmdWeb(command);
+                // display operation resultult
+                console.log(JSON.stringify(result, null, 4));
+                // this.debug = JSON.stringify(result, null, 4);
+                if (result.data) {
+                  const slots = {};
+                  this.debug = "";
+                  for (const [key, value] of Object.entries(result.data)) {
+                    const [k, i] = key.split(/:/);
+                    if (k == "compressedPublicKey") {
+                      if (!value.error) {
+                        this.debug = this.debug + "k: " + k + ", i: " + i + ", value: " + value;
+                        if (!(('' + i) in slots)) {
+                          slots[i] = {
+                            compressedPublicKey: value,
+                            address: ethers.utils.computeAddress("0x" + value),
+                          };
+                        }
+                      }
+                    } else {
+                      if (!value.error) {
+                        this.debug = this.debug + "k: " + k + ", i: " + i + ", value: " + JSON.stringify(value);
+                        if (('' + i) in slots) {
+                          slots[i].isPasswordProtected = value.isPasswordProtected;
+                          slots[i].rawSignCommandNotUsed = value.rawSignCommandNotUsed;
+                          slots[i].isImported = value.isImported;
+                          slots[i].isExported = value.isExported;
+                        }
+                      }
+                    }
+                  }
+                  this.slots = slots;
+                }
             } catch (e) {
                 // display error
                 console.log(e);
@@ -1336,7 +1401,8 @@
           },
 
           saveSettings() {
-            localStorage.approvalToolSettings = JSON.stringify(this.settings);
+            // Don't save yet
+            // localStorage.approvalToolSettings = JSON.stringify(this.settings);
           },
           async processNewBlock(blockNumber) {
             console.log(moment().format("HH:mm:ss") + " processNewBlock[" + this.chainId + "] #" + this.commify0(blockNumber) + ", latest #" + this.commify0(this.blockNumber) + " @ " + moment.unix(this.timestamp).format("YYYY-MM-DD HH:mm:ss") + " " + moment.unix(this.timestamp).fromNow());
