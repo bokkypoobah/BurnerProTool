@@ -34,6 +34,7 @@ So this is my review of these cards.
 * [New Ethereum Wallet Setup](#new-ethereum-wallet-setup)
 * [Duplicating A Card](#duplicating-a-card)
 * [Purchase NFT](#purchase-nft)
+* [Supported NFT Media Types](#supported-nft-media-types)
 * [Withdraw ETH](#withdraw-eth)
 * [Questions](#questions)
 * [References](#references)
@@ -191,6 +192,22 @@ From the Burner OS menu, select NFTS
 And here is Fast Food Punk Gen2 #1678
 
 <kbd><img src="images/purchasenft19.png" width="200" /></kbd>
+
+<br />
+
+---
+
+#### Supported NFT Media Types
+
+* [Babby #4011](https://opensea.io/assets/ethereum/0x9a4b320418544b4da92c38d2a6e2de09d5b0287a/4011) has dynamic HTML media, and a static thumbnail is displayed
+* [FastFoodPunkGEN2 #1678](https://opensea.io/assets/ethereum/0x1a17531d136a3a4e0ef05575867fc7c59dae3069/1678) has a static PNG or GIF and is displayed correctly
+
+<kbd><img src="images/purchasenft20.jpg" width="200" /></kbd>
+
+* [NAH FUNGIBLE BONES #4218](https://opensea.io/assets/ethereum/0x0ee24c748445fb48028a74b0ccb6b46d7d3e3b33/4218) has dynamic HTML media and the static GIF is displayed correctly
+* [Flipmap #3204](https://opensea.io/assets/ethereum/0x0e4b8e24789630618aa90072f520711d3d9db647/3204) has an on-chain generated image. This image is not displayed correctly.
+
+<kbd><img src="images/purchasenft21.jpg" width="200" /></kbd>
 
 <br />
 
