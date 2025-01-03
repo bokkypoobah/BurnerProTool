@@ -204,7 +204,7 @@ And here is Fast Food Punk Gen2 #1678
 
 <kbd><img src="images/purchasenft20.jpg" width="200" /></kbd>
 
-* [NAH FUNGIBLE BONES #4218](https://opensea.io/assets/ethereum/0x0ee24c748445fb48028a74b0ccb6b46d7d3e3b33/4218) has dynamic HTML media and the static GIF is displayed correctly
+* [NAH FUNGIBLE BONES #4218](https://opensea.io/assets/ethereum/0x0ee24c748445fb48028a74b0ccb6b46d7d3e3b33/4218) has dynamic HTML media and the selected GIF is displayed correctly
 * [Flipmap #3204](https://opensea.io/assets/ethereum/0x0e4b8e24789630618aa90072f520711d3d9db647/3204) has an on-chain generated image. This image is not displayed correctly.
 
 <kbd><img src="images/purchasenft21.jpg" width="200" /></kbd>
