@@ -33,7 +33,8 @@ So this is my review of these cards.
 * [Price](#price)
 * [New Ethereum Wallet Setup](#new-ethereum-wallet-setup)
 * [Duplicating A Card](#duplicating-a-card)
-* [Purchase NFT](#purchase-nft)
+* [Purchase NFT on ETH Mainnet](#purchase-nft-on-eth-mainnet)
+* [Purchase NFT on Base](#purchase-nft-on-base)
 * [Supported NFT Media Types](#supported-nft-media-types)
 * [Withdraw ETH](#withdraw-eth)
 * [Questions](#questions)
@@ -115,7 +116,7 @@ Swipe the source and duplicate cards a few more times and the new card is now a 
 
 ---
 
-#### Purchase NFT
+#### Purchase NFT on ETH Mainnet
 
 ETH sent to Burner.pro address
 
@@ -192,6 +193,28 @@ From the Burner OS menu, select NFTS
 And here is Fast Food Punk Gen2 #1678
 
 <kbd><img src="images/purchasenft19.png" width="200" /></kbd>
+
+<br />
+
+---
+
+#### Purchase NFT on Base
+
+Base ETH sent to Burner.pro address. Purchasing [Chonk #47740](https://opensea.io/assets/base/0x07152bfde079b5319e5308c43fb1dbc9c76cb4f9/47740)
+
+<kbd><img src="images/purchasenftbase01.jpg" width="200" /></kbd>
+
+Confirm in Burner OS with a few scans of the NFC card
+
+<kbd><img src="images/purchasenftbase02.jpg" width="200" /></kbd>
+
+NFT purchased. Transaction [0xb8c8...0155](https://basescan.org/tx/0xb8c8e0178c171e04dff10b01d3d45383fa503d827cd8a5dfae852fa6851c0155)
+
+<kbd><img src="images/purchasenftbase03.jpg" width="200" /></kbd>
+
+But this Base NFT does not show up in the NFT screen. Even after several refreshes
+
+<kbd><img src="images/purchasenftbase04.jpg" width="200" /></kbd>
 
 <br />
 
