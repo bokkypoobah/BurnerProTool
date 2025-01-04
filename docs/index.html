@@ -176,7 +176,7 @@
                 </b-form-group>
                 <b-form-group label="password" label-for="action-password">
                   <b-input-group>
-                    <b-form-input id="action-password" v-model.trim="action.password" style="max-width: 10.0rem;"></b-form-input>
+                    <b-form-input type="password" id="action-password" v-model.trim="action.password" style="max-width: 10.0rem;"></b-form-input>
                   </b-input-group>
                 </b-form-group>
                 <b-button size="sm" :disabled="false" @click="signEthTx();" variant="primary" v-b-popover.hover.bottom="'Scan NFC To Sign'" style="max-width: 10.0rem;">Scan NFC To Sign</b-button>
