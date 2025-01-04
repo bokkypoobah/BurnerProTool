@@ -319,7 +319,9 @@
               </b-card>
 
               <b-card v-if="settings.tabIndex == 1 && filteredSortedSlots.length > 0" no-body class="my-0 p-1">
-                Address
+                <b-form-group label="Address:" label-for="address-address" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
+                  <b-form-select size="sm" id="address-address" v-model="address.selected" :options="addressesOptions"></b-form-select>
+                </b-form-group>
               </b-card>
 
               <!-- :INFO -->
@@ -565,6 +567,10 @@
           slots: {},
           keySlotNumber: 9,
 
+          address: {
+            selected: null,
+          },
+
           connected: false,
           chainId: null,
           coinbase: null,
@@ -735,13 +741,27 @@
         // --- COMPUTED ---
         computed: {
 
+          addressesOptions() {
+            // console.log("addressesOptions - this.slots: " + JSON.stringify(this.slots));
+            const results = [];
+            results.push({ value: null, text: "Select address" });
+            const keys = Object.keys(this.slots);
+            keys.sort((a, b) => {
+              return parseInt(b) - parseInt(a);
+            });
+            for (const key of keys) {
+              results.push({ value: this.slots[key].address, text: '' + key + '. ' + this.slots[key].address.substring(0, 10) + '...' + this.slots[key].address.slice(-8) })
+            }
+            return results;
+          },
+
           filteredSortedSlots() {
             const results = [];
             for (const [slot, slotData] of Object.entries(this.slots)) {
               results.push( { slot, ...slotData } );
             }
             results.sort((a, b) => {
-              return a.slot - b.slot;
+              return b.slot - a.slot;
             });
             return results;
           },
