@@ -111,12 +111,12 @@
               </b-card>
 
               <b-card v-if="settings.tabIndex == 1 && filteredSortedSlots.length > 0" no-body class="my-0 p-1">
-                <b-form-group label="Active address" label-for="selected-address">
+                <b-form-group label="Active address" label-for="selected-slot">
                   <b-input-group>
-                    <b-form-select id="selected-address" v-model="selectedAddress" :options="addressesOptions" style="max-width: 30.0rem;"></b-form-select>
+                    <b-form-select id="selected-slot" v-model="selectedSlot" :options="slotsOptions" style="max-width: 30.0rem;"></b-form-select>
                     <b-input-group-append>
-                      <b-button :disabled="!selectedAddress" :href="'https://etherscan.io/address/' + selectedAddress" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-3 p-0"><b-icon-link45deg shift-v="-4" font-scale="1.2"></b-icon-link45deg></b-button>
-                      <b-button :disabled="!selectedAddress" @click="copyToClipboard(selectedAddress);" variant="link" class="m-0 ml-1 p-0"><b-icon-clipboard shift-v="+1" font-scale="1.1"></b-icon-clipboard></b-button>
+                      <b-button :disabled="!selectedSlot" :href="'https://etherscan.io/address/' + (slots[selectedSlot] && slots[selectedSlot].address)" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-3 p-0"><b-icon-link45deg shift-v="-4" font-scale="1.2"></b-icon-link45deg></b-button>
+                      <b-button :disabled="!selectedSlot" @click="copyToClipboard((slots[selectedSlot] && slots[selectedSlot].address));" variant="link" class="m-0 ml-1 p-0"><b-icon-clipboard shift-v="+1" font-scale="1.1"></b-icon-clipboard></b-button>
                     </b-input-group-append>
                   </b-input-group>
                 </b-form-group>
@@ -218,8 +218,8 @@
           debug: "Debug",
           slots: {},
 
-          selectedAddress: null,
-          selectedAction: null,
+          selectedSlot: 9, // null,
+          selectedAction: "transfereth", // null,
 
           action: {
             to: "0x8888888888888888888888888888888888888888", // null,
@@ -298,8 +298,7 @@
         // --- COMPUTED ---
         computed: {
 
-          addressesOptions() {
-            // console.log("addressesOptions - this.slots: " + JSON.stringify(this.slots));
+          slotsOptions() {
             const results = [];
             results.push({ value: null, text: "Select address" });
             const keys = Object.keys(this.slots);
@@ -307,7 +306,7 @@
               return parseInt(b) - parseInt(a);
             });
             for (const key of keys) {
-              results.push({ value: this.slots[key].address, text: '' + key + '. ' + this.slots[key].address.substring(0, 10) + '...' + this.slots[key].address.slice(-8) })
+              results.push({ value: key, text: '' + key + '. ' + this.slots[key].address.substring(0, 10) + '...' + this.slots[key].address.slice(-8) })
             }
             return results;
           },
@@ -363,7 +362,7 @@
               }
             };
             this.settings.tabIndex = 1;
-            this.selectedAddress = "0x9999999999999999999999999999999999999999";
+            this.selectedSlot = 9;
             this.selectedAction = "transfereth";
           },
           async scanNFCTestOld() {
