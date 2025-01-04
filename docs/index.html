@@ -426,12 +426,12 @@
                 // this.debug = JSON.stringify(result, null, 4);
                 if (result.data) {
                   const slots = {};
-                  this.debug = "";
+                  // this.debug = "";
                   for (const [key, value] of Object.entries(result.data)) {
                     const [k, i] = key.split(/:/);
                     if (k == "compressedPublicKey") {
                       if (!value.error) {
-                        this.debug = this.debug + "k: " + k + ", i: " + i + ", value: " + value;
+                        // this.debug = this.debug + "k: " + k + ", i: " + i + ", value: " + value;
                         if (!(('' + i) in slots)) {
                           slots[i] = {
                             compressedPublicKey: value,
@@ -441,7 +441,7 @@
                       }
                     } else {
                       if (!value.error) {
-                        this.debug = this.debug + "k: " + k + ", i: " + i + ", value: " + JSON.stringify(value);
+                        // this.debug = this.debug + "k: " + k + ", i: " + i + ", value: " + JSON.stringify(value);
                         if (('' + i) in slots) {
                           slots[i].isPasswordProtected = value.isPasswordProtected;
                           slots[i].rawSignCommandNotUsed = value.rawSignCommandNotUsed;
