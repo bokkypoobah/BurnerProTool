@@ -224,7 +224,7 @@
           action: {
             to: "0x8888888888888888888888888888888888888888", // null,
             value: "0.00007", // null,
-            valueType: "eth",
+            valueType: "ether",
             gasLimit: "21000", // null,
             maxFeePerGas: "7", // null,
             maxFeePerGasType: "gwei",
@@ -282,7 +282,7 @@
           ],
 
           valueTypeOptions: [
-            { value: 'eth', text: 'eth' },
+            { value: 'ether', text: 'eth' },
             { value: 'gwei', text: 'gwei' },
             { value: 'wei', text: 'wei' },
           ],
@@ -481,7 +481,7 @@
           },
 
           async signEthTx() {
-            console.log(moment().format("HH:mm:ss") + " signEthTx");
+            console.log(moment().format("HH:mm:ss") + " signEthTx - action: " + JSON.stringify(this.action, null, 2));
 
             // action: {
             //   to: "0x8888888888888888888888888888888888888888", // null,
@@ -498,6 +498,25 @@
             //   data: null,
             // },
 
+            const tx = {
+              to: ethers.utils.getAddress(this.action.to),
+              value: ethers.BigNumber.from(ethers.utils.parseUnits(this.action.value, this.action.valueType)).toString(),
+              data: this.action.data,
+              chainId: parseInt(this.action.chainId),
+              nonce: parseInt(this.action.nonce),
+              gasLimit: parseInt(this.action.gasLimit),
+              type: parseInt(this.action.transactionType),
+              maxFeePerGas: ethers.BigNumber.from(ethers.utils.parseUnits(this.action.maxFeePerGas, this.action.maxFeePerGasType)).toString(),
+              maxPriorityFeePerGas: ethers.BigNumber.from(ethers.utils.parseUnits(this.action.maxPriorityFeePerGas, this.action.maxPriorityFeePerGasType)).toString(),
+            };
+            console.log(moment().format("HH:mm:ss") + " signEthTx - tx: " + JSON.stringify(tx, null, 2));
+
+            const serializedTransaction = ethers.utils.serializeTransaction(tx);
+            console.log(moment().format("HH:mm:ss") + " signEthTx - serializedTransaction: " + JSON.stringify(serializedTransaction, null, 2));
+            const transactionHash = ethers.utils.keccak256(serializedTransaction);
+            console.log(moment().format("HH:mm:ss") + " signEthTx - transactionHash: " + JSON.stringify(transactionHash, null, 2));
+            const decodedTransaction = ethers.utils.parseTransaction(serializedTransaction);
+            console.log(moment().format("HH:mm:ss") + " signEthTx - decodedTransaction: " + JSON.stringify(decodedTransaction, null, 2));
           },
 
           async syncIt(devMode) {
