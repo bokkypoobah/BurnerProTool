@@ -196,15 +196,13 @@
               </b-card>
 
               <b-card v-if="settings.tabIndex == 1 && filteredSortedSlots.length > 0" no-body class="my-0 p-1">
-                <b-form-group label="Active address:" label-for="address-address" label-size="sm" label-cols-sm="2" label-align-sm="right" class="mx-0 my-1 p-0">
+                <b-form-group label="Active address:" label-for="address-address" label-cols-sm="2" label-align="right" class="mx-0 my-1 p-0" style="max-width: 50.0rem;">
 
-                  <b-input-group size="sm" class="w-100">
+                  <b-input-group class="w-100">
                     <b-form-select id="address-address" v-model="address.selected" :options="addressesOptions"></b-form-select>
                     <b-input-group-append>
-                      <div>
-                        <b-button :disabled="!address.selected" :href="'https://etherscan.io/address/' + address.selected" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-3 p-0"><b-icon-link45deg shift-v="+1" font-scale="1.1"></b-icon-link45deg></b-button>
-                        <b-button :disabled="!address.selected" @click="copyToClipboard(address.selected);" variant="link" class="m-0 ml-1 p-0"><b-icon-clipboard shift-v="+1" font-scale="1.1"></b-icon-clipboard></b-button>
-                      </div>
+                      <b-button :disabled="!address.selected" :href="'https://etherscan.io/address/' + address.selected" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-3 p-0"><b-icon-link45deg shift-v="-4" font-scale="1.2"></b-icon-link45deg></b-button>
+                      <b-button :disabled="!address.selected" @click="copyToClipboard(address.selected);" variant="link" class="m-0 ml-1 p-0"><b-icon-clipboard shift-v="+1" font-scale="1.1"></b-icon-clipboard></b-button>
                     </b-input-group-append>
                   </b-input-group>
 
