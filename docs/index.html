@@ -175,8 +175,8 @@
                   </b-input-group>
                 </b-form-group>
                 <b-button size="sm" :disabled="false" @click="signEthTx();" variant="primary" v-b-popover.hover.bottom="'Scan NFC To Sign'" style="max-width: 10.0rem;">Scan NFC To Sign</b-button>
+                <b-form-textarea readonly size="sm" v-model.trim="debug" rows="3" max-rows="20" class="mt-1"></b-form-textarea>
               </b-card>
-
             </b-card-text>
           </b-card>
         </b-card>
@@ -517,6 +517,25 @@
             console.log(moment().format("HH:mm:ss") + " signEthTx - transactionHash: " + JSON.stringify(transactionHash, null, 2));
             const decodedTransaction = ethers.utils.parseTransaction(serializedTransaction);
             console.log(moment().format("HH:mm:ss") + " signEthTx - decodedTransaction: " + JSON.stringify(decodedTransaction, null, 2));
+            let command = {
+                name: "sign",
+                keyNo: this.selectedSlot,
+                digest: transactionHash.substring(2),
+            };
+            console.log(moment().format("HH:mm:ss") + " signEthTx - command: " + JSON.stringify(command, null, 2));
+            try {
+                const result = await execHaloCmdWeb(command);
+                // display operation resultult
+                console.log(JSON.stringify(result, null, 4));
+                this.debug = JSON.stringify(result, null, 4);
+                if (result.data) {
+                }
+            } catch (e) {
+              // display error
+              console.log(e);
+              this.debug = e.message;
+            }
+
           },
 
           async syncIt(devMode) {
