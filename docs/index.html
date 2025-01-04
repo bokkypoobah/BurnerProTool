@@ -122,7 +122,7 @@
                 </b-form-group>
                 <b-form-group label="Action" label-for="selected-action">
                   <b-input-group>
-                    <b-form-select id="selected-action" v-model="selectedAction" :options="actionOptions" style="max-width: 15.0rem;"></b-form-select>
+                    <b-form-select id="selected-action" v-model="selectedAction" :options="actionOptions" style="max-width: 10.0rem;"></b-form-select>
                   </b-input-group>
                 </b-form-group>
                 <b-form-group label="To" label-for="action-to">
@@ -132,7 +132,7 @@
                 </b-form-group>
                 <b-form-group label="Value" label-for="action-value">
                   <b-input-group>
-                    <b-form-input id="action-value" v-model.trim="action.value" style="max-width: 15.0rem;"></b-form-input>
+                    <b-form-input id="action-value" v-model.trim="action.value" style="max-width: 10.0rem;"></b-form-input>
                     <b-input-group-append>
                       <b-form-select v-model="action.valueType" :options="valueTypeOptions"></b-form-select>
                     </b-input-group-append>
@@ -140,12 +140,12 @@
                 </b-form-group>
                 <b-form-group label="Gas Limit" label-for="action-gaslimit">
                   <b-input-group>
-                    <b-form-input id="action-gaslimit" v-model.trim="action.gasLimit" style="max-width: 15.0rem;"></b-form-input>
+                    <b-form-input id="action-gaslimit" v-model.trim="action.gasLimit" style="max-width: 10.0rem;"></b-form-input>
                   </b-input-group>
                 </b-form-group>
                 <b-form-group label="Max Fee Per Gas" label-for="action-maxfeepergas">
                   <b-input-group>
-                    <b-form-input id="action-maxfeepergas" v-model.trim="action.maxFeePerGas" style="max-width: 15.0rem;"></b-form-input>
+                    <b-form-input id="action-maxfeepergas" v-model.trim="action.maxFeePerGas" style="max-width: 10.0rem;"></b-form-input>
                     <b-input-group-append>
                       <b-form-select v-model="action.maxFeePerGasType" :options="valueTypeOptions"></b-form-select>
                     </b-input-group-append>
@@ -153,7 +153,7 @@
                 </b-form-group>
                 <b-form-group label="Max Priority Fee Per Gas" label-for="action-maxpriorityfeepergas">
                   <b-input-group>
-                    <b-form-input id="action-maxpriorityfeepergas" v-model.trim="action.maxPriorityFeePerGas" style="max-width: 15.0rem;"></b-form-input>
+                    <b-form-input id="action-maxpriorityfeepergas" v-model.trim="action.maxPriorityFeePerGas" style="max-width: 10.0rem;"></b-form-input>
                     <b-input-group-append>
                       <b-form-select v-model="action.maxPriorityFeePerGasType" :options="valueTypeOptions"></b-form-select>
                     </b-input-group-append>
@@ -161,20 +161,20 @@
                 </b-form-group>
                 <b-form-group label="Chain Id" label-for="action-chainId">
                   <b-input-group>
-                    <b-form-input id="action-chainId" v-model.trim="action.chainId" style="max-width: 15.0rem;"></b-form-input>
+                    <b-form-input id="action-chainId" v-model.trim="action.chainId" style="max-width: 10.0rem;"></b-form-input>
                   </b-input-group>
                 </b-form-group>
                 <b-form-group label="Transaction Type" label-for="action-type">
                   <b-input-group>
-                    <b-form-input id="action-type" v-model.trim="action.transactionType" style="max-width: 15.0rem;"></b-form-input>
+                    <b-form-input id="action-type" v-model.trim="action.transactionType" style="max-width: 10.0rem;"></b-form-input>
                   </b-input-group>
                 </b-form-group>
                 <b-form-group label="Nonce" label-for="action-nonce">
                   <b-input-group>
-                    <b-form-input id="action-nonce" v-model.trim="action.nonce" style="max-width: 15.0rem;"></b-form-input>
+                    <b-form-input id="action-nonce" v-model.trim="action.nonce" style="max-width: 10.0rem;"></b-form-input>
                   </b-input-group>
                 </b-form-group>
-                <b-button size="sm" :disabled="false" @click="signEthTx();" variant="primary" v-b-popover.hover.bottom="'Scan NFC To Sign'" style="max-width: 15.0rem;">Scan NFC To Sign</b-button>
+                <b-button size="sm" :disabled="false" @click="signEthTx();" variant="primary" v-b-popover.hover.bottom="'Scan NFC To Sign'" style="max-width: 10.0rem;">Scan NFC To Sign</b-button>
               </b-card>
 
             </b-card-text>
@@ -223,12 +223,12 @@
 
           action: {
             to: "0x8888888888888888888888888888888888888888", // null,
-            value: "0.000069", // null,
+            value: "0.00007", // null,
             valueType: "eth",
             gasLimit: "21000", // null,
-            maxFeePerGas: "6.9", // null,
+            maxFeePerGas: "7", // null,
             maxFeePerGasType: "gwei",
-            maxPriorityFeePerGas: "0.069", // null
+            maxPriorityFeePerGas: "0.07", // null
             maxPriorityFeePerGasType: "gwei",
             chainId: 1,
             transactionType: 2,
