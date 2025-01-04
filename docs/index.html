@@ -365,48 +365,45 @@
             this.selectedSlot = 9;
             this.selectedAction = "transfereth";
           },
-          async scanNFCTestOld() {
-            // TEST: Replace below with test data
-            const result = {};
-            // this.debug = JSON.stringify(result, null, 4);
-            if (result.data) {
-              const slots = {};
-              this.debug = "";
-              for (const [key, value] of Object.entries(result.data)) {
-                const [k, i] = key.split(/:/);
-                if (k == "compressedPublicKey") {
-                  if (!value.error) {
-                    this.debug = this.debug + "k: " + k + ", i: " + i + ", value: " + value;
-                    if (!(('' + i) in slots)) {
-                      slots[i] = {
-                        compressedPublicKey: value,
-                        address: ethers.utils.computeAddress("0x" + value),
-                      };
-                    }
-                  }
-                } else {
-                  if (!value.error) {
-                    this.debug = this.debug + "k: " + k + ", i: " + i + ", value: " + JSON.stringify(value);
-                    if (('' + i) in slots) {
-                      slots[i].isPasswordProtected = value.isPasswordProtected;
-                      slots[i].rawSignCommandNotUsed = value.rawSignCommandNotUsed;
-                      slots[i].isImported = value.isImported;
-                      slots[i].isExported = value.isExported;
-                    }
-                  }
-                }
-              }
-              this.slots = slots;
-            }
-          },
+          // async scanNFCTestOld() {
+          //   console.log(moment().format("HH:mm:ss") + " scanNFCTestOld");
+          //   // TEST: Replace below with test data
+          //   const result = {};
+          //   // this.debug = JSON.stringify(result, null, 4);
+          //   if (result.data) {
+          //     const slots = {};
+          //     this.debug = "";
+          //     for (const [key, value] of Object.entries(result.data)) {
+          //       const [k, i] = key.split(/:/);
+          //       if (k == "compressedPublicKey") {
+          //         if (!value.error) {
+          //           this.debug = this.debug + "k: " + k + ", i: " + i + ", value: " + value;
+          //           if (!(('' + i) in slots)) {
+          //             slots[i] = {
+          //               compressedPublicKey: value,
+          //               address: ethers.utils.computeAddress("0x" + value),
+          //             };
+          //           }
+          //         }
+          //       } else {
+          //         if (!value.error) {
+          //           this.debug = this.debug + "k: " + k + ", i: " + i + ", value: " + JSON.stringify(value);
+          //           if (('' + i) in slots) {
+          //             slots[i].isPasswordProtected = value.isPasswordProtected;
+          //             slots[i].rawSignCommandNotUsed = value.rawSignCommandNotUsed;
+          //             slots[i].isImported = value.isImported;
+          //             slots[i].isExported = value.isExported;
+          //           }
+          //         }
+          //       }
+          //     }
+          //     this.slots = slots;
+          //   }
+          // },
           async scanNFC() {
             // https://github.com/arx-research/libhalo/blob/master/docs/api-web.md#debugging-through-the-developers-console
             localStorage.setItem('DEBUG_LIBHALO_WEB', '1');
-
-            // const result = ethers.utils.computeAddress("0x028efa8726964184dba9c863dfac81342b9295fd222d76e8041c8a4646aa655fdf");
-            // console.log("result: " + result);
-            // this.debug = "DFSLKJFKDSJF";
-            console.log(moment().format("HH:mm:ss") + " scanNFC - blah: " + JSON.stringify(this.modalApproval));
+            console.log(moment().format("HH:mm:ss") + " scanNFC");
             // let command = {
             //     name: "sign",
             //     keyNo: 1,
@@ -481,6 +478,26 @@
               }
               // console.log("this.slots: " + JSON.stringify(this.slots, null, 2));
             }
+          },
+
+          async signEthTx() {
+            console.log(moment().format("HH:mm:ss") + " signEthTx");
+
+            // action: {
+            //   to: "0x8888888888888888888888888888888888888888", // null,
+            //   value: "0.00007", // null,
+            //   valueType: "eth",
+            //   gasLimit: "21000", // null,
+            //   maxFeePerGas: "7", // null,
+            //   maxFeePerGasType: "gwei",
+            //   maxPriorityFeePerGas: "0.07", // null
+            //   maxPriorityFeePerGasType: "gwei",
+            //   chainId: 1,
+            //   transactionType: 2,
+            //   nonce: 0, // null
+            //   data: null,
+            // },
+
           },
 
           async syncIt(devMode) {
