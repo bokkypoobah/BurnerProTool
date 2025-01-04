@@ -113,7 +113,7 @@
               <b-card v-if="settings.tabIndex == 1 && filteredSortedSlots.length > 0" no-body class="my-0 p-1">
                 <b-form-group label="Active address" label-for="selected-address">
                   <b-input-group class="w-100">
-                    <b-form-select id="selected-address" v-model="selectedAddress" :options="addressesOptions" style="max-width: 25.0rem;"></b-form-select>
+                    <b-form-select id="selected-address" v-model="selectedAddress" :options="addressesOptions" style="max-width: 20.0rem;"></b-form-select>
                     <b-input-group-append>
                       <b-button :disabled="!selectedAddress" :href="'https://etherscan.io/address/' + selectedAddress" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-3 p-0"><b-icon-link45deg shift-v="-4" font-scale="1.2"></b-icon-link45deg></b-button>
                       <b-button :disabled="!selectedAddress" @click="copyToClipboard(selectedAddress);" variant="link" class="m-0 ml-1 p-0"><b-icon-clipboard shift-v="+1" font-scale="1.1"></b-icon-clipboard></b-button>
@@ -122,7 +122,7 @@
                 </b-form-group>
                 <b-form-group label="Action" label-for="selected-action">
                   <b-input-group class="w-100">
-                    <b-form-select id="selected-action" v-model="selectedAction" :options="actionOptions" style="max-width: 25.0rem;"></b-form-select>
+                    <b-form-select id="selected-action" v-model="selectedAction" :options="actionOptions" style="max-width: 20.0rem;"></b-form-select>
                   </b-input-group>
                 </b-form-group>
               </b-card>
@@ -170,6 +170,17 @@
 
           selectedAddress: null,
           selectedAction: null,
+
+          action: {
+            to: "0x8888888888888888888888888888888888888888", // null,
+            value: "0.000069", // null,
+            valueType: "eth",
+            gasLimit: "21000", // null,
+            maxFeePerGas: "6.9", // null,
+            maxFeePerGasType: "gwei",
+            maxPriorityFeePerGas: "0.069", // null
+            maxPriorityFeePerGas: "gwei",
+          },
 
           connected: false,
           chainId: null,
