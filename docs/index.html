@@ -43,7 +43,8 @@
             <em v-b-popover.hover.bottom="'gm gm gm'">BurnerProTool</em>
           </b-navbar-brand>
           <b-navbar-nav class="ml-auto">
-            <b-nav-item size="sm" @click="settings.tabIndex = 0; saveSettings();" :active="settings.tabIndex == 0" active-class="active" v-b-popover.hover="'Scan NFC'">Scan NFC</b-nav-item>
+            <b-nav-item size="sm" @click="settings.tabIndex = 0; saveSettings();" :active="settings.tabIndex == 0" active-class="active" v-b-popover.hover="'Addresses'">Addresses</b-nav-item>
+            <b-nav-item size="sm" @click="settings.tabIndex = 1; saveSettings();" :active="settings.tabIndex == 1" active-class="active" v-b-popover.hover="'Address'">Address</b-nav-item>
             <!-- <b-nav-item size="sm" @click="settings.tabIndex = 0; saveSettings();" :active="settings.tabIndex == 0" active-class="active" v-b-popover.hover="'Approvals'">Approvals</b-nav-item>
             <b-nav-item size="sm" @click="settings.tabIndex = 1; saveSettings();" :active="settings.tabIndex == 1" active-class="active" v-b-popover.hover="'Events'">Events</b-nav-item>
             <b-nav-item size="sm" @click="settings.tabIndex = 2; saveSettings();" :active="settings.tabIndex == 2" active-class="active" v-b-popover.hover="'Accounts'">Accounts</b-nav-item> -->
@@ -222,7 +223,7 @@
             </b-card-text>
 
             <b-card-text class="m-0 p-0">
-              <b-card v-if="settings.tabIndex == 0" no-body class="my-0 p-1">
+              <b-card v-if="settings.tabIndex == 0 || filteredSortedSlots.length == 0" no-body class="my-0 p-1">
                 <div class="d-flex flex-wrap m-0 p-0">
                   <div class="mt-1 pr-1">
                     <b-button size="sm" :disabled="false" @click="scanNFC();" variant="primary" v-b-popover.hover.bottom="'Scan NFC'">Scan NFC</b-button>
@@ -315,6 +316,10 @@
                 <!-- <b-form-textarea readonly size="sm" :value="JSON.stringify(slots, null, 2)" rows="3" max-rows="10" class="mt-2"></b-form-textarea> -->
                 <!-- <b-form-textarea readonly size="sm" :value="JSON.stringify(filteredSortedSlots, null, 2)" rows="3" max-rows="10" class="mt-2"></b-form-textarea> -->
 
+              </b-card>
+
+              <b-card v-if="settings.tabIndex == 1 && filteredSortedSlots.length > 0" no-body class="my-0 p-1">
+                Address
               </b-card>
 
               <!-- :INFO -->
