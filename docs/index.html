@@ -519,7 +519,7 @@
 
             const serializedTransaction = ethers.utils.serializeTransaction(tx);
             console.log(moment().format("HH:mm:ss") + " signEthTx - serializedTransaction: " + JSON.stringify(serializedTransaction, null, 2));
-            const transactionHash = ethers.utils.keccak256(serializedTransaction);
+            const transactionHash = ethers.utils.hashMessage(serializedTransaction);
             console.log(moment().format("HH:mm:ss") + " signEthTx - transactionHash: " + JSON.stringify(transactionHash, null, 2));
             const decodedTransaction = ethers.utils.parseTransaction(serializedTransaction);
             console.log(moment().format("HH:mm:ss") + " signEthTx - decodedTransaction: " + JSON.stringify(decodedTransaction, null, 2));
