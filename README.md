@@ -10,13 +10,17 @@ Sample screen after scanning a Burner Pro NFC card. When using with a web3 enabl
 
 #### Sign Transfer ETH Message
 
-Slot 9 selected, with some test data
+Slot 9 selected, with some test data. Loaded in Brave on mobile for web3 and NFC support
 
 <kbd><img src="images/signtransfereth01.png" width="400" /></kbd>
 
 Enter password, click [Scan NFC To Sign] and scan the NFC card
 
 <kbd><img src="images/signtransfereth02.png" width="400" /></kbd>
+
+Transaction [0xc2027...b03c](https://etherscan.io/tx/0xc2027cc88e37ef02a99f30d2ce7658bf65643d6ca0d6228799d6184a71e4b03c) sent automatically via web3
+
+<kbd><img src="images/signtransfereth03.png" width="400" /></kbd>
 
 <br />
 
