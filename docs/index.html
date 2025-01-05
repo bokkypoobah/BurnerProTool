@@ -79,7 +79,10 @@
                   <div class="mt-0 flex-grow-1">
                   </div>
                   <div class="mt-1 pr-1">
-                    <b-button size="sm" :disabled="false" @click="scanNFCTest();" variant="primary" v-b-popover.hover.bottom="'Scan NFC Test'">Dev</b-button>
+                    <b-button size="sm" :disabled="false" @click="scanNFCTest();" variant="primary" v-b-popover.hover.bottom="'Scan NFC Test'">Dev1</b-button>
+                  </div>
+                  <div class="mt-1 pr-1">
+                    <b-button size="sm" :disabled="false" @click="signingTest();" variant="primary" v-b-popover.hover.bottom="'Scan NFC Test'">Dev2</b-button>
                   </div>
                   <div class="mt-0 flex-grow-1">
                   </div>
@@ -227,17 +230,43 @@
           selectedAction: "transfereth", // null,
 
           action: {
-            to: "0x8888888888888888888888888888888888888888", // null,
-            value: "0.00007", // null,
+            // 0x3eafc1a364a2f7047958bd71f2d1b8c4a4e817584ceb9870d73c98d13d01cf15
+            // eth.getTransaction("0x3eafc1a364a2f7047958bd71f2d1b8c4a4e817584ceb9870d73c98d13d01cf15")
+            // {
+            //   accessList: [],
+            //   blockHash: "0xd6e1a24a61839ad596b472fce9ae3b7f67370702f0d674d3bbb9db60bdb6338e",
+            //   blockNumber: 21543230,
+            //   chainId: "0x1",
+            //   from: "0xa2113f1e9a66c3b0a75bb466bbbfeeec987ac92e",
+            //   gas: 21000,
+            //   gasPrice: 11492564131,
+            //   hash: "0x3eafc1a364a2f7047958bd71f2d1b8c4a4e817584ceb9870d73c98d13d01cf15",
+            //   input: "0x",
+            //   maxFeePerGas: 11900000000,
+            //   maxPriorityFeePerGas: 1676928624,
+            //   nonce: 3846,
+            //   r: "0x983f4cf80a3e93ea07fa4a3824af2d37887a2ee8e207f540dee345de94e7c3c3",
+            //   s: "0x62a831ef86bf58607c3a69484d7ff01ebcefc55ecfaa299d2039aa85c9bd7323",
+            //   to: "0x8e872af87b462f2b3b6f42b76b2f1a5f4d240f5e",
+            //   transactionIndex: 200,
+            //   type: "0x2",
+            //   v: "0x1",
+            //   value: 30000000000000000,
+            //   yParity: "0x1"
+            // }
+
+            to: "0x8E872af87B462F2B3b6f42b76B2f1a5f4D240F5E", // null,
+            value: "0.03", // null,
             valueType: "ether",
             gasLimit: "21000", // null,
-            maxFeePerGas: "7", // null,
+            gasPrice: "11492564131", // testing
+            maxFeePerGas: "11.9", // null,
             maxFeePerGasType: "gwei",
-            maxPriorityFeePerGas: "0.07", // null
+            maxPriorityFeePerGas: "1.676928624", // null
             maxPriorityFeePerGasType: "gwei",
             chainId: 1,
             transactionType: 2,
-            nonce: 0, // null
+            nonce: 3846, // null
             data: null,
             password: null,
           },
@@ -460,32 +489,6 @@
             }
           },
 
-          async retrieveBalances() {
-            console.log(moment().format("HH:mm:ss") + " retrieveBalances");
-            if (!window.ethereum) {
-              this.connected = false;
-            } else {
-              try {
-                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-                this.connected = window.ethereum.isConnected();
-              } catch (e) {
-                console.log("window.ethereum.request error: " + e.message);
-                this.connected = false;
-              }
-            }
-            if (!this.connected) {
-              alert("Please use the Opera or any other other web3 browser with NFC tag reading capabilities, and refresh!");
-            } else {
-              const provider = new ethers.providers.Web3Provider(window.ethereum);
-              for (const [slot, slotData] of Object.entries(this.slots)) {
-                // console.log("slot: " + slot + " => " + JSON.stringify(slotData));
-                const balance = await provider.getBalance(slotData.address);
-                Vue.set(this.slots[slot], 'balance', balance.toString());
-              }
-              // console.log("this.slots: " + JSON.stringify(this.slots, null, 2));
-            }
-          },
-
           async signEthTx() {
             console.log(moment().format("HH:mm:ss") + " signEthTx - action: " + JSON.stringify(this.action, null, 2));
 
@@ -510,6 +513,8 @@
               data: this.action.data,
               chainId: parseInt(this.action.chainId),
               nonce: parseInt(this.action.nonce),
+              gasPrice: null,
+              // gasPrice: ethers.BigNumber.from(ethers.utils.parseUnits(this.action.gasPrice, "wei")).toString(),
               gasLimit: parseInt(this.action.gasLimit),
               type: parseInt(this.action.transactionType),
               maxFeePerGas: ethers.BigNumber.from(ethers.utils.parseUnits(this.action.maxFeePerGas, this.action.maxFeePerGasType)).toString(),
@@ -532,7 +537,6 @@
             console.log(moment().format("HH:mm:ss") + " signEthTx - command: " + JSON.stringify(command, null, 2));
             try {
                 const result = await execHaloCmdWeb(command);
-                // display operation resultult
                 console.log(JSON.stringify(result, null, 4));
                 this.debug = JSON.stringify(result, null, 4);
                 if (result.data) {
@@ -543,6 +547,97 @@
               this.debug = e.message;
             }
 
+          },
+
+          async signingTest() {
+            console.log(moment().format("HH:mm:ss") + " signingTest");
+            // 0x3eafc1a364a2f7047958bd71f2d1b8c4a4e817584ceb9870d73c98d13d01cf15
+            // eth.getTransaction("0x3eafc1a364a2f7047958bd71f2d1b8c4a4e817584ceb9870d73c98d13d01cf15")
+            // {
+            //   accessList: [],
+            //   blockHash: "0xd6e1a24a61839ad596b472fce9ae3b7f67370702f0d674d3bbb9db60bdb6338e",
+            //   blockNumber: 21543230,
+            //   chainId: "0x1",
+            //   from: "0xa2113f1e9a66c3b0a75bb466bbbfeeec987ac92e",
+            //   gas: 21000,
+            //   gasPrice: 11492564131,
+            //   hash: "0x3eafc1a364a2f7047958bd71f2d1b8c4a4e817584ceb9870d73c98d13d01cf15",
+            //   input: "0x",
+            //   maxFeePerGas: 11900000000,
+            //   maxPriorityFeePerGas: 1676928624,
+            //   nonce: 3846,
+            //   r: "0x983f4cf80a3e93ea07fa4a3824af2d37887a2ee8e207f540dee345de94e7c3c3",
+            //   s: "0x62a831ef86bf58607c3a69484d7ff01ebcefc55ecfaa299d2039aa85c9bd7323",
+            //   to: "0x8e872af87b462f2b3b6f42b76b2f1a5f4d240f5e",
+            //   transactionIndex: 200,
+            //   type: "0x2",
+            //   v: "0x1",
+            //   value: 30000000000000000,
+            //   yParity: "0x1"
+            // }
+            const tx = {
+              to: "0x8e872af87b462f2b3b6f42b76b2f1a5f4d240f5e",
+              value: ethers.BigNumber.from(ethers.utils.parseUnits("0.000000003", "ether")).toString(),
+              data: "0x",
+              chainId: "0x1",
+              nonce: 5,
+              gasLimit: 21000,
+              gasPrice: null,
+              type: 2,
+              maxFeePerGas: ethers.BigNumber.from(ethers.utils.parseUnits("7.0", "gwei")).toString(),
+              maxPriorityFeePerGas: ethers.BigNumber.from(ethers.utils.parseUnits("0.007", "gwei")).toString(),
+              accessList: [],
+              // v: "0x",
+              // r: "0x",
+              // s: "0x",
+            };
+            console.log(moment().format("HH:mm:ss") + " signingTest - tx: " + JSON.stringify(tx, null, 2));
+
+            // const provider = new ethers.providers.Web3Provider(window.ethereum);
+            // const signer = provider.getSigner();
+            // try {
+            //   const txResult = await signer.sendTransaction(tx);
+            //   console.log(moment().format("HH:mm:ss") + " signingTest - txResult: " + JSON.stringify(txResult, bigNumberReplacer, 2));
+            //   // this.prepare.error = null;
+            // } catch (e) {
+            //   console.log(moment().format("HH:mm:ss") + " signingTest ERROR: " + e.message);
+            //   // this.prepare.error = e.message;
+            //   // this.prepare.estimatedGas = null;
+            // }
+
+            const serializedTransaction = ethers.utils.serializeTransaction(tx, false);
+            console.log(moment().format("HH:mm:ss") + " signingTest - serializedTransaction: " + JSON.stringify(serializedTransaction, null, 2));
+            const transactionHash = ethers.utils.hashMessage(serializedTransaction);
+            console.log(moment().format("HH:mm:ss") + " signingTest - transactionHash: " + JSON.stringify(transactionHash, null, 2));
+            const decodedTransaction = ethers.utils.parseTransaction(serializedTransaction);
+            console.log(moment().format("HH:mm:ss") + " signingTest - decodedTransaction: " + JSON.stringify(decodedTransaction, null, 2));
+
+          },
+
+          async retrieveBalances() {
+            console.log(moment().format("HH:mm:ss") + " retrieveBalances");
+            if (!window.ethereum) {
+              this.connected = false;
+            } else {
+              try {
+                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                this.connected = window.ethereum.isConnected();
+              } catch (e) {
+                console.log("window.ethereum.request error: " + e.message);
+                this.connected = false;
+              }
+            }
+            if (!this.connected) {
+              alert("Please use the Opera or any other other web3 browser with NFC tag reading capabilities, and refresh!");
+            } else {
+              const provider = new ethers.providers.Web3Provider(window.ethereum);
+              for (const [slot, slotData] of Object.entries(this.slots)) {
+                // console.log("slot: " + slot + " => " + JSON.stringify(slotData));
+                const balance = await provider.getBalance(slotData.address);
+                Vue.set(this.slots[slot], 'balance', balance.toString());
+              }
+              // console.log("this.slots: " + JSON.stringify(this.slots, null, 2));
+            }
           },
 
           async syncIt(devMode) {

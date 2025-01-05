@@ -7,3 +7,8 @@ function handleErrors(response) {
   }
   return response;
 }
+
+const bigNumberReplacer = (key, value) =>
+  value && typeof value === "object" && value.type == "BigNumber"
+      ? ethers.BigNumber.from(value).toString()
+      : value;
