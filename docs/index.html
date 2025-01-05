@@ -542,7 +542,7 @@
                 if (result.signature && result.signature.raw) {
                   tx.r = "0x" + result.signature.raw.r;
                   tx.s = "0x" + result.signature.raw.s;
-                  tx.v = ethers.BigNumber.from(result.signature.raw.v).toString(16);
+                  tx.v = ethers.BigNumber.from(result.signature.raw.v).toHexString();
                   this.debug = JSON.stringify(tx, null, 4);
                 }
             } catch (e) {
