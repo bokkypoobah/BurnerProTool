@@ -662,6 +662,12 @@
             console.log(moment().format("HH:mm:ss") + " signingTest1 - signature: " + JSON.stringify(signature, null, 2));
             const recoveredAddress = ethers.utils.recoverAddress(ethers.utils.keccak256(serializedTx), signature);
             console.log(moment().format("HH:mm:ss") + " signingTest1 - recoveredAddress: " + JSON.stringify(recoveredAddress, null, 2));
+
+            console.log(moment().format("HH:mm:ss") + " signingTest1 - signature: " + JSON.stringify(signature, null, 2));
+            const serializedSignedTx = ethers.utils.serializeTransaction(unsignedTx, signature);
+            console.log(moment().format("HH:mm:ss") + " signingTest1 - serializedSignedTx: " + JSON.stringify(serializedSignedTx, null, 2));
+            const hash = ethers.utils.keccak256(serializedSignedTx);
+            console.log(moment().format("HH:mm:ss") + " signingTest1 - hash: " + JSON.stringify(hash, null, 2));
           },
 
           async retrieveBalances() {
