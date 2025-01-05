@@ -544,11 +544,24 @@
                   tx.s = "0x" + result.signature.raw.s;
                   tx.v = ethers.BigNumber.from(result.signature.raw.v).toHexString();
                   this.debug = JSON.stringify(tx, null, 4);
+
+                  const provider = new ethers.providers.Web3Provider(window.ethereum);
+                  const signer = provider.getSigner();
+                  try {
+                    const txResult = await signer.sendTransaction(tx);
+                    console.log(moment().format("HH:mm:ss") + " signEthTx - txResult: " + JSON.stringify(txResult, bigNumberReplacer, 2));
+                    // this.prepare.error = null;
+                  } catch (e1) {
+                    console.log(moment().format("HH:mm:ss") + " signEthTx ERROR: " + e1.message);
+                    this.debug = "sendTransaction ERROR: " + e1.message;
+                    // this.prepare.error = e.message;
+                    // this.prepare.estimatedGas = null;
+                  }
                 }
             } catch (e) {
               // display error
               console.log(e);
-              this.debug = e.message;
+              this.debug = "execHaloCmdWeb ERROR: " + e.message;
             }
 
           },
