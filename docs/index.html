@@ -256,17 +256,17 @@
             // }
 
             to: "0x8E872af87B462F2B3b6f42b76B2f1a5f4D240F5E", // null,
-            value: "0.03", // null,
+            value: "0.00000003", // null,
             valueType: "ether",
             gasLimit: "21000", // null,
-            gasPrice: "11492564131", // testing
-            maxFeePerGas: "11.9", // null,
+            gasPrice: null, // testing
+            maxFeePerGas: "7", // null,
             maxFeePerGasType: "gwei",
-            maxPriorityFeePerGas: "1.676928624", // null
+            maxPriorityFeePerGas: "0.007", // null
             maxPriorityFeePerGasType: "gwei",
             chainId: 1,
             transactionType: 2,
-            nonce: 3846, // null
+            nonce: 5, // null
             data: null,
             password: null,
           },
@@ -538,8 +538,12 @@
             try {
                 const result = await execHaloCmdWeb(command);
                 console.log(JSON.stringify(result, null, 4));
-                this.debug = JSON.stringify(result, null, 4);
-                if (result.data) {
+                // this.debug = JSON.stringify(result, null, 4);
+                if (result.signature && result.signature.raw) {
+                  tx.r = result.signature.raw.r;
+                  tx.s = result.signature.raw.s;
+                  tx.v = result.signature.raw.v;
+                  this.debug = JSON.stringify(tx, null, 4);
                 }
             } catch (e) {
               // display error
