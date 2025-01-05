@@ -546,9 +546,9 @@
                   this.debug = JSON.stringify(tx, null, 4);
 
                   const provider = new ethers.providers.Web3Provider(window.ethereum);
-                  const signer = provider.getSigner();
                   try {
-                    const txResult = await signer.sendTransaction(tx);
+                    const serializedTransaction = ethers.utils.serializeTransaction(tx);
+                    const txResult = await provider.sendTransaction(serializedTransaction);
                     console.log(moment().format("HH:mm:ss") + " signEthTx - txResult: " + JSON.stringify(txResult, bigNumberReplacer, 2));
                     // this.prepare.error = null;
                   } catch (e1) {
