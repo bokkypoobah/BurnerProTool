@@ -540,9 +540,9 @@
                 console.log(JSON.stringify(result, null, 4));
                 // this.debug = JSON.stringify(result, null, 4);
                 if (result.signature && result.signature.raw) {
-                  tx.r = result.signature.raw.r;
-                  tx.s = result.signature.raw.s;
-                  tx.v = result.signature.raw.v;
+                  tx.r = "0x" + result.signature.raw.r;
+                  tx.s = "0x" + result.signature.raw.s;
+                  tx.v = ethers.BigNumber.from(result.signature.raw.v).toString(16);
                   this.debug = JSON.stringify(tx, null, 4);
                 }
             } catch (e) {
