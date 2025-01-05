@@ -527,14 +527,15 @@
 
             const serializedTransaction = ethers.utils.serializeTransaction(tx);
             console.log(moment().format("HH:mm:ss") + " signEthTx - serializedTransaction: " + JSON.stringify(serializedTransaction, null, 2));
-            const transactionHash = ethers.utils.hashMessage(serializedTransaction);
-            console.log(moment().format("HH:mm:ss") + " signEthTx - transactionHash: " + JSON.stringify(transactionHash, null, 2));
-            const decodedTransaction = ethers.utils.parseTransaction(serializedTransaction);
-            console.log(moment().format("HH:mm:ss") + " signEthTx - decodedTransaction: " + JSON.stringify(decodedTransaction, null, 2));
+            // const transactionHash = ethers.utils.hashMessage(serializedTransaction);
+            const digest = ethers.utils.keccak256(serializedTransaction);
+            console.log(moment().format("HH:mm:ss") + " signEthTx - digest: " + JSON.stringify(digest, null, 2));
+            // const decodedTransaction = ethers.utils.parseTransaction(serializedTransaction);
+            // console.log(moment().format("HH:mm:ss") + " signEthTx - decodedTransaction: " + JSON.stringify(decodedTransaction, null, 2));
             let command = {
                 name: "sign",
                 keyNo: this.selectedSlot,
-                digest: transactionHash.substring(2),
+                digest: digest.substring(2),
                 password: this.action.password,
             };
             console.log(moment().format("HH:mm:ss") + " signEthTx - command: " + JSON.stringify(command, null, 2));
@@ -543,14 +544,18 @@
                 console.log(JSON.stringify(result, null, 4));
                 // this.debug = JSON.stringify(result, null, 4);
                 if (result.signature && result.signature.raw) {
-                  tx.r = "0x" + result.signature.raw.r;
-                  tx.s = "0x" + result.signature.raw.s;
-                  tx.v = ethers.BigNumber.from(result.signature.raw.v).toHexString();
-                  this.debug = JSON.stringify(tx, null, 4);
+                  // tx.r = "0x" + result.signature.raw.r;
+                  // tx.s = "0x" + result.signature.raw.s;
+                  // tx.v = ethers.BigNumber.from(result.signature.raw.v).toHexString();
+                  // this.debug = JSON.stringify(tx, null, 4);
+                  const v = result.signature.raw.v;
+                  const r = "0x" + result.signature.raw.r;
+                  const s = "0x" + result.signature.raw.s;
+                  const signature = ethers.utils.joinSignature({ v, r, s });
 
                   const provider = new ethers.providers.Web3Provider(window.ethereum);
                   try {
-                    const serializedTransaction = ethers.utils.serializeTransaction(tx);
+                    const serializedTransaction = ethers.utils.serializeTransaction(tx, signature);
                     const txResult = await provider.sendTransaction(serializedTransaction);
                     console.log(moment().format("HH:mm:ss") + " signEthTx - txResult: " + JSON.stringify(txResult, bigNumberReplacer, 2));
                     // this.prepare.error = null;
