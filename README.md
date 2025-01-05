@@ -226,9 +226,13 @@ NFT purchased. Transaction [0xb8c8...0155](https://basescan.org/tx/0xb8c8e0178c1
 
 <kbd><img src="images/purchasenftbase03.jpg" width="200" /></kbd>
 
-But this Base NFT does not show up in the NFT screen. Even after several refreshes
+Initially these Base NFTs did not show up in the NFT screen
 
 <kbd><img src="images/purchasenftbase04.jpg" width="200" /></kbd>
+
+These Base NFTs showed up the next day. A second Base NFT Purchased in transaction [0xc841...8b1e](0xc841d4948bb886289f0d9d180b91ba8c6e37c90939b5dcc4304ff496396a8b1e) does not display correctly
+
+<kbd><img src="images/purchasenftbase05.png" width="200" /></kbd>
 
 <br />
 
