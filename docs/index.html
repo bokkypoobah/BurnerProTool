@@ -84,6 +84,9 @@
                   <div class="mt-1 pr-1">
                     <b-button size="sm" :disabled="false" @click="signingTest();" variant="primary" v-b-popover.hover.bottom="'Scan NFC Test'">Dev2</b-button>
                   </div>
+                  <div class="mt-1 pr-1">
+                    <b-button size="sm" :disabled="false" @click="signingTest1();" variant="primary" v-b-popover.hover.bottom="'Scan NFC Test'">Dev3</b-button>
+                  </div>
                   <div class="mt-0 flex-grow-1">
                   </div>
                 </div>
@@ -629,6 +632,36 @@
             const decodedTransaction = ethers.utils.parseTransaction(serializedTransaction);
             console.log(moment().format("HH:mm:ss") + " signingTest - decodedTransaction: " + JSON.stringify(decodedTransaction, null, 2));
 
+          },
+
+          async signingTest1() {
+            console.log(moment().format("HH:mm:ss") + " signingTest1");
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            const tx = await provider.getTransaction("0x3eafc1a364a2f7047958bd71f2d1b8c4a4e817584ceb9870d73c98d13d01cf15");
+            console.log(moment().format("HH:mm:ss") + " signingTest1 - tx: " + JSON.stringify(tx, null, 2));
+
+            const unsignedTx = {
+              to: tx.to,
+              value: tx.value,
+              data: tx.data,
+              gasLimit: tx.gasLimit,
+              maxFeePerGas: tx.maxFeePerGas,
+              maxPriorityFeePerGas: tx.maxPriorityFeePerGas,
+              chainId: tx.chainId,
+              nonce: tx.nonce,
+              type: tx.type,
+            };
+            console.log(moment().format("HH:mm:ss") + " signingTest1 - unsignedTx: " + JSON.stringify(unsignedTx, null, 2));
+            const serializedTx = ethers.utils.serializeTransaction(unsignedTx);
+            console.log(moment().format("HH:mm:ss") + " signingTest1 - serializedTx: " + JSON.stringify(serializedTx, null, 2));
+            const { v, r, s } = tx;
+            console.log(moment().format("HH:mm:ss") + " signingTest1 - v: " + JSON.stringify(v, null, 2));
+            console.log(moment().format("HH:mm:ss") + " signingTest1 - r: " + JSON.stringify(r, null, 2));
+            console.log(moment().format("HH:mm:ss") + " signingTest1 - s: " + JSON.stringify(s, null, 2));
+            const signature = ethers.utils.joinSignature({ v, r, s });
+            console.log(moment().format("HH:mm:ss") + " signingTest1 - signature: " + JSON.stringify(signature, null, 2));
+            const recoveredAddress = ethers.utils.recoverAddress(ethers.utils.keccak256(serializedTx), signature);
+            console.log(moment().format("HH:mm:ss") + " signingTest1 - recoveredAddress: " + JSON.stringify(recoveredAddress, null, 2));
           },
 
           async retrieveBalances() {
