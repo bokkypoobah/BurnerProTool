@@ -4,6 +4,8 @@
 
 Load on NFC reader enabled mobile phone, with Burner.pro NFC card: https://bokkypoobah.github.io/BurnerProTool/
 
+This tool uses [libhalo.js v1.10.11](https://github.com/arx-research/libhalo/releases/download/libhalo-v1.10.11/libhalo.js).
+
 Sample screen after scanning a Burner Pro NFC card. When using with a web3 enabled browser like Brave that can scan NFC cards, balances can be retrieved using [Retrieve Balances]
 
 <kbd><img src="images/scanNFC1.png" width="400" /></kbd>
