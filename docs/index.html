@@ -53,7 +53,7 @@
           </b-navbar-nav>
         </b-navbar>
 
-        <b-card no-body class="p-0 mt-0" style="min-height: 666px;">
+        <b-card no-body class="p-0 mt-0 border-0" style="min-height: 666px;">
           <b-alert v-if="false" size="sm" dismissible variant="warning" show class="m-1 my-0">
             Warning: This is experimental unaudited software. Please check your transaction data carefully before signing
           </b-alert>
@@ -62,6 +62,13 @@
               Please install the MetaMask extension and connect to the Ethereum Mainnet or an EVM compatible chain. Then refresh this page, and click the [Connect] button on the top right.
             </b-card-text>
           </b-card>
+
+          <!-- <b-tabs card small v-model="settings.tabIndex" content-class="mt-3">
+            <b-tab title="Cards" active no-body></b-tab>
+            <b-tab title="Card" no-body></b-tab>
+          </b-tabs> -->
+
+          <!-- {{ settings.tabIndex }} -->
 
           <b-card class="m-0 p-0 border-0" body-class="m-1 p-0">
 
@@ -227,6 +234,9 @@
         data: {
 
           debug: "Debug",
+
+          cards: {}, // address0 -> slot# -> address
+
           slots: {},
 
           selectedSlot: 9, // null,
@@ -365,6 +375,7 @@
         // --- METHODS ---
         methods: {
           async scanNFCTest() {
+            console.log(moment().format("HH:mm:ss") + " scanNFCTest");
             this.slots = {
               "1": {
                 "compressedPublicKey": "111111111111111111111111111111111111111111111111111111111111111111",
@@ -402,6 +413,31 @@
             this.settings.tabIndex = 1;
             this.selectedSlot = 9;
             this.selectedAction = "transfereth";
+
+            this.saveCards();
+          },
+          saveCards() {
+            console.log(moment().format("HH:mm:ss") + " saveCards - this.cards: " + JSON.stringify(this.cards, null, 2));
+            const cardId = this.slots["1"] && this.slots["1"].address || null;
+            const initialised = this.slots["9"] && this.slots["9"].address && true;
+            if (cardId) {
+              // for (const [slot, slotInfo] of Object.entries(this.slots)) {
+              //   console.log(cardId + "/" + slot + " => " + JSON.stringify(slotInfo));
+              // }
+              if (!(cardId in this.cards)) {
+                Vue.set(this.cards, cardId, {
+                  name: null,
+                  initialised,
+                  selectedSlot: initialised ? 9 : null,
+                  slots: this.slots,
+                });
+                console.log(moment().format("HH:mm:ss") + " saveCards - new this.cards: " + JSON.stringify(this.cards, null, 2));
+              } else {
+                Vue.set(this.cards[cardId], 'slots', this.slots);
+                console.log(moment().format("HH:mm:ss") + " saveCards - update this.cards: " + JSON.stringify(this.cards, null, 2));
+              }
+              localStorage.burnerProToolCards = JSON.stringify(this.cards);
+            }
           },
           // async scanNFCTestOld() {
           //   console.log(moment().format("HH:mm:ss") + " scanNFCTestOld");
@@ -484,6 +520,7 @@
                     }
                   }
                   this.slots = slots;
+                  this.saveCards();
                 }
             } catch (e) {
                 // display error
@@ -1187,6 +1224,10 @@
           // if ('approvalToolChainId' in localStorage) {
           //   this.chainId = localStorage.approvalToolChainId;
           // }
+          if ('burnerProToolCards' in localStorage) {
+            this.cards = JSON.parse(localStorage.burnerProToolCards);
+            console.log(moment().format("HH:mm:ss") + " mounted - this.cards: " + JSON.stringify(this.cards, null, 2));
+          }
           // if ('approvalToolCoinbase' in localStorage) {
           //   this.coinbase = localStorage.approvalToolCoinbase;
           // }
