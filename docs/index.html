@@ -475,31 +475,21 @@
           //   }
           // },
           async scanNFC() {
-            // https://github.com/arx-research/libhalo/blob/master/docs/api-web.md#debugging-through-the-developers-console
-            localStorage.setItem('DEBUG_LIBHALO_WEB', '1');
+            localStorage.setItem('DEBUG_LIBHALO_WEB', '1'); // https://github.com/arx-research/libhalo/blob/master/docs/api-web.md#debugging-through-the-developers-console
             console.log(moment().format("HH:mm:ss") + " scanNFC");
-            // let command = {
-            //     name: "sign",
-            //     keyNo: 1,
-            //     digest: "6e76e202b71892e9ee32a634eefcf522ba1c4cb4eadd7e4562ced1270214c41e"
-            // };
-            let command = {
+            const command = {
                 name: "get_data_struct", // https://github.com/arx-research/libhalo/blob/master/docs/halo-command-set.md#command-get_data_struct
                 spec: "compressedPublicKey:1,compressedPublicKey:2,compressedPublicKey:3,compressedPublicKey:4,compressedPublicKey:5,compressedPublicKey:6,compressedPublicKey:7,compressedPublicKey:8,compressedPublicKey:9,keySlotFlags:1,keySlotFlags:2,keySlotFlags:3,keySlotFlags:4,keySlotFlags:5,keySlotFlags:6,keySlotFlags:7,keySlotFlags:8,keySlotFlags:9",
             };
             try {
                 const result = await execHaloCmdWeb(command);
-                // display operation resultult
                 console.log(JSON.stringify(result, null, 4));
-                // this.debug = JSON.stringify(result, null, 4);
                 if (result.data) {
                   const slots = {};
-                  // this.debug = "";
                   for (const [key, value] of Object.entries(result.data)) {
                     const [k, i] = key.split(/:/);
                     if (k == "compressedPublicKey") {
                       if (!value.error) {
-                        // this.debug = this.debug + "k: " + k + ", i: " + i + ", value: " + value;
                         if (!(('' + i) in slots)) {
                           slots[i] = {
                             compressedPublicKey: value,
@@ -509,7 +499,6 @@
                       }
                     } else {
                       if (!value.error) {
-                        // this.debug = this.debug + "k: " + k + ", i: " + i + ", value: " + JSON.stringify(value);
                         if (('' + i) in slots) {
                           slots[i].isPasswordProtected = value.isPasswordProtected;
                           slots[i].rawSignCommandNotUsed = value.rawSignCommandNotUsed;
@@ -523,8 +512,7 @@
                   this.saveCards();
                 }
             } catch (e) {
-                // display error
-                console.log(e);
+                console.log(moment().format("HH:mm:ss") + " scanNFC - ERROR: " + e.message);
                 this.debug = e.message;
             }
           },
@@ -579,12 +567,7 @@
             try {
                 const result = await execHaloCmdWeb(command);
                 console.log(JSON.stringify(result, null, 4));
-                // this.debug = JSON.stringify(result, null, 4);
                 if (result.signature && result.signature.raw) {
-                  // tx.r = "0x" + result.signature.raw.r;
-                  // tx.s = "0x" + result.signature.raw.s;
-                  // tx.v = ethers.BigNumber.from(result.signature.raw.v).toHexString();
-                  // this.debug = JSON.stringify(tx, null, 4);
                   const v = result.signature.raw.v;
                   const r = "0x" + result.signature.raw.r;
                   const s = "0x" + result.signature.raw.s;
@@ -595,18 +578,14 @@
                     const serializedTransaction = ethers.utils.serializeTransaction(tx, signature);
                     const txResult = await provider.sendTransaction(serializedTransaction);
                     console.log(moment().format("HH:mm:ss") + " signEthTx - txResult: " + JSON.stringify(txResult, bigNumberReplacer, 2));
-                    // this.prepare.error = null;
                   } catch (e1) {
                     console.log(moment().format("HH:mm:ss") + " signEthTx ERROR: " + e1.message);
                     this.debug = "sendTransaction ERROR: " + e1.message;
-                    // this.prepare.error = e.message;
-                    // this.prepare.estimatedGas = null;
                   }
                 }
             } catch (e) {
-              // display error
               console.log(e);
-              this.debug = "execHaloCmdWeb ERROR: " + e.message;
+              console.log(moment().format("HH:mm:ss") + " signEthTx - execHaloCmdWeb - ERROR: " + e.message);
             }
 
           },
