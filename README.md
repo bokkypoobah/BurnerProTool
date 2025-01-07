@@ -2,9 +2,9 @@
 
 This repo initially started as a review of [burner.pro](https://burner.pro/), but some tools need to be built to provide alternative access to this card, if the original developer's website were to become unavailable.
 
-We are not affiliated with the producers of burner.pro . This tool is under development, so test it with small amounts first.
+Skip to the [Burner.pro Review](#burnerpro-review) (WIP).
 
-Skip to the [Burner.pro Review](#burner-pro-review) (WIP).
+We are not affiliated with burner.pro . This tool is under development, so test it with small amounts first.
 
 <br />
 
