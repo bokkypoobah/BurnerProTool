@@ -88,13 +88,11 @@
                   <div class="mt-1 pr-1">
                     <b-button size="sm" :disabled="false" @click="scanNFCTest();" variant="primary" v-b-popover.hover.bottom="'Scan NFC Test'">Dev1</b-button>
                   </div>
-                  <div class="mt-1 pr-1">
+                  <div v-if="false" class="mt-1 pr-1">
                     <b-button size="sm" :disabled="false" @click="signingTest();" variant="primary" v-b-popover.hover.bottom="'Scan NFC Test'">Dev2</b-button>
                   </div>
-                  <div class="mt-1 pr-1">
+                  <div v-if="false" class="mt-1 pr-1">
                     <b-button size="sm" :disabled="false" @click="signingTest1();" variant="primary" v-b-popover.hover.bottom="'Scan NFC Test'">Dev3</b-button>
-                  </div>
-                  <div class="mt-0 flex-grow-1">
                   </div>
                 </div>
 
@@ -379,7 +377,7 @@
             this.slots = {
               "1": {
                 "compressedPublicKey": "111111111111111111111111111111111111111111111111111111111111111111",
-                "address": "0x1111111111111111111111111111111111111111",
+                "address": "0x1111111111111111111111111111111111111112",
                 "isPasswordProtected": false,
                 "rawSignCommandNotUsed": false,
                 "isImported": false,
@@ -387,7 +385,7 @@
               },
               "2": {
                 "compressedPublicKey": "222222222222222222222222222222222222222222222222222222222222222222",
-                "address": "0x2222222222222222222222222222222222222222",
+                "address": "0x2222222222222222222222222222222222222223",
                 "isPasswordProtected": false,
                 "rawSignCommandNotUsed": false,
                 "isImported": false,
@@ -395,7 +393,7 @@
               },
               "8": {
                 "compressedPublicKey": "888888888888888888888888888888888888888888888888888888888888888888",
-                "address": "0x8888888888888888888888888888888888888888",
+                "address": "0x8888888888888888888888888888888888888889",
                 "isPasswordProtected": true,
                 "rawSignCommandNotUsed": true,
                 "isImported": false,
@@ -403,7 +401,7 @@
               },
               "9": {
                 "compressedPublicKey": "999999999999999999999999999999999999999999999999999999999999999999",
-                "address": "0x9999999999999999999999999999999999999999",
+                "address": "0x9999999999999999999999999999999999999990",
                 "isPasswordProtected": true,
                 "rawSignCommandNotUsed": false,
                 "isImported": false,
@@ -439,41 +437,6 @@
               localStorage.burnerProToolCards = JSON.stringify(this.cards);
             }
           },
-          // async scanNFCTestOld() {
-          //   console.log(moment().format("HH:mm:ss") + " scanNFCTestOld");
-          //   // TEST: Replace below with test data
-          //   const result = {};
-          //   // this.debug = JSON.stringify(result, null, 4);
-          //   if (result.data) {
-          //     const slots = {};
-          //     this.debug = "";
-          //     for (const [key, value] of Object.entries(result.data)) {
-          //       const [k, i] = key.split(/:/);
-          //       if (k == "compressedPublicKey") {
-          //         if (!value.error) {
-          //           this.debug = this.debug + "k: " + k + ", i: " + i + ", value: " + value;
-          //           if (!(('' + i) in slots)) {
-          //             slots[i] = {
-          //               compressedPublicKey: value,
-          //               address: ethers.utils.computeAddress("0x" + value),
-          //             };
-          //           }
-          //         }
-          //       } else {
-          //         if (!value.error) {
-          //           this.debug = this.debug + "k: " + k + ", i: " + i + ", value: " + JSON.stringify(value);
-          //           if (('' + i) in slots) {
-          //             slots[i].isPasswordProtected = value.isPasswordProtected;
-          //             slots[i].rawSignCommandNotUsed = value.rawSignCommandNotUsed;
-          //             slots[i].isImported = value.isImported;
-          //             slots[i].isExported = value.isExported;
-          //           }
-          //         }
-          //       }
-          //     }
-          //     this.slots = slots;
-          //   }
-          // },
           async scanNFC() {
             localStorage.setItem('DEBUG_LIBHALO_WEB', '1'); // https://github.com/arx-research/libhalo/blob/master/docs/api-web.md#debugging-through-the-developers-console
             console.log(moment().format("HH:mm:ss") + " scanNFC");
@@ -519,22 +482,6 @@
 
           async signEthTx() {
             console.log(moment().format("HH:mm:ss") + " signEthTx - action: " + JSON.stringify(this.action, null, 2));
-
-            // action: {
-            //   to: "0x8888888888888888888888888888888888888888", // null,
-            //   value: "0.00007", // null,
-            //   valueType: "eth",
-            //   gasLimit: "21000", // null,
-            //   maxFeePerGas: "7", // null,
-            //   maxFeePerGasType: "gwei",
-            //   maxPriorityFeePerGas: "0.07", // null
-            //   maxPriorityFeePerGasType: "gwei",
-            //   chainId: 1,
-            //   transactionType: 2,
-            //   nonce: 0, // null
-            //   data: null,
-            // },
-
             const tx = {
               to: ethers.utils.getAddress(this.action.to),
               value: ethers.BigNumber.from(ethers.utils.parseUnits(this.action.value, this.action.valueType)).toString(),
@@ -542,7 +489,6 @@
               chainId: parseInt(this.action.chainId),
               nonce: parseInt(this.action.nonce),
               gasPrice: null,
-              // gasPrice: ethers.BigNumber.from(ethers.utils.parseUnits(this.action.gasPrice, "wei")).toString(),
               gasLimit: parseInt(this.action.gasLimit),
               type: parseInt(this.action.transactionType),
               maxFeePerGas: ethers.BigNumber.from(ethers.utils.parseUnits(this.action.maxFeePerGas, this.action.maxFeePerGasType)).toString(),
@@ -552,7 +498,6 @@
 
             const serializedTransaction = ethers.utils.serializeTransaction(tx);
             console.log(moment().format("HH:mm:ss") + " signEthTx - serializedTransaction: " + JSON.stringify(serializedTransaction, null, 2));
-            // const transactionHash = ethers.utils.hashMessage(serializedTransaction);
             const digest = ethers.utils.keccak256(serializedTransaction);
             console.log(moment().format("HH:mm:ss") + " signEthTx - digest: " + JSON.stringify(digest, null, 2));
             // const decodedTransaction = ethers.utils.parseTransaction(serializedTransaction);
@@ -572,7 +517,6 @@
                   const r = "0x" + result.signature.raw.r;
                   const s = "0x" + result.signature.raw.s;
                   const signature = ethers.utils.joinSignature({ v, r, s });
-
                   const provider = new ethers.providers.Web3Provider(window.ethereum);
                   try {
                     const serializedTransaction = ethers.utils.serializeTransaction(tx, signature);
@@ -587,35 +531,10 @@
               console.log(e);
               console.log(moment().format("HH:mm:ss") + " signEthTx - execHaloCmdWeb - ERROR: " + e.message);
             }
-
           },
 
           async signingTest() {
             console.log(moment().format("HH:mm:ss") + " signingTest");
-            // 0x3eafc1a364a2f7047958bd71f2d1b8c4a4e817584ceb9870d73c98d13d01cf15
-            // eth.getTransaction("0x3eafc1a364a2f7047958bd71f2d1b8c4a4e817584ceb9870d73c98d13d01cf15")
-            // {
-            //   accessList: [],
-            //   blockHash: "0xd6e1a24a61839ad596b472fce9ae3b7f67370702f0d674d3bbb9db60bdb6338e",
-            //   blockNumber: 21543230,
-            //   chainId: "0x1",
-            //   from: "0xa2113f1e9a66c3b0a75bb466bbbfeeec987ac92e",
-            //   gas: 21000,
-            //   gasPrice: 11492564131,
-            //   hash: "0x3eafc1a364a2f7047958bd71f2d1b8c4a4e817584ceb9870d73c98d13d01cf15",
-            //   input: "0x",
-            //   maxFeePerGas: 11900000000,
-            //   maxPriorityFeePerGas: 1676928624,
-            //   nonce: 3846,
-            //   r: "0x983f4cf80a3e93ea07fa4a3824af2d37887a2ee8e207f540dee345de94e7c3c3",
-            //   s: "0x62a831ef86bf58607c3a69484d7ff01ebcefc55ecfaa299d2039aa85c9bd7323",
-            //   to: "0x8e872af87b462f2b3b6f42b76b2f1a5f4d240f5e",
-            //   transactionIndex: 200,
-            //   type: "0x2",
-            //   v: "0x1",
-            //   value: 30000000000000000,
-            //   yParity: "0x1"
-            // }
             const tx = {
               to: "0x8e872af87b462f2b3b6f42b76b2f1a5f4d240f5e",
               value: ethers.BigNumber.from(ethers.utils.parseUnits("0.000000003", "ether")).toString(),
@@ -633,26 +552,12 @@
               // s: "0x",
             };
             console.log(moment().format("HH:mm:ss") + " signingTest - tx: " + JSON.stringify(tx, null, 2));
-
-            // const provider = new ethers.providers.Web3Provider(window.ethereum);
-            // const signer = provider.getSigner();
-            // try {
-            //   const txResult = await signer.sendTransaction(tx);
-            //   console.log(moment().format("HH:mm:ss") + " signingTest - txResult: " + JSON.stringify(txResult, bigNumberReplacer, 2));
-            //   // this.prepare.error = null;
-            // } catch (e) {
-            //   console.log(moment().format("HH:mm:ss") + " signingTest ERROR: " + e.message);
-            //   // this.prepare.error = e.message;
-            //   // this.prepare.estimatedGas = null;
-            // }
-
             const serializedTransaction = ethers.utils.serializeTransaction(tx, false);
             console.log(moment().format("HH:mm:ss") + " signingTest - serializedTransaction: " + JSON.stringify(serializedTransaction, null, 2));
             const transactionHash = ethers.utils.hashMessage(serializedTransaction);
             console.log(moment().format("HH:mm:ss") + " signingTest - transactionHash: " + JSON.stringify(transactionHash, null, 2));
             const decodedTransaction = ethers.utils.parseTransaction(serializedTransaction);
             console.log(moment().format("HH:mm:ss") + " signingTest - decodedTransaction: " + JSON.stringify(decodedTransaction, null, 2));
-
           },
 
           async signingTest1() {
@@ -660,7 +565,6 @@
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const tx = await provider.getTransaction("0x3eafc1a364a2f7047958bd71f2d1b8c4a4e817584ceb9870d73c98d13d01cf15");
             console.log(moment().format("HH:mm:ss") + " signingTest1 - tx: " + JSON.stringify(tx, null, 2));
-
             const unsignedTx = {
               to: tx.to,
               value: tx.value,
