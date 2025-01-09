@@ -425,7 +425,7 @@
           saveCards() {
             console.log(moment().format("HH:mm:ss") + " saveCards - this.cards: " + JSON.stringify(this.cards, null, 2));
             const cardId = this.slots["1"] && this.slots["1"].address || null;
-            const initialised = this.slots["9"] && this.slots["9"].address && true;
+            const initialised = !!this.slots["9"] && this.slots["9"].address;
             if (cardId) {
               // for (const [slot, slotInfo] of Object.entries(this.slots)) {
               //   console.log(cardId + "/" + slot + " => " + JSON.stringify(slotInfo));
