@@ -425,7 +425,7 @@
           saveCards() {
             console.log(moment().format("HH:mm:ss") + " saveCards - this.cards: " + JSON.stringify(this.cards, null, 2));
             const cardId = this.slots["1"] && this.slots["1"].address || null;
-            const initialised = !!this.slots["9"] && this.slots["9"].address;
+            const initialised = !!(this.slots["9"] && this.slots["9"].address);
             if (cardId) {
               // for (const [slot, slotInfo] of Object.entries(this.slots)) {
               //   console.log(cardId + "/" + slot + " => " + JSON.stringify(slotInfo));
@@ -440,6 +440,10 @@
                 console.log(moment().format("HH:mm:ss") + " saveCards - new this.cards: " + JSON.stringify(this.cards, null, 2));
               } else {
                 Vue.set(this.cards[cardId], 'slots', this.slots);
+                Vue.set(this.cards[cardId], 'initialised', initialised);
+                if (!this.cards[cardId].selectedSlot && initialised) {
+                  Vue.set(this.cards[cardId], 'selectedSlot', 9);
+                }
                 console.log(moment().format("HH:mm:ss") + " saveCards - update this.cards: " + JSON.stringify(this.cards, null, 2));
               }
               localStorage.burnerProToolCards = JSON.stringify(this.cards);
