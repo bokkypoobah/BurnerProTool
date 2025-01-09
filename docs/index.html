@@ -76,8 +76,16 @@
               <b-card v-if="settings.tabIndex == 0 || filteredSortedSlots.length == 0" no-body class="my-0 p-1">
                 <div class="d-flex flex-wrap m-0 p-0">
                   <div class="mt-1 pr-1">
-                    <b-button size="sm" :disabled="false" @click="scanNFC();" variant="primary" v-b-popover.hover.bottom="'Scan NFC'">Scan NFC</b-button>
+                    <b-button size="sm" :disabled="false" @click="scanNFC();" variant="outline" v-b-popover.hover.bottom="'Scan NFC'">
+                      <b-iconstack font-scale="1">
+                        <b-icon stacked icon="wifi" variant="primary" scale="1.1"></b-icon>
+                        <b-icon stacked icon="circle" variant="primary" scale="1.5"></b-icon>
+                      </b-iconstack>
+                    </b-button>
                   </div>
+                  <!-- <div class="mt-1 pr-1">
+                    <b-button size="sm" :disabled="false" @click="scanNFC();" variant="primary" v-b-popover.hover.bottom="'Scan NFC'">Scan NFC</b-button>
+                  </div> -->
                   <div class="mt-0 flex-grow-1">
                   </div>
                   <div class="mt-1 pr-1">
@@ -96,7 +104,7 @@
                   </div>
                 </div>
 
-                <b-table fixed striped responsive hover :fields="slotsFields" :items="filteredSortedSlots" show-empty empty-html="Scan your Burner.pro NFC card to view the addresses at each slot" head-variant="light" class="mx-0 my-1 mt-2">
+                <b-table fixed striped responsive hover :fields="slotsFields" :items="filteredSortedSlots" show-empty empty-html="Click on the top left button and scan your Burner.pro NFC card to begin" head-variant="light" class="mx-0 my-1 mt-2">
                   <template #cell(slot)="data">
                     <b-badge pill variant="transparent" class="px-0">{{ data.item.slot }}</b-badge>
                   </template>
