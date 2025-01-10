@@ -55,12 +55,12 @@
 
         <!-- :MODALCARDS -->
         <!-- <b-modal visible id="modal-cards" hide-footer size="md"> -->
-        <b-modal id="modal-cards" hide-footer size="md">
+        <b-modal visible id="modal-cards" hide-footer size="md" body-class="m-1 p-1">
           <template #modal-title>
             Cards
           </template>
           <!-- <b-table fixed striped responsive hover :fields="slotsFields" :items="filteredSortedSlots" show-empty empty-html="Click on the top left button and scan your Burner.pro NFC card to begin" head-variant="light" class="mx-0 my-1 mt-2"> -->
-          <b-table fixed striped responsive hover :fields="cardsFields" :items="filteredSortedCards" show-empty empty-html="Press Escape. Then scan your Burner.pro NFC card to begin" head-variant="light" class="mx-0 my-1 mt-2">
+          <b-table fixed striped responsive hover :fields="cardsFields" :items="filteredSortedCards" show-empty empty-html="Press Escape. Then scan your Burner.pro NFC card to begin" head-variant="light" class="mx-0 my-0">
             <template #cell(card)="data">
               {{ data.item }}
             </template>
