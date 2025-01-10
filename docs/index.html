@@ -60,7 +60,13 @@
             Cards
           </template>
           <!-- <b-table fixed striped responsive hover :fields="slotsFields" :items="filteredSortedSlots" show-empty empty-html="Click on the top left button and scan your Burner.pro NFC card to begin" head-variant="light" class="mx-0 my-1 mt-2"> -->
-          <b-table fixed striped responsive hover :items="filteredSortedCards" show-empty empty-html="Press Escape. Then scan your Burner.pro NFC card to begin" head-variant="light" class="mx-0 my-1 mt-2">
+          <b-table fixed striped responsive hover :fields="cardsFields" :items="filteredSortedCards" show-empty empty-html="Press Escape. Then scan your Burner.pro NFC card to begin" head-variant="light" class="mx-0 my-1 mt-2">
+            <template #cell(card)="data">
+              {{ data.item }}
+            </template>
+            <template #cell(select)="data">
+              [Select]
+            </template>
             <!-- <template #cell(slot)="data">
               <b-badge pill variant="transparent" class="px-0">{{ data.item.slot }}</b-badge>
             </template> -->
@@ -411,6 +417,11 @@
             { value: 'ether', text: 'eth' },
             { value: 'gwei', text: 'gwei' },
             { value: 'wei', text: 'wei' },
+          ],
+
+          cardsFields: [
+            { key: 'card', label: 'Card', sortable: false, thStyle: 'width: 70%;', tdClass: 'text-truncate' },
+            { key: 'select', label: 'Select', sortable: false, thStyle: 'width: 30%;', thClass: 'text-left', tdClass: 'text-left' },
           ],
 
           slotsFields: [
