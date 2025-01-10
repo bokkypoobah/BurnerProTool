@@ -78,15 +78,23 @@
                   <div class="mt-1 pr-1">
                     <b-form-select size="sm" v-model="settings.selectedCard" :options="cardsOptions" @change="saveSettings" style="max-width: 30.0rem;"></b-form-select>
                   </div>
+                  <div class="mt-1 pr-1">
+                    <b-button size="sm" :disabled="false" @click="scanNFC();" variant="outline" v-b-popover.hover.bottom="'Scan NFC'">
+                      <b-icon-files shift-v="+1" font-scale="1.0" variant="primary"></b-icon-files>
+                    </b-button>
+                  </div>
                   <div class="mt-0 flex-grow-1">
                   </div>
                   <div class="mt-1 pr-1">
                     <b-button size="sm" :disabled="false" @click="scanNFC();" variant="outline" v-b-popover.hover.bottom="'Scan NFC'">
-                      <b-iconstack font-scale="1" animation="cylon">
-                        <b-icon stacked icon="wifi" variant="primary" scale="1.1"></b-icon>
-                        <b-icon stacked icon="circle" variant="primary" scale="1.5"></b-icon>
+                      <!-- <b-iconstack font-scale="1" animation="cylon"> -->
+                      <b-iconstack font-scale="1">
+                        <b-icon stacked icon="wifi" variant="primary" scale="0.8"></b-icon>
+                        <b-icon stacked icon="file" variant="primary" scale="1.5"></b-icon>
                       </b-iconstack>
                     </b-button>
+                  </div>
+                  <div class="mt-0 flex-grow-1">
                   </div>
                   <!-- <div class="mt-1 pr-1">
                     <b-button size="sm" :disabled="false" @click="scanNFC();" variant="primary" v-b-popover.hover.bottom="'Scan NFC'">Scan NFC</b-button>
@@ -96,17 +104,24 @@
                   <!-- <div class="mt-1 pr-1">
                     <b-button size="sm" :disabled="filteredSortedSlots.length == 0" @click="retrieveBalances();" variant="primary" v-b-popover.hover.bottom="'Retrieve Balances'">Retrieve Balances</b-button>
                   </div> -->
+                  <div class="mt-1 pl-1">
+                    <b-button size="sm" :disabled="false" @click="scanNFCTest();" variant="none" v-b-popover.hover.bottom="'Dev Button'">
+                      <b-icon-info-square-fill shift-v="+1" font-scale="1.0" variant="primary"></b-icon-info-square-fill>
+                    </b-button>
+                  </div>
                   <div class="mt-0 flex-grow-1">
                   </div>
                   <div class="mt-1 pl-1">
-                    <b-button size="sm" :disabled="false" @click="scanNFCTest();" variant="primary" v-b-popover.hover.bottom="'Scan NFC Test'">Dev1</b-button>
+                    <b-button size="sm" :disabled="false" @click="scanNFCTest();" variant="none" v-b-popover.hover.bottom="'Dev Button'">
+                      <b-icon-lightning shift-v="+1" font-scale="1.0" variant="primary"></b-icon-lightning>
+                    </b-button>
                   </div>
-                  <div v-if="false" class="mt-1 pl-1">
+                  <!-- <div v-if="false" class="mt-1 pl-1">
                     <b-button size="sm" :disabled="false" @click="signingTest();" variant="primary" v-b-popover.hover.bottom="'Scan NFC Test'">Dev2</b-button>
-                  </div>
-                  <div v-if="false" class="mt-1 pl-1">
+                  </div> -->
+                  <!-- <div v-if="false" class="mt-1 pl-1">
                     <b-button size="sm" :disabled="false" @click="signingTest1();" variant="primary" v-b-popover.hover.bottom="'Scan NFC Test'">Dev3</b-button>
-                  </div>
+                  </div> -->
                 </div>
 
                 <b-table fixed striped responsive hover :fields="slotsFields" :items="filteredSortedSlots" show-empty empty-html="Click on the top left button and scan your Burner.pro NFC card to begin" head-variant="light" class="mx-0 my-1 mt-2">
