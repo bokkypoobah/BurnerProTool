@@ -157,6 +157,19 @@
                 <b-card v-if="settings.showInfo || Object.keys(settings.cards).length == 0" no-body class="my-1 p-1">
                   <b-card-body class="mt-1 p-1">
                     <h6>Welcome to BurnerProTool</h6>
+
+                    This is a blah
+
+                    <br />
+                    <br />
+
+                    Click on
+                    <b-iconstack font-scale="1">
+                      <b-icon stacked icon="wifi" variant="primary" scale="0.8"></b-icon>
+                      <b-icon stacked icon="file" variant="primary" scale="1.5"></b-icon>
+                    </b-iconstack>
+                    to scan your Burner.pro NFC card
+
                   </b-card-body class="mt-1 p-1">
                 </b-card>
 
@@ -556,6 +569,71 @@
                 }
             };
             this.processScanResult(result);
+            const result1 = {
+                "isPartial": false,
+                "data": {
+                    "compressedPublicKey:1": "0292a44beb3d985876bd4a5562c04e7cb30fb4ac68e4cac8bc04f9b45948f3b66d",
+                    "compressedPublicKey:2": "0292a44beb3d985876bd4a5562c04e7cb30fb4ac68e4cac8bc04f9b45948f3b66d",
+                    "compressedPublicKey:3": {
+                        "error": "keySlotNotGenerated"
+                    },
+                    "compressedPublicKey:4": {
+                        "error": "keySlotNotGenerated"
+                    },
+                    "compressedPublicKey:5": {
+                        "error": "keySlotNotGenerated"
+                    },
+                    "compressedPublicKey:6": {
+                        "error": "keySlotNotGenerated"
+                    },
+                    "compressedPublicKey:7": {
+                        "error": "keySlotNotGenerated"
+                    },
+                    "compressedPublicKey:8": "028efa8726964184dba9c863dfac81342b9295fd222d76e8041c8a4646aa655fdf",
+                    "compressedPublicKey:9": "028efa8726964184dba9c863dfac81342b9295fd222d76e8041c8a4646aa655fdf",
+                    "keySlotFlags:1": {
+                        "isPasswordProtected": false,
+                        "rawSignCommandNotUsed": false,
+                        "isImported": false,
+                        "isExported": false
+                    },
+                    "keySlotFlags:2": {
+                        "isPasswordProtected": false,
+                        "rawSignCommandNotUsed": false,
+                        "isImported": false,
+                        "isExported": false
+                    },
+                    "keySlotFlags:3": {
+                        "error": "keySlotNotGenerated"
+                    },
+                    "keySlotFlags:4": {
+                        "error": "keySlotNotGenerated"
+                    },
+                    "keySlotFlags:5": {
+                        "error": "keySlotNotGenerated"
+                    },
+                    "keySlotFlags:6": {
+                        "error": "keySlotNotGenerated"
+                    },
+                    "keySlotFlags:7": {
+                        "error": "keySlotNotGenerated"
+                    },
+                    "keySlotFlags:8": {
+                        "isPasswordProtected": true,
+                        "rawSignCommandNotUsed": true,
+                        "isImported": false,
+                        "isExported": false
+                    },
+                    "keySlotFlags:9": {
+                        "isPasswordProtected": true,
+                        "rawSignCommandNotUsed": false,
+                        "isImported": false,
+                        "isExported": true
+                    },
+                    "graffiti:1": "gmgmgm1"
+                }
+            };
+            this.processScanResult(result1);
           },
           processScanResult(result) {
             console.log(moment().format("HH:mm:ss") + " processScanResults - result: " + JSON.stringify(result, null, 2));
