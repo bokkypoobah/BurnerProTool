@@ -300,15 +300,17 @@
           settings: {
             tabIndex: 0,
             showInfo: false,
-            reportingDateTime: 0,
-            searchAttachedAccount: true,
-            searchAccounts: null,
-            accountsTable: {
-              filter: null,
-              currentPage: 1,
-              pageSize: 100,
-              sortOption: 'typenameasc',
-            },
+            cards: {},
+            selectedCard: null,
+            // reportingDateTime: 0,
+            // searchAttachedAccount: true,
+            // searchAccounts: null,
+            // accountsTable: {
+            //   filter: null,
+            //   currentPage: 1,
+            //   pageSize: 100,
+            //   sortOption: 'typenameasc',
+            // },
             version: 0,
           },
           sync: {
@@ -382,6 +384,135 @@
         methods: {
           async scanNFCTest() {
             console.log(moment().format("HH:mm:ss") + " scanNFCTest");
+            const result = {
+                "isPartial": false,
+                "data": {
+                    "compressedPublicKey:1": "02902c2a69ad17083d4cf83d1a8a742d3b16fb1c6ccd803bea5c870c7f60c0f6a9",
+                    "compressedPublicKey:2": "0292a44beb3d985876bd4a5562c04e7cb30fb4ac68e4cac8bc04f9b45948f3b66d",
+                    "compressedPublicKey:3": {
+                        "error": "keySlotNotGenerated"
+                    },
+                    "compressedPublicKey:4": {
+                        "error": "keySlotNotGenerated"
+                    },
+                    "compressedPublicKey:5": {
+                        "error": "keySlotNotGenerated"
+                    },
+                    "compressedPublicKey:6": {
+                        "error": "keySlotNotGenerated"
+                    },
+                    "compressedPublicKey:7": {
+                        "error": "keySlotNotGenerated"
+                    },
+                    "compressedPublicKey:8": "028efa8726964184dba9c863dfac81342b9295fd222d76e8041c8a4646aa655fdf",
+                    "compressedPublicKey:9": "031b94f277b2be5a667c5a8f0e78cce51a771d7758f6144b7e69312d71b85fcc47",
+                    "keySlotFlags:1": {
+                        "isPasswordProtected": false,
+                        "rawSignCommandNotUsed": false,
+                        "isImported": false,
+                        "isExported": false
+                    },
+                    "keySlotFlags:2": {
+                        "isPasswordProtected": false,
+                        "rawSignCommandNotUsed": false,
+                        "isImported": false,
+                        "isExported": false
+                    },
+                    "keySlotFlags:3": {
+                        "error": "keySlotNotGenerated"
+                    },
+                    "keySlotFlags:4": {
+                        "error": "keySlotNotGenerated"
+                    },
+                    "keySlotFlags:5": {
+                        "error": "keySlotNotGenerated"
+                    },
+                    "keySlotFlags:6": {
+                        "error": "keySlotNotGenerated"
+                    },
+                    "keySlotFlags:7": {
+                        "error": "keySlotNotGenerated"
+                    },
+                    "keySlotFlags:8": {
+                        "isPasswordProtected": true,
+                        "rawSignCommandNotUsed": true,
+                        "isImported": false,
+                        "isExported": false
+                    },
+                    "keySlotFlags:9": {
+                        "isPasswordProtected": true,
+                        "rawSignCommandNotUsed": false,
+                        "isImported": false,
+                        "isExported": true
+                    },
+                    "graffiti:1": "gmgmgm"
+                }
+            };
+            this.processScanResult(result);
+          },
+          processScanResult(result) {
+            console.log(moment().format("HH:mm:ss") + " processScanResults - result: " + JSON.stringify(result, null, 2));
+            if (result && result.data) {
+              const slots = {};
+              for (const [keyAndSlot, value] of Object.entries(result.data)) {
+                const [key, slot] = keyAndSlot.split(/:/);
+                // console.log(moment().format("HH:mm:ss") + " processScanResults - items: " + key + ":" + slot + " => " + JSON.stringify(value));
+                if (key == "compressedPublicKey") {
+                  if (!value.error) {
+                    if (!(('' + slot) in slots)) {
+                      slots[slot] = {
+                        compressedPublicKey: value,
+                        address: ethers.utils.computeAddress("0x" + value),
+                      };
+                    }
+                  }
+                } else if (key == "keySlotFlags") {
+                  if (!value.error) {
+                    if (('' + slot) in slots) {
+                      slots[slot].isPasswordProtected = value.isPasswordProtected;
+                      slots[slot].rawSignCommandNotUsed = value.rawSignCommandNotUsed;
+                      slots[slot].isImported = value.isImported;
+                      slots[slot].isExported = value.isExported;
+                    }
+                  }
+                } else if (key == "graffiti") {
+                  if (!value.error) {
+                    if (('' + slot) in slots) {
+                      slots[slot].graffiti = value;
+                    }
+                  }
+                }
+              }
+              console.log(moment().format("HH:mm:ss") + " processScanResults - slots: " + JSON.stringify(slots, null, 2));
+              const cardId = slots["1"] && slots["1"].address || null;
+              const initialised = !!(slots["9"] && slots["9"].address);
+              const graffiti = slots["1"] && slots["1"].graffiti || null;
+              if (cardId) {
+                if (!(cardId in this.settings.cards)) {
+                  Vue.set(this.settings.cards, cardId, {
+                    name: null,
+                    graffiti,
+                    initialised,
+                    selectedSlot: initialised ? 9 : null,
+                    slots,
+                  });
+                  console.log(moment().format("HH:mm:ss") + " processScanResults - new card: " + JSON.stringify(this.settings.cards, null, 2));
+                } else {
+                  Vue.set(this.settings.cards[cardId], 'slots', slots);
+                  Vue.set(this.settings.cards[cardId], 'initialised', initialised);
+                  if (!this.settings.cards[cardId].selectedSlot && initialised) {
+                    Vue.set(this.settings.cards[cardId], 'selectedSlot', 9);
+                  }
+                  console.log(moment().format("HH:mm:ss") + " processScanResults - update card: " + JSON.stringify(this.settings.cards, null, 2));
+                }
+                this.settings.selectedCard = cardId;
+                this.saveSettings();
+              }
+            }
+          },
+
+          async scanNFCTestOld() {
+            console.log(moment().format("HH:mm:ss") + " scanNFCTestOld");
             this.slots = {
               "1": {
                 "compressedPublicKey": "111111111111111111111111111111111111111111111111111111111111111111",
@@ -459,35 +590,7 @@
             try {
                 const result = await execHaloCmdWeb(command);
                 console.log(JSON.stringify(result, null, 4));
-                if (result.data) {
-                  const slots = {};
-                  for (const [key, value] of Object.entries(result.data)) {
-                    const [k, i] = key.split(/:/);
-                    if (k == "compressedPublicKey") {
-                      if (!value.error) {
-                        if (!(('' + i) in slots)) {
-                          slots[i] = {
-                            compressedPublicKey: value,
-                            address: ethers.utils.computeAddress("0x" + value),
-                          };
-                        }
-                      }
-                    } else if (k == "keySlotFlags") {
-                      if (!value.error) {
-                        if (('' + i) in slots) {
-                          slots[i].isPasswordProtected = value.isPasswordProtected;
-                          slots[i].rawSignCommandNotUsed = value.rawSignCommandNotUsed;
-                          slots[i].isImported = value.isImported;
-                          slots[i].isExported = value.isExported;
-                        }
-                      }
-                    } else if (k == "graffiti") {
-                      console.log("graffiti: " + JSON.stringify(value, null, 4));
-                    }
-                  }
-                  this.slots = slots;
-                  this.saveCards();
-                }
+                this.processScanResult(result);
             } catch (e) {
                 console.log(moment().format("HH:mm:ss") + " scanNFC - ERROR: " + e.message);
                 this.debug = e.message;
@@ -988,8 +1091,8 @@
           },
 
           saveSettings() {
-            // Don't save yet
-            // localStorage.approvalToolSettings = JSON.stringify(this.settings);
+            console.log(moment().format("HH:mm:ss") + " saveSettings: " + JSON.stringify(this.settings, null, 2));
+            localStorage.burnerProToolSettings = JSON.stringify(this.settings);
           },
           async processNewBlock(blockNumber) {
             console.log(moment().format("HH:mm:ss") + " processNewBlock[" + this.chainId + "] #" + this.commify0(blockNumber) + ", latest #" + this.commify0(this.blockNumber) + " @ " + moment.unix(this.timestamp).format("YYYY-MM-DD HH:mm:ss") + " " + moment.unix(this.timestamp).fromNow());
@@ -1121,17 +1224,18 @@
           // if ('approvalToolChainId' in localStorage) {
           //   this.chainId = localStorage.approvalToolChainId;
           // }
-          if ('burnerProToolCards' in localStorage) {
-            this.cards = JSON.parse(localStorage.burnerProToolCards);
-            console.log(moment().format("HH:mm:ss") + " mounted - this.cards: " + JSON.stringify(this.cards, null, 2));
-          }
+          // if ('burnerProToolCards' in localStorage) {
+          //   this.cards = JSON.parse(localStorage.burnerProToolCards);
+          //   console.log(moment().format("HH:mm:ss") + " mounted - this.cards: " + JSON.stringify(this.cards, null, 2));
+          // }
           // if ('approvalToolCoinbase' in localStorage) {
           //   this.coinbase = localStorage.approvalToolCoinbase;
           // }
-          // if ('approvalToolSettings' in localStorage) {
-          //   const tempSettings = JSON.parse(localStorage.approvalToolSettings);
-          //   if ('version' in tempSettings && tempSettings.version == this.settings.version) {
-          //     this.settings = tempSettings;
+          if ('burnerProToolSettings' in localStorage) {
+            const tempSettings = JSON.parse(localStorage.burnerProToolSettings);
+            if ('version' in tempSettings && tempSettings.version == this.settings.version) {
+              this.settings = tempSettings;
+              console.log(moment().format("HH:mm:ss") + " mounted - this.settings: " + JSON.stringify(this.settings, null, 2));
           //     if (this.settings.approvalsTable.currentPage > 1) {
           //       this.settings.approvalsTable.currentPage = 1;
           //     }
@@ -1151,8 +1255,8 @@
           //     if ('approvalBlockTimestamps' in localStorage) {
           //       this.blockTimestamps = JSON.parse(localStorage.approvalBlockTimestamps);
           //     }
-          //   }
-          // }
+            }
+          }
         },
       })
     </script>
