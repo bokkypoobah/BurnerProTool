@@ -591,6 +591,7 @@
                 const result = await execHaloCmdWeb(command);
                 console.log(JSON.stringify(result, null, 4));
                 this.processScanResult(result);
+                this.debug = JSON.stringify(this.settings, null, 2);
             } catch (e) {
                 console.log(moment().format("HH:mm:ss") + " scanNFC - ERROR: " + e.message);
                 this.debug = e.message;
