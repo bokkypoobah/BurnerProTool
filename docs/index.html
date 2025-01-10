@@ -53,6 +53,16 @@
           </b-navbar-nav>
         </b-navbar>
 
+        <!-- :MODALCARDS -->
+        <!-- <b-modal visible id="modal-cards" hide-footer size="md"> -->
+        <b-modal id="modal-cards" hide-footer size="md">
+          <template #modal-title>
+            Cards
+          </template>
+          {{ filteredSortedCards }}
+
+        </b-modal>
+
         <b-card no-body class="p-0 mt-0 border-0" style="min-height: 666px;">
           <b-alert v-if="false" size="sm" dismissible variant="warning" show class="m-1 my-0">
             Warning: This is experimental unaudited software. Please check your transaction data carefully before signing
@@ -79,7 +89,7 @@
                     <b-form-select size="sm" v-model="settings.selectedCard" :options="cardsOptions" @change="saveSettings" style="max-width: 30.0rem;"></b-form-select>
                   </div>
                   <div class="mt-1 pr-1">
-                    <b-button size="sm" :disabled="false" @click="scanNFC();" variant="outline" v-b-popover.hover.bottom="'Scan NFC'">
+                    <b-button size="sm" @click="showModalCards();" variant="outline" v-b-popover.hover.bottom="'Cards'">
                       <b-icon-files shift-v="+1" font-scale="1.0" variant="primary"></b-icon-files>
                     </b-button>
                   </div>
@@ -393,6 +403,17 @@
             return results;
           },
 
+          filteredSortedCards() {
+            const results = [];
+            for (const [cardId, cardData] of Object.entries(this.settings.cards)) {
+              results.push( { cardId, ...cardData } );
+            }
+            // results.sort((a, b) => {
+            //   return b.slot - a.slot;
+            // });
+            return results;
+          },
+
           slotsOptions() {
             const results = [];
             results.push({ value: null, text: "Select address" });
@@ -421,6 +442,9 @@
 
         // --- METHODS ---
         methods: {
+          showModalCards() {
+            this.$bvModal.show('modal-cards');
+          },
           async scanNFC() {
             localStorage.setItem('DEBUG_LIBHALO_WEB', '1'); // https://github.com/arx-research/libhalo/blob/master/docs/api-web.md#debugging-through-the-developers-console
             console.log(moment().format("HH:mm:ss") + " scanNFC");
