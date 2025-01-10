@@ -76,6 +76,11 @@
               <b-card v-if="settings.tabIndex == 0 || filteredSortedSlots.length == 0" no-body class="my-0 p-1">
                 <div class="d-flex flex-wrap m-0 p-0">
                   <div class="mt-1 pr-1">
+                    <b-form-select size="sm" v-model="settings.selectedCard" :options="cardsOptions" @change="saveSettings" style="max-width: 30.0rem;"></b-form-select>
+                  </div>
+                  <div class="mt-0 flex-grow-1">
+                  </div>
+                  <div class="mt-1 pr-1">
                     <b-button size="sm" :disabled="false" @click="scanNFC();" variant="outline" v-b-popover.hover.bottom="'Scan NFC'">
                       <b-iconstack font-scale="1" animation="cylon">
                         <b-icon stacked icon="wifi" variant="primary" scale="1.1"></b-icon>
@@ -86,11 +91,11 @@
                   <!-- <div class="mt-1 pr-1">
                     <b-button size="sm" :disabled="false" @click="scanNFC();" variant="primary" v-b-popover.hover.bottom="'Scan NFC'">Scan NFC</b-button>
                   </div> -->
-                  <div class="mt-0 flex-grow-1">
-                  </div>
-                  <div class="mt-1 pr-1">
+                  <!-- <div class="mt-0 flex-grow-1">
+                  </div> -->
+                  <!-- <div class="mt-1 pr-1">
                     <b-button size="sm" :disabled="filteredSortedSlots.length == 0" @click="retrieveBalances();" variant="primary" v-b-popover.hover.bottom="'Retrieve Balances'">Retrieve Balances</b-button>
-                  </div>
+                  </div> -->
                   <div class="mt-0 flex-grow-1">
                   </div>
                   <div class="mt-1 pl-1">
@@ -354,6 +359,25 @@
         // --- COMPUTED ---
         computed: {
 
+          cardsOptions() {
+            const results = [];
+            results.push({ value: null, text: "(select card)" });
+            for (const [cardId, cardData] of Object.entries(this.settings.cards)) {
+              console.log(cardId + " => " + JSON.stringify(cardData));
+              const address = cardData.initialised ? cardData.slots[cardData.selectedSlot].address : "Uninitialised";
+              const name = cardData.initialised ? cardData.name || address.substring(0, 10) : "Uninitialised";
+              results.push({ value: cardId, text: name });
+            }
+            // const keys = Object.keys(this.slots);
+            // keys.sort((a, b) => {
+            //   return parseInt(b) - parseInt(a);
+            // });
+            // for (const key of keys) {
+            //   results.push({ value: key, text: '' + key + '. ' + this.slots[key].address.substring(0, 10) + '...' + this.slots[key].address.slice(-8) })
+            // }
+            return results;
+          },
+
           slotsOptions() {
             const results = [];
             results.push({ value: null, text: "Select address" });
@@ -382,6 +406,23 @@
 
         // --- METHODS ---
         methods: {
+          async scanNFC() {
+            localStorage.setItem('DEBUG_LIBHALO_WEB', '1'); // https://github.com/arx-research/libhalo/blob/master/docs/api-web.md#debugging-through-the-developers-console
+            console.log(moment().format("HH:mm:ss") + " scanNFC");
+            const command = {
+                name: "get_data_struct", // https://github.com/arx-research/libhalo/blob/master/docs/halo-command-set.md#command-get_data_struct
+                spec: "compressedPublicKey:1,compressedPublicKey:2,compressedPublicKey:3,compressedPublicKey:4,compressedPublicKey:5,compressedPublicKey:6,compressedPublicKey:7,compressedPublicKey:8,compressedPublicKey:9,keySlotFlags:1,keySlotFlags:2,keySlotFlags:3,keySlotFlags:4,keySlotFlags:5,keySlotFlags:6,keySlotFlags:7,keySlotFlags:8,keySlotFlags:9,graffiti:1",
+            };
+            try {
+                const result = await execHaloCmdWeb(command);
+                console.log(JSON.stringify(result, null, 4));
+                this.processScanResult(result);
+                this.debug = JSON.stringify(this.settings, null, 2);
+            } catch (e) {
+                console.log(moment().format("HH:mm:ss") + " scanNFC - ERROR: " + e.message);
+                this.debug = e.message;
+            }
+          },
           async scanNFCTest() {
             console.log(moment().format("HH:mm:ss") + " scanNFCTest");
             const result = {
@@ -508,93 +549,6 @@
                 this.settings.selectedCard = cardId;
                 this.saveSettings();
               }
-            }
-          },
-
-          async scanNFCTestOld() {
-            console.log(moment().format("HH:mm:ss") + " scanNFCTestOld");
-            this.slots = {
-              "1": {
-                "compressedPublicKey": "111111111111111111111111111111111111111111111111111111111111111111",
-                "address": "0x1111111111111111111111111111111111111112",
-                "isPasswordProtected": false,
-                "rawSignCommandNotUsed": false,
-                "isImported": false,
-                "isExported": false
-              },
-              "2": {
-                "compressedPublicKey": "222222222222222222222222222222222222222222222222222222222222222222",
-                "address": "0x2222222222222222222222222222222222222223",
-                "isPasswordProtected": false,
-                "rawSignCommandNotUsed": false,
-                "isImported": false,
-                "isExported": false
-              },
-              "8": {
-                "compressedPublicKey": "888888888888888888888888888888888888888888888888888888888888888888",
-                "address": "0x8888888888888888888888888888888888888889",
-                "isPasswordProtected": true,
-                "rawSignCommandNotUsed": true,
-                "isImported": false,
-                "isExported": false
-              },
-              "9": {
-                "compressedPublicKey": "999999999999999999999999999999999999999999999999999999999999999999",
-                "address": "0x9999999999999999999999999999999999999990",
-                "isPasswordProtected": true,
-                "rawSignCommandNotUsed": false,
-                "isImported": false,
-                "isExported": true
-              }
-            };
-            this.settings.tabIndex = 1;
-            this.selectedSlot = 9;
-            this.selectedAction = "transfereth";
-
-            this.saveCards();
-          },
-          saveCards() {
-            console.log(moment().format("HH:mm:ss") + " saveCards - this.cards: " + JSON.stringify(this.cards, null, 2));
-            const cardId = this.slots["1"] && this.slots["1"].address || null;
-            const initialised = !!(this.slots["9"] && this.slots["9"].address);
-            if (cardId) {
-              // for (const [slot, slotInfo] of Object.entries(this.slots)) {
-              //   console.log(cardId + "/" + slot + " => " + JSON.stringify(slotInfo));
-              // }
-              if (!(cardId in this.cards)) {
-                Vue.set(this.cards, cardId, {
-                  name: null,
-                  initialised,
-                  selectedSlot: initialised ? 9 : null,
-                  slots: this.slots,
-                });
-                console.log(moment().format("HH:mm:ss") + " saveCards - new this.cards: " + JSON.stringify(this.cards, null, 2));
-              } else {
-                Vue.set(this.cards[cardId], 'slots', this.slots);
-                Vue.set(this.cards[cardId], 'initialised', initialised);
-                if (!this.cards[cardId].selectedSlot && initialised) {
-                  Vue.set(this.cards[cardId], 'selectedSlot', 9);
-                }
-                console.log(moment().format("HH:mm:ss") + " saveCards - update this.cards: " + JSON.stringify(this.cards, null, 2));
-              }
-              localStorage.burnerProToolCards = JSON.stringify(this.cards);
-            }
-          },
-          async scanNFC() {
-            localStorage.setItem('DEBUG_LIBHALO_WEB', '1'); // https://github.com/arx-research/libhalo/blob/master/docs/api-web.md#debugging-through-the-developers-console
-            console.log(moment().format("HH:mm:ss") + " scanNFC");
-            const command = {
-                name: "get_data_struct", // https://github.com/arx-research/libhalo/blob/master/docs/halo-command-set.md#command-get_data_struct
-                spec: "compressedPublicKey:1,compressedPublicKey:2,compressedPublicKey:3,compressedPublicKey:4,compressedPublicKey:5,compressedPublicKey:6,compressedPublicKey:7,compressedPublicKey:8,compressedPublicKey:9,keySlotFlags:1,keySlotFlags:2,keySlotFlags:3,keySlotFlags:4,keySlotFlags:5,keySlotFlags:6,keySlotFlags:7,keySlotFlags:8,keySlotFlags:9,graffiti:1",
-            };
-            try {
-                const result = await execHaloCmdWeb(command);
-                console.log(JSON.stringify(result, null, 4));
-                this.processScanResult(result);
-                this.debug = JSON.stringify(this.settings, null, 2);
-            } catch (e) {
-                console.log(moment().format("HH:mm:ss") + " scanNFC - ERROR: " + e.message);
-                this.debug = e.message;
             }
           },
 
