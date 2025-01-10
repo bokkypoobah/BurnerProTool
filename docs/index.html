@@ -472,7 +472,7 @@
                           };
                         }
                       }
-                    } else {
+                    } else if (k == "keySlotFlags") {
                       if (!value.error) {
                         if (('' + i) in slots) {
                           slots[i].isPasswordProtected = value.isPasswordProtected;
@@ -481,6 +481,8 @@
                           slots[i].isExported = value.isExported;
                         }
                       }
+                    } else if (k == "graffiti") {
+                      console.log("graffiti: " + JSON.stringify(value, null, 4));
                     }
                   }
                   this.slots = slots;
