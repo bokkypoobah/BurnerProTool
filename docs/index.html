@@ -102,7 +102,6 @@
           <!-- {{ settings.tabIndex }} -->
 
           <b-card class="m-0 p-0 border-0" body-class="m-1 p-0">
-
             <b-card-text class="m-0 p-0">
               <b-card v-if="settings.tabIndex == 0 || filteredSortedSlots.length == 0" no-body class="my-0 p-1">
                 <div class="d-flex flex-wrap m-0 p-0">
@@ -136,8 +135,8 @@
                     <b-button size="sm" :disabled="filteredSortedSlots.length == 0" @click="retrieveBalances();" variant="primary" v-b-popover.hover.bottom="'Retrieve Balances'">Retrieve Balances</b-button>
                   </div> -->
                   <div class="mt-1 pl-1">
-                    <b-button size="sm" :disabled="false" @click="scanNFCTest();" variant="none" v-b-popover.hover.bottom="'Dev Button'">
-                      <b-icon-info-square-fill shift-v="+1" font-scale="1.0" variant="primary"></b-icon-info-square-fill>
+                    <b-button size="sm" :disabled="false" @click="settings.showInfo = !settings.showInfo; saveSettings();" @change="saveSettings" variant="none" v-b-popover.hover.bottom="'Info'">
+                      <b-icon :icon="settings.showInfo ? 'info-square-fill' : 'info-square'" shift-v="+1" font-scale="1.0" variant="primary"></b-icon>
                     </b-button>
                   </div>
                   <div class="mt-0 flex-grow-1">
@@ -155,7 +154,14 @@
                   </div> -->
                 </div>
 
-                <b-table fixed striped responsive hover :fields="slotsFields" :items="filteredSortedSlots" show-empty empty-html="Click on the top left button and scan your Burner.pro NFC card to begin" head-variant="light" class="mx-0 my-1 mt-2">
+                <b-card v-if="settings.showInfo || Object.keys(settings.cards).length == 0" no-body class="my-1 p-1">
+                  <b-card-body class="mt-1 p-1">
+                    <h6>Welcome to BurnerProTool</h6>
+                  </b-card-body class="mt-1 p-1">
+                </b-card>
+
+
+                <b-table v-if="false" fixed striped responsive hover :fields="slotsFields" :items="filteredSortedSlots" show-empty empty-html="Click on the top left button and scan your Burner.pro NFC card to begin" head-variant="light" class="mx-0 my-1 mt-2">
                   <template #cell(slot)="data">
                     <b-badge pill variant="transparent" class="px-0">{{ data.item.slot }}</b-badge>
                   </template>
@@ -407,7 +413,7 @@
 
           cardsOptions() {
             const results = [];
-            results.push({ value: null, text: "(select card)" });
+            results.push({ value: null, text: Object.keys(this.settings.cards) == 0 ? "(scan NFC card to begin)" : "(select card)" });
             for (const [cardId, cardData] of Object.entries(this.settings.cards)) {
               console.log(cardId + " => " + JSON.stringify(cardData));
               const address = cardData.initialised ? cardData.slots[cardData.selectedSlot].address : "Uninitialised";
