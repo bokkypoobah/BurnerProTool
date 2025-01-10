@@ -169,12 +169,25 @@
                     <br />
                     <br />
 
-                    Click on
+                    Click
                     <b-iconstack font-scale="1">
                       <b-icon stacked icon="wifi" variant="primary" scale="0.8"></b-icon>
                       <b-icon stacked icon="file" variant="primary" scale="1.5"></b-icon>
                     </b-iconstack>
                     to scan your Burner.pro NFC card
+
+                    <br />
+                    <br />
+
+                    <b-icon-files shift-v="+1" font-scale="1.0" variant="primary"></b-icon-files> View cards
+
+                    <br />
+
+                    <b-icon :icon="settings.showInfo ? 'info-square-fill' : 'info-square'" shift-v="+1" font-scale="1.0" variant="primary"></b-icon> View info
+
+                    <br />
+
+                    <b-icon-lightning shift-v="+1" font-scale="1.0" variant="primary"></b-icon-lightning> Dev button
 
                   </b-card-body class="mt-1 p-1">
                 </b-card>
