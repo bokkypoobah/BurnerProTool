@@ -43,13 +43,13 @@
             <font size="-1" v-b-popover.hover.bottom="'gm gm gm'">BurnerProTool</font>
           </b-navbar-brand>
           <b-navbar-nav class="ml-auto">
-            <b-nav-item size="sm" @click="settings.tabIndex = 0; saveSettings();" :active="settings.tabIndex == 0" active-class="active" v-b-popover.hover="'Scan'">Scan</b-nav-item>
-            <b-nav-item size="sm" @click="settings.tabIndex = 1; saveSettings();" :active="settings.tabIndex == 1" active-class="active" v-b-popover.hover="'Actions'">Actions</b-nav-item>
+            <!-- <b-nav-item size="sm" @click="settings.tabIndex = 0; saveSettings();" :active="settings.tabIndex == 0" active-class="active" v-b-popover.hover="'Scan'">Scan</b-nav-item> -->
+            <!-- <b-nav-item size="sm" @click="settings.tabIndex = 1; saveSettings();" :active="settings.tabIndex == 1" active-class="active" v-b-popover.hover="'Actions'">Actions</b-nav-item> -->
             <!-- <b-nav-item size="sm" @click="settings.tabIndex = 0; saveSettings();" :active="settings.tabIndex == 0" active-class="active" v-b-popover.hover="'Approvals'">Approvals</b-nav-item>
             <b-nav-item size="sm" @click="settings.tabIndex = 1; saveSettings();" :active="settings.tabIndex == 1" active-class="active" v-b-popover.hover="'Events'">Events</b-nav-item>
             <b-nav-item size="sm" @click="settings.tabIndex = 2; saveSettings();" :active="settings.tabIndex == 2" active-class="active" v-b-popover.hover="'Accounts'">Accounts</b-nav-item> -->
             <!-- <b-avatar v-if="coinbase && coinbase != nameOrAddress(coinbase)" rounded variant="light" size="3.0rem" :src="'https://metadata.ens.domains/mainnet/avatar/' + nameOrAddress(coinbase, 100)" v-b-popover.hover="'Your ENS avatar if set'"></b-avatar> -->
-            <!-- <b-button size="sm" variant="outline-primary" class="ml-1" @click="connectToWeb3(); processNewBlock(0);" v-b-popover.hover.bottom="'Click to update wallet'">{{ coinbase ? nameOrAddress(coinbase, 16) : 'Connect' }}</b-button> -->
+            <b-button size="sm" variant="outline-primary" class="ml-1" @click="connectToWeb3(); processNewBlock(0);" v-b-popover.hover.bottom="'Click to update wallet'">{{ coinbase ? nameOrAddress(coinbase, 16) : 'Connect' }}</b-button>
           </b-navbar-nav>
         </b-navbar>
 
@@ -59,7 +59,28 @@
           <template #modal-title>
             Cards
           </template>
-          {{ filteredSortedCards }}
+          <!-- <b-table fixed striped responsive hover :fields="slotsFields" :items="filteredSortedSlots" show-empty empty-html="Click on the top left button and scan your Burner.pro NFC card to begin" head-variant="light" class="mx-0 my-1 mt-2"> -->
+          <b-table fixed striped responsive hover :items="filteredSortedCards" show-empty empty-html="Press Escape. Then scan your Burner.pro NFC card to begin" head-variant="light" class="mx-0 my-1 mt-2">
+            <!-- <template #cell(slot)="data">
+              <b-badge pill variant="transparent" class="px-0">{{ data.item.slot }}</b-badge>
+            </template> -->
+            <!-- <template #cell(address)="data">
+              <b-link :href="'https://etherscan.io/address/' + data.item.address" target="_blank" v-b-popover.hover="data.item.address">
+                {{ data.item.address.substring(0, 8) + '...' + data.item.address.slice(-6) }}
+              </b-link>
+              <br />
+              <font v-if="data.item.balance" size="-1">
+                Balance: {{ formatETH(data.item.balance) }}
+              </font>
+            </template> -->
+            <!-- <template #cell(info)="data">
+              <font size="-1">
+                <b-form-checkbox disabled v-model="data.item.isPasswordProtected">Password Protected</b-form-checkbox>
+                <b-form-checkbox disabled v-model="data.item.isImported">Imported</b-form-checkbox>
+                <b-form-checkbox disabled v-model="data.item.isExported">Exported</b-form-checkbox>
+              </font>
+            </template> -->
+          </b-table>
 
         </b-modal>
 
