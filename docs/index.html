@@ -54,7 +54,6 @@
         </b-navbar>
 
         <!-- :MODALCARDS -->
-        <!-- <b-modal visible id="modal-cards" hide-footer size="md"> -->
         <b-modal id="modal-cards" hide-footer size="md" body-class="m-0 p-1">
           <template #modal-title>
             Cards
@@ -65,10 +64,10 @@
             </div>
             <div class="mt-0 flex-grow-1">
             </div>
-            <div class="mt-0 pr-1" style="max-width: 7.0rem;">
+            <div class="mt-0 pr-1" style="max-width: 6.0rem;">
               <b-form-select size="sm" v-model="settings.cardsTable.sortOption" @change="saveSettings" :options="sortOptions"></b-form-select>
             </div>
-            <div class="mt-0 pr-1">
+            <div class="mt-0">
               <b-pagination size="sm" v-model="settings.cardsTable.currentPage" @input="saveSettings" :total-rows="filteredSortedCards.length" :per-page="settings.cardsTable.pageSize" style="height: 0;"></b-pagination>
             </div>
             <!-- <div class="mt-0 pl-1">
@@ -77,11 +76,22 @@
           </div>
           <!-- <b-table fixed striped responsive hover selectable select-mode="single" @row-selected='cardSelected' :fields="slotsFields" :items="filteredSortedSlots" show-empty empty-html="Click on the top left button and scan your Burner.pro NFC card to begin" head-variant="light" class="mx-0 my-1 mt-2"> -->
           <b-table small fixed striped responsive hover selectable select-mode="single" @row-selected='cardSelected' :fields="cardsFields" :items="filteredSortedCards" show-empty empty-html="Press Escape. Then scan your Burner.pro NFC card to begin" head-variant="light" class="mx-0 my-0 mt-1">
-            <template #cell(card)="data">
-              {{ data.item }}
+            <template #cell(name)="data">
+              <!-- {{ data.item.name }} -->
+              <b-form-input type="text" size="sm" v-model.trim="data.item.name" @change="updateName(data.item.cardId, $event)" debounce="600" placeholder="name"></b-form-input>
             </template>
-            <template #cell(select)="data">
-              [Select]
+            <template #cell(address)="data">
+              <div v-if="data.item.initialised">
+                <font size="-1">{{ data.item.address.substring(0, 8) + '...' + data.item.address.slice(-4) }}</font>
+              </div>
+              <div v-else>
+                Uninitialised
+              </div>
+            </template>
+            <template #cell(slot)="data">
+              <b-button size="sm" @click="showModalSlots(data.item.cardId);" variant="outline">
+                <b-icon-card-list shift-v="+1" font-scale="1.0" variant="primary"></b-icon-card-list>
+              </b-button>
             </template>
             <!-- <template #cell(slot)="data">
               <b-badge pill variant="transparent" class="px-0">{{ data.item.slot }}</b-badge>
@@ -103,7 +113,15 @@
               </font>
             </template> -->
           </b-table>
+        </b-modal>
 
+        <b-modal id="modal-slots" hide-footer size="sm" body-class="m-0 p-1">
+          <template #modal-title>
+            Slots
+          </template>
+          CardId: {{ modalSlots.cardId }}
+          <br />
+          {{ slots }}
         </b-modal>
 
         <b-card no-body class="p-0 mt-0 border-0" style="min-height: 666px;">
@@ -355,7 +373,7 @@
 
           cards: {}, // address0 -> slot# -> address
 
-          slots: {},
+          // slots: {},
 
           selectedSlot: 9, // null,
           selectedAction: "transfereth", // null,
@@ -414,9 +432,6 @@
             showInfo: false,
             cards: {},
             selectedCard: null,
-            // reportingDateTime: 0,
-            // searchAttachedAccount: true,
-            // searchAccounts: null,
             cardsTable: {
               filter: null,
               currentPage: 1,
@@ -425,6 +440,12 @@
             },
             version: 1,
           },
+
+          modalSlots: {
+            // cardId: null,
+            cardId: "0x55aD5cd29e7409ed9215186056eF1a40a51b25FC",
+          },
+
           sync: {
             section: null,
             total: null,
@@ -443,10 +464,10 @@
           },
 
           sortOptions: [
+            { value: 'addressasc', text: '▲ Addr' },
+            { value: 'addressdsc', text: '▼ Addr' },
             { value: 'nameasc', text: '▲ Name' },
             { value: 'namedsc', text: '▼ Name' },
-            { value: 'addressasc', text: '▲ Address' },
-            { value: 'addressdsc', text: '▼ Address' },
           ],
           pageSizes: [
             { value: 1, text: '1' },
@@ -471,8 +492,9 @@
           ],
 
           cardsFields: [
-            { key: 'card', label: 'Card', sortable: false, thStyle: 'width: 70%;', tdClass: 'text-truncate' },
-            { key: 'select', label: 'Select', sortable: false, thStyle: 'width: 30%;', thClass: 'text-left', tdClass: 'text-left' },
+            { key: 'name', label: 'Name', sortable: false, thStyle: 'width: 30%;', tdClass: 'text-truncate' },
+            { key: 'address', label: 'Address', sortable: false, thStyle: 'width: 40%;', tdClass: 'text-truncate' },
+            { key: 'slot', label: 'Slot', sortable: false, thStyle: 'width: 30%;', thClass: 'text-left', tdClass: 'text-left' },
           ],
 
           slotsFields: [
@@ -508,13 +530,43 @@
           },
 
           filteredSortedCards() {
+            // console.log(moment().format("HH:mm:ss") + " filteredSortedCards");
             const results = [];
             for (const [cardId, cardData] of Object.entries(this.settings.cards)) {
-              results.push( { cardId, ...cardData } );
+              const address = cardData.initialised ? cardData.slots[cardData.selectedSlot].address : "Uninitialised";
+              results.push( { cardId, ...cardData, address } );
             }
-            // results.sort((a, b) => {
-            //   return b.slot - a.slot;
-            // });
+
+            if (this.settings.cardsTable.sortOption == 'addressasc') {
+              results.sort((a, b) => {
+                const addressA = a.initialised ? a.slots[a.selectedSlot].address : "Uninitialised";
+                const addressB = b.initialised ? b.slots[b.selectedSlot].address : "Uninitialised";
+                return ('' + addressA).localeCompare(addressB);
+              });
+            } else if (this.settings.cardsTable.sortOption == 'addressdsc') {
+              results.sort((a, b) => {
+                const addressA = a.initialised ? a.slots[a.selectedSlot].address : "Uninitialised";
+                const addressB = b.initialised ? b.slots[b.selectedSlot].address : "Uninitialised";
+                return ('' + addressB).localeCompare(addressA);
+              });
+            } else if (this.settings.cardsTable.sortOption == 'nameasc') {
+              results.sort((a, b) => {
+                const addressA = a.initialised ? a.slots[a.selectedSlot].address : "Uninitialised";
+                const addressB = b.initialised ? b.slots[b.selectedSlot].address : "Uninitialised";
+                const nameA = a.initialised ? a.name || addressA.substring(0, 10) : "Uninitialised";
+                const nameB = b.initialised ? b.name || addressB.substring(0, 10) : "Uninitialised";
+                return ('' + addressA).localeCompare(addressB);
+              });
+            } else if (this.settings.cardsTable.sortOption == 'namedsc') {
+              results.sort((a, b) => {
+                const addressA = a.initialised ? a.slots[a.selectedSlot].address : "Uninitialised";
+                const addressB = b.initialised ? b.slots[b.selectedSlot].address : "Uninitialised";
+                const nameA = a.initialised ? a.name || addressA.substring(0, 10) : "Uninitialised";
+                const nameB = b.initialised ? b.name || addressB.substring(0, 10) : "Uninitialised";
+                return ('' + addressB).localeCompare(addressA);
+              });
+            }
+            // console.log(moment().format("HH:mm:ss") + " filteredSortedCards: " + JSON.stringify(results));
             return results;
           },
 
@@ -542,20 +594,43 @@
             return results;
           },
 
+          slots() {
+            // console.log(moment().format("HH:mm:ss") + " slots");
+            const results = [];
+            if (this.modalSlots.cardId && this.modalSlots.cardId in this.settings.cards) {
+              for (const [slot, slotData] of Object.entries(this.settings.cards[this.modalSlots.cardId].slots)) {
+                results.push({ slot, ...slotData })
+              }
+            }
+            // console.log(moment().format("HH:mm:ss") + " slots: " + JSON.stringify(results, null, 2));
+            return results;
+          },
+
         },
 
         // --- METHODS ---
         methods: {
+          updateName(cardId, name) {
+            console.log(moment().format("HH:mm:ss") + " updateName: " + JSON.stringify(cardId) + ", name: " + JSON.stringify(name));
+            if (cardId in this.settings.cards) {
+              Vue.set(this.settings.cards[cardId], 'name', name);
+            }
+            this.saveSettings();
+          },
           showModalCards() {
             this.$bvModal.show('modal-cards');
+          },
+          showModalSlots(cardId) {
+            console.log(moment().format("HH:mm:ss") + " showModalSlots - cardId: " + cardId);
+            this.modalSlots.cardId = cardId;
+            this.$bvModal.show('modal-slots');
           },
           cardSelected(item) {
             console.log(moment().format("HH:mm:ss") + " cardSelected: " + JSON.stringify(item));
             if (item && item.length > 0) {
-            //   this.modalApproval.item = item[0];
               this.$bvModal.hide('modal-cards');
               this.settings.selectedCard = item[0].cardId;
-            //   this.$refs.approvalsTable.clearSelected();
+            //   this.$refs.cardsTable.clearSelected();
             }
           },
           async scanNFC() {
