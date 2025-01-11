@@ -59,7 +59,7 @@
             Cards
           </template>
           <div class="d-flex flex-wrap m-0 p-0">
-            <div class="mt-0 pr-1" style="max-width: 7.0rem;">
+            <div class="mt-0 pr-1" style="max-width: 8.0rem;">
               <b-form-input type="text" size="sm" v-model.trim="settings.cardsTable.filter" @change="saveSettings" debounce="600" placeholder="🔍 addr/name"></b-form-input>
             </div>
             <div class="mt-0 flex-grow-1">
@@ -81,13 +81,19 @@
             </template>
             <template #cell(address)="data">
               <div v-if="data.item.initialised">
-                <font size="-1">{{ data.item.address.substring(0, 8) + '...' + data.item.address.slice(-4) }}</font>
+                <!-- <font size="-1">{{ data.item.address.substring(0, 8) + '...' + data.item.address.slice(-4) }}</font> -->
+                <b-link :href="'https://etherscan.io/address/' + data.item.address" target="_blank" v-b-popover.hover="data.item.address">
+                  <font size="-1">{{ data.item.address.substring(0, 10) + '...' + data.item.address.slice(-6) }}</font>
+                </b-link>
+                <b-button size="sm" @click="copyToClipboard(data.item.address);" variant="outline" v-b-popover.hover="'Copy address to clipboard'">
+                  <b-icon-clipboard shift-v="+2" font-scale="0.9" variant="primary"></b-icon-clipboard>
+                </b-button>
               </div>
               <div v-else>
                 Uninitialised
               </div>
             </template>
-            <template #cell(slot)="data">
+            <template #cell(slots)="data">
               <b-button size="sm" @click="showModalSlots(data.item.cardId, data.item.name);" variant="outline">
                 <b-icon-card-list shift-v="+1" font-scale="1.0" variant="primary"></b-icon-card-list>
               </b-button>
@@ -116,7 +122,7 @@
 
         <b-modal id="modal-slots" hide-footer size="sm" body-class="m-0 p-1">
           <template #modal-title>
-            {{ modalSlots.name ? "Slots for " + modalSlots.name : "Slots" }}
+            {{ modalSlots.name ? "Slots for '" + modalSlots.name + "'": "Slots" }}
           </template>
           <!-- <b-table small fixed striped responsive hover selectable select-mode="single" @row-selected='cardSelected' :fields="cardsFields" :items="slots" show-empty empty-html="Press Escape. Then scan your Burner.pro NFC card to begin" head-variant="light" class="mx-0 my-0 mt-1"> -->
           <b-table small fixed striped responsive hover :fields="slotsFields" :items="slots" show-empty head-variant="light" class="mx-0 my-0 mt-1">
@@ -124,7 +130,12 @@
               <font size="-1">{{ data.item.slot }}</font>
             </template>
             <template #cell(address)="data">
-              <font size="-1">{{ data.item.address.substring(0, 12) + '...' + data.item.address.slice(-10) }}</font>
+              <b-link :href="'https://etherscan.io/address/' + data.item.address" target="_blank" v-b-popover.hover="data.item.address">
+                <font size="-1">{{ data.item.address.substring(0, 12) + '...' + data.item.address.slice(-8) }}</font>
+              </b-link>
+              <b-button size="sm" @click="copyToClipboard(data.item.address);" variant="outline" v-b-popover.hover="'Copy address to clipboard'">
+                <b-icon-clipboard shift-v="+2" font-scale="0.9" variant="primary"></b-icon-clipboard>
+              </b-button>
             </template>
             <template #cell(info)="data">
               <b-icon :icon="data.item.isPasswordProtected ? 'lock-fill' : 'unlock'" shift-v="+1" font-scale="1.0" :variant="data.item.isPasswordProtected ? 'primary' : 'secondary'" v-b-popover.hover="data.item.isPasswordProtected ? 'Password protected' : 'Not password protected'"></b-icon>
@@ -503,14 +514,14 @@
 
           cardsFields: [
             { key: 'name', label: 'Name', sortable: false, thStyle: 'width: 30%;', tdClass: 'text-truncate' },
-            { key: 'address', label: 'Address', sortable: false, thStyle: 'width: 40%;', tdClass: 'text-truncate' },
-            { key: 'slot', label: 'Slot', sortable: false, thStyle: 'width: 30%;', thClass: 'text-left', tdClass: 'text-left' },
+            { key: 'address', label: 'Address', sortable: false, thStyle: 'width: 50%;', tdClass: 'text-truncate' },
+            { key: 'slots', label: 'Slots', sortable: false, thStyle: 'width: 20%;', thClass: 'text-left', tdClass: 'text-left' },
           ],
 
           slotsFields: [
-            { key: 'slot', label: 'Slot', sortable: false, thStyle: 'width: 10%;', tdClass: 'text-truncate' },
+            { key: 'slot', label: 'Slot', sortable: false, thStyle: 'width: 15%;', thClass: 'text-left', tdClass: 'text-left' },
             { key: 'address', label: 'Address', sortable: false, thStyle: 'width: 60%;', thClass: 'text-left', tdClass: 'text-left' },
-            { key: 'info', label: 'Info', sortable: false, thStyle: 'width: 30%;', thClass: 'text-left', tdClass: 'text-left' },
+            { key: 'info', label: 'Info', sortable: false, thStyle: 'width: 25%;', thClass: 'text-right', tdClass: 'text-right' },
           ],
 
         },
