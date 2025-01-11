@@ -115,14 +115,14 @@
                     <b-form-select size="sm" v-model="settings.selectedCard" :options="cardsOptions" @change="saveSettings" style="max-width: 30.0rem;"></b-form-select>
                   </div>
                   <div class="mt-1 pr-1">
-                    <b-button size="sm" @click="showModalCards();" variant="outline" v-b-popover.hover.bottom="'Cards'">
+                    <b-button size="sm" @click="showModalCards();" variant="outline">
                       <b-icon-files shift-v="+1" font-scale="1.0" variant="primary"></b-icon-files>
                     </b-button>
                   </div>
                   <div class="mt-0 flex-grow-1">
                   </div>
                   <div class="mt-1 pr-1">
-                    <b-button size="sm" :disabled="false" @click="scanNFC();" variant="outline" v-b-popover.hover.bottom="'Scan NFC'">
+                    <b-button size="sm" :disabled="false" @click="scanNFC();" variant="outline">
                       <!-- <b-iconstack font-scale="1" animation="cylon"> -->
                       <b-iconstack font-scale="1">
                         <b-icon stacked icon="wifi" variant="primary" scale="0.8"></b-icon>
@@ -141,14 +141,14 @@
                     <b-button size="sm" :disabled="filteredSortedSlots.length == 0" @click="retrieveBalances();" variant="primary" v-b-popover.hover.bottom="'Retrieve Balances'">Retrieve Balances</b-button>
                   </div> -->
                   <div class="mt-1 pl-1">
-                    <b-button size="sm" :disabled="false" @click="settings.showInfo = !settings.showInfo; saveSettings();" @change="saveSettings" variant="none" v-b-popover.hover.bottom="'Info'">
+                    <b-button size="sm" :disabled="false" @click="settings.showInfo = !settings.showInfo; saveSettings();" @change="saveSettings" variant="none">
                       <b-icon :icon="settings.showInfo ? 'info-circle-fill' : 'info-circle'" shift-v="+1" font-scale="1.0" variant="primary"></b-icon>
                     </b-button>
                   </div>
                   <div class="mt-0 flex-grow-1">
                   </div>
                   <div class="mt-1 pl-1">
-                    <b-button size="sm" :disabled="false" @click="scanNFCTest();" variant="none" v-b-popover.hover.bottom="'Dev Button'">
+                    <b-button size="sm" :disabled="false" @click="scanNFCTest();" variant="none">
                       <b-icon-lightning shift-v="+1" font-scale="1.0" variant="primary"></b-icon-lightning>
                     </b-button>
                   </div>
@@ -457,9 +457,11 @@
 
           cardsOptions() {
             const results = [];
-            results.push({ value: null, text: Object.keys(this.settings.cards) == 0 ? "(scan NFC card to begin)" : "(select card)" });
+            if (Object.keys(this.settings.cards) == 0) {
+              results.push({ value: null, text: "(Scan NFC card to begin)" });
+            }
             for (const [cardId, cardData] of Object.entries(this.settings.cards)) {
-              console.log(cardId + " => " + JSON.stringify(cardData));
+              // console.log(cardId + " => " + JSON.stringify(cardData));
               const address = cardData.initialised ? cardData.slots[cardData.selectedSlot].address : "Uninitialised";
               const name = cardData.initialised ? cardData.name || address.substring(0, 10) : "Uninitialised";
               results.push({ value: cardId, text: name });
