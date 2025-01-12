@@ -302,7 +302,7 @@
                 </b-button>
               </b-form-group>
               <b-form-group label="CryptoCompare:" label-cols="5" label-align="right" description="Set API Key in the Config menu">
-                <b-button v-if="activeAddress" size="sm" @click="downloadFromCryptoCompare(activeAddress);" variant="outline">
+                <b-button v-if="activeAddress" size="sm" @click="downloadFromCryptoCompare();" variant="outline">
                   <b-icon-cloud-download shift-v="+2" font-scale="1" variant="primary"></b-icon-cloud-download>
                 </b-button>
               </b-form-group>
@@ -1068,12 +1068,48 @@
           //   console.log(moment().format("HH:mm:ss") + " signingTest1 - hash: " + JSON.stringify(hash, null, 2));
           // },
 
-          async downloadFromEtherscan() {
-            console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan");
+          async downloadFromEtherscan(address) {
+            console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - address: " + address);
+
+            const getBalanceUrl = "https://api.etherscan.io/v2/api?chainId=1&module=account&action=balance&address=" + this.activeAddress + "&apikey=" + this.settings.etherscanAPIKey;
+            console.log("getBalanceUrl: " + getBalanceUrl);
+            const getBalanceResult = await fetch(getBalanceUrl)
+              .then(handleErrors)
+              .then(response => response.json())
+              .catch(function(error) {
+                 console.log("ERROR - downloadFromEtherscan: " + error);
+                 // Want to work around API data unavailablity - state.sync.error = true;
+                 return {};
+              });
+            console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - getBalanceResult: " + JSON.stringify(getBalanceResult, null, 2));
+            if (getBalanceResult.result) {
+              const balance = ethers.BigNumber.from(getBalanceResult.result).toString();
+              console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - balance: " + balance);
+            }
+            await delay(1000);
+
+            const getBlockNumberUrl = "https://api.etherscan.io/v2/api?chainId=1&module=proxy&action=eth_blockNumber&apikey=" + this.settings.etherscanAPIKey;
+            console.log("getBlockNumberUrl: " + getBlockNumberUrl);
+            const getBlockNumberResult = await fetch(getBlockNumberUrl)
+              .then(handleErrors)
+              .then(response => response.json())
+              .catch(function(error) {
+                 console.log("ERROR - downloadFromEtherscan: " + error);
+                 // Want to work around API data unavailablity - state.sync.error = true;
+                 return {};
+              });
+            console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - getBlockNumberResult: " + JSON.stringify(getBlockNumberResult, null, 2));
+            if (getBlockNumberResult.result) {
+              const blockNumber = Number(getBlockNumberResult.result);
+              console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - blockNumber: " + blockNumber);
+            }
+
+            console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - delayed");
           },
 
           async downloadFromCryptoCompare() {
             console.log(moment().format("HH:mm:ss") + " downloadFromCryptoCompare");
+
           },
 
           async retrieveBalances() {
