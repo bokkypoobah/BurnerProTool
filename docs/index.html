@@ -286,12 +286,31 @@
             </div>
 
             <!-- Address View -->
-            <b-card-body v-if="settings.tabIndex == 0" class="m-0 p-0" body-bg-variant="white">
-              Address Tab
-              Blah
-              Blah
-              Blah
-              <br /><br /><br /><br /><br /><br /><br />
+            <b-card-body v-if="settings.tabIndex == 0" class="m-0 p-1" body-bg-variant="white">
+
+              <!-- <b-form-group label="Etherscan:" label-cols="5" label-align="right" description="Get your API Key from https://etherscan.io/apis">
+                <b-form-input type="text" size="sm" v-model.trim="settings.etherscanAPIKey" @change="saveSettings();" placeholder="API key"></b-form-input>
+              </b-form-group>
+              <b-form-group label="CryptoCompare:" label-cols="5" label-align="right" description="Get your API Key from https://www.cryptocompare.com/cryptopian/api-keys">
+                <b-form-input type="text" size="sm" v-model.trim="settings.cryptoCompareAPIKey" @change="saveSettings();" placeholder="API key"></b-form-input>
+              </b-form-group> -->
+
+
+              <b-form-group label="Etherscan:" label-cols="5" label-align="right" description="Set API Key in the Config menu">
+                <b-button v-if="activeAddress" size="sm" @click="downloadFromEtherscan(activeAddress);" variant="outline">
+                  <b-icon-cloud-download shift-v="+2" font-scale="1" variant="primary"></b-icon-cloud-download>
+                </b-button>
+              </b-form-group>
+              <b-form-group label="CryptoCompare:" label-cols="5" label-align="right" description="Set API Key in the Config menu">
+                <b-button v-if="activeAddress" size="sm" @click="downloadFromCryptoCompare(activeAddress);" variant="outline">
+                  <b-icon-cloud-download shift-v="+2" font-scale="1" variant="primary"></b-icon-cloud-download>
+                </b-button>
+              </b-form-group>
+              <!-- <b-button v-if="activeAddress" size="sm" @click="copyToClipboard(activeAddress);" variant="outline">
+                <b-icon-currency-dollar shift-v="+2" font-scale="1" variant="primary"></b-icon-currency-dollar>
+              </b-button> -->
+
+
             </b-card-body>
 
             <!-- Card View --->
@@ -1048,6 +1067,14 @@
           //   const hash = ethers.utils.keccak256(serializedSignedTx);
           //   console.log(moment().format("HH:mm:ss") + " signingTest1 - hash: " + JSON.stringify(hash, null, 2));
           // },
+
+          async downloadFromEtherscan() {
+            console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan");
+          },
+
+          async downloadFromCryptoCompare() {
+            console.log(moment().format("HH:mm:ss") + " downloadFromCryptoCompare");
+          },
 
           async retrieveBalances() {
             console.log(moment().format("HH:mm:ss") + " retrieveBalances");
