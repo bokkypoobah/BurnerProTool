@@ -169,10 +169,10 @@
           <template #modal-title>
             Set Graffiti For {{ activeCardName }}
           </template>
-          <b-form-group label="Insert test data:" label-cols="5" label-align="right">
+          <b-form-group label="Graffiti:" label-cols="3" label-align="right" description="Up to 32 characters, alphanumeric plus '-', '_' and '.' permitted">
             <b-form-input type="text" size="sm" v-model.trim="modalGraffiti.graffiti" placeholder="graffiti"></b-form-input>
           </b-form-group>
-          <b-form-group label="" label-cols="5" label-align="right" :description="modalGraffiti.prompt">
+          <b-form-group label="" label-cols="3" label-align="right" :description="modalGraffiti.prompt">
             <b-button size="sm" @click="updateGraffiti();" variant="outline">
               <b-iconstack font-scale="1">
                 <b-icon stacked icon="wifi" variant="primary" scale="0.8"></b-icon>
