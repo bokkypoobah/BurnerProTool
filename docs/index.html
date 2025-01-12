@@ -152,6 +152,14 @@
           <template #modal-title>
             Configuration
           </template>
+          <b-form-group label-cols-lg="2" label="API Keys" label-size="md" label-class="font-weight-bold pt-0" class="mt-3 mb-0">
+            <b-form-group label="Etherscan:" label-cols="5" label-align="right" description="Get your API Key from https://etherscan.io/apis">
+              <b-form-input type="text" size="sm" v-model.trim="settings.etherscanAPIKey" @change="saveSettings();" placeholder="API key"></b-form-input>
+            </b-form-group>
+            <b-form-group label="CryptoCompare:" label-cols="5" label-align="right" description="Get your API Key from https://www.cryptocompare.com/cryptopian/api-keys">
+              <b-form-input type="text" size="sm" v-model.trim="settings.cryptoCompareAPIKey" @change="saveSettings();" placeholder="API key"></b-form-input>
+            </b-form-group>
+          </b-form-group>
           <b-form-group label-cols-lg="2" label="Test Data" label-size="md" label-class="font-weight-bold pt-0" class="mt-3 mb-0">
             <b-form-group label="Insert test data:" label-cols="5" label-align="right">
               <b-button size="sm" @click="insertTestData()" variant="primary">Insert</b-button>
@@ -452,13 +460,15 @@
             showInfo: false,
             cards: {},
             selectedCard: null,
+            etherscanAPIKey: null,
+            cryptoCompareAPIKey: null,
             cardsTable: {
               filter: null,
               currentPage: 1,
               pageSize: 10,
               sortOption: 'nameasc',
             },
-            version: 1,
+            version: 2,
           },
 
           modalSlots: {
