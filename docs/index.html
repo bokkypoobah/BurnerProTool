@@ -1071,9 +1071,9 @@
           async downloadFromEtherscan(address) {
             console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - address: " + address);
 
-            const getBalanceUrl = "https://api.etherscan.io/v2/api?chainId=1&module=account&action=balance&address=" + this.activeAddress + "&apikey=" + this.settings.etherscanAPIKey;
-            console.log("getBalanceUrl: " + getBalanceUrl);
-            const getBalanceResult = await fetch(getBalanceUrl)
+            const getTransactionsUrl = "https://api.etherscan.io/v2/api?chainId=1&module=account&action=txlist&address=" + this.activeAddress + "&startblock=0&endblock=99999999&page=1&offset=100&sort=dsc&apikey=" + this.settings.etherscanAPIKey;
+            console.log("getTransactionsUrl: " + getTransactionsUrl);
+            const getTransactionsResult = await fetch(getTransactionsUrl)
               .then(handleErrors)
               .then(response => response.json())
               .catch(function(error) {
@@ -1081,28 +1081,45 @@
                  // Want to work around API data unavailablity - state.sync.error = true;
                  return {};
               });
-            console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - getBalanceResult: " + JSON.stringify(getBalanceResult, null, 2));
-            if (getBalanceResult.result) {
-              const balance = ethers.BigNumber.from(getBalanceResult.result).toString();
-              console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - balance: " + balance);
-            }
-            await delay(1000);
+            console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - getTransactionsResult: " + JSON.stringify(getTransactionsResult, null, 2));
+            // if (getTransactionsResult.result) {
+            //   const balance = ethers.BigNumber.from(getTransactionsResult.result).toString();
+            //   console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - balance: " + balance);
+            // }
 
-            const getBlockNumberUrl = "https://api.etherscan.io/v2/api?chainId=1&module=proxy&action=eth_blockNumber&apikey=" + this.settings.etherscanAPIKey;
-            console.log("getBlockNumberUrl: " + getBlockNumberUrl);
-            const getBlockNumberResult = await fetch(getBlockNumberUrl)
-              .then(handleErrors)
-              .then(response => response.json())
-              .catch(function(error) {
-                 console.log("ERROR - downloadFromEtherscan: " + error);
-                 // Want to work around API data unavailablity - state.sync.error = true;
-                 return {};
-              });
-            console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - getBlockNumberResult: " + JSON.stringify(getBlockNumberResult, null, 2));
-            if (getBlockNumberResult.result) {
-              const blockNumber = Number(getBlockNumberResult.result);
-              console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - blockNumber: " + blockNumber);
-            }
+            // await delay(1000);
+            // const getBalanceUrl = "https://api.etherscan.io/v2/api?chainId=1&module=account&action=balance&address=" + this.activeAddress + "&apikey=" + this.settings.etherscanAPIKey;
+            // console.log("getBalanceUrl: " + getBalanceUrl);
+            // const getBalanceResult = await fetch(getBalanceUrl)
+            //   .then(handleErrors)
+            //   .then(response => response.json())
+            //   .catch(function(error) {
+            //      console.log("ERROR - downloadFromEtherscan: " + error);
+            //      // Want to work around API data unavailablity - state.sync.error = true;
+            //      return {};
+            //   });
+            // console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - getBalanceResult: " + JSON.stringify(getBalanceResult, null, 2));
+            // if (getBalanceResult.result) {
+            //   const balance = ethers.BigNumber.from(getBalanceResult.result).toString();
+            //   console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - balance: " + balance);
+            // }
+
+            // await delay(1000);
+            // const getBlockNumberUrl = "https://api.etherscan.io/v2/api?chainId=1&module=proxy&action=eth_blockNumber&apikey=" + this.settings.etherscanAPIKey;
+            // console.log("getBlockNumberUrl: " + getBlockNumberUrl);
+            // const getBlockNumberResult = await fetch(getBlockNumberUrl)
+            //   .then(handleErrors)
+            //   .then(response => response.json())
+            //   .catch(function(error) {
+            //      console.log("ERROR - downloadFromEtherscan: " + error);
+            //      // Want to work around API data unavailablity - state.sync.error = true;
+            //      return {};
+            //   });
+            // console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - getBlockNumberResult: " + JSON.stringify(getBlockNumberResult, null, 2));
+            // if (getBlockNumberResult.result) {
+            //   const blockNumber = Number(getBlockNumberResult.result);
+            //   console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - blockNumber: " + blockNumber);
+            // }
 
             console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - delayed");
           },
