@@ -60,7 +60,7 @@
           </template>
           <div class="d-flex flex-wrap m-0 p-0">
             <div class="mt-0 pr-1" style="max-width: 8.0rem;">
-              <b-form-input type="text" size="sm" v-model.trim="settings.cardsTable.filter" @change="saveSettings" debounce="600" placeholder="🔍 addr/name"></b-form-input>
+              <b-form-input type="text" size="sm" v-model.trim="settings.cardsTable.filter" @change="saveSettings" debounce="1200" placeholder="🔍 addr/name"></b-form-input>
             </div>
             <div class="mt-0 flex-grow-1">
             </div>
@@ -80,7 +80,7 @@
               </b-form-checkbox>
             </template>
             <template #cell(name)="data">
-              <b-form-input type="text" size="sm" v-model.trim="data.item.name" @change="updateName(data.item.cardId, $event)" debounce="600" placeholder="name"></b-form-input>
+              <b-form-input type="text" size="sm" v-model.trim="data.item.name" @change="updateName(data.item.cardId, $event)" debounce="1200" placeholder="name"></b-form-input>
             </template>
             <template #cell(address)="data">
               <div v-if="data.item.initialised">
