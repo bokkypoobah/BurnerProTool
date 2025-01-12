@@ -49,7 +49,7 @@
             <b-nav-item size="sm" @click="settings.tabIndex = 1; saveSettings();" :active="settings.tabIndex == 1" active-class="active" v-b-popover.hover="'Events'">Events</b-nav-item>
             <b-nav-item size="sm" @click="settings.tabIndex = 2; saveSettings();" :active="settings.tabIndex == 2" active-class="active" v-b-popover.hover="'Accounts'">Accounts</b-nav-item> -->
             <!-- <b-avatar v-if="coinbase && coinbase != nameOrAddress(coinbase)" rounded variant="light" size="3.0rem" :src="'https://metadata.ens.domains/mainnet/avatar/' + nameOrAddress(coinbase, 100)" v-b-popover.hover="'Your ENS avatar if set'"></b-avatar> -->
-            <b-button size="sm" variant="outline-primary" class="ml-1" @click="connectToWeb3(); processNewBlock(0);" v-b-popover.hover.bottom="'Click to update wallet'">{{ coinbase ? nameOrAddress(coinbase, 16) : 'Connect' }}</b-button>
+            <b-button size="sm" variant="outline-primary" class="ml-1 mr-1" @click="connectToWeb3(); processNewBlock(0);" v-b-popover.hover.bottom="'Click to update wallet'">{{ coinbase ? nameOrAddress(coinbase, 16) : 'Connect' }}</b-button>
           </b-navbar-nav>
         </b-navbar>
 
@@ -84,10 +84,10 @@
             </template>
             <template #cell(address)="data">
               <div v-if="data.item.initialised">
-                <b-link :href="'https://etherscan.io/address/' + data.item.address" target="_blank" v-b-popover.hover="data.item.address">
+                <b-link :href="'https://etherscan.io/address/' + data.item.address" target="_blank">
                   <font size="-1">{{ data.item.address.substring(0, 8) + '...' + data.item.address.slice(-4) }}</font>
                 </b-link>
-                <b-button size="sm" @click="copyToClipboard(data.item.address);" variant="outline" v-b-popover.hover="'Copy address to clipboard'">
+                <b-button size="sm" @click="copyToClipboard(data.item.address);" variant="outline">
                   <b-icon-clipboard shift-v="+2" font-scale="0.9" variant="primary"></b-icon-clipboard>
                 </b-button>
               </div>
@@ -132,10 +132,10 @@
               </b-form-checkbox>
             </template>
             <template #cell(address)="data">
-              <b-link :href="'https://etherscan.io/address/' + data.item.address" target="_blank" v-b-popover.hover="data.item.address">
+              <b-link :href="'https://etherscan.io/address/' + data.item.address" target="_blank">
                 <font size="-1">{{ data.item.address.substring(0, 10) + '...' + data.item.address.slice(-6) }}</font>
               </b-link>
-              <b-button size="sm" @click="copyToClipboard(data.item.address);" variant="outline" v-b-popover.hover="'Copy address to clipboard'">
+              <b-button size="sm" @click="copyToClipboard(data.item.address);" variant="outline">
                 <b-icon-clipboard shift-v="+2" font-scale="0.9" variant="primary"></b-icon-clipboard>
               </b-button>
             </template>
@@ -164,210 +164,190 @@
           </b-form-group>
         </b-modal>
 
+        <!-- <b-alert v-if="false" size="sm" dismissible variant="warning" show class="m-1 my-0">
+          Warning: This is experimental unaudited software. Please check your transaction data carefully before signing
+        </b-alert> -->
+        <!-- <b-card class="m-2 p-1" header-class="warningheader" header="Welcome" v-if="false && !coinbase">
+          <b-card-text>
+            Please install the MetaMask extension and connect to the Ethereum Mainnet or an EVM compatible chain. Then refresh this page, and click the [Connect] button on the top right.
+          </b-card-text>
+        </b-card> -->
+
         <b-card no-body class="p-0 mt-0 border-0" style="min-height: 666px;">
-          <!-- <b-alert v-if="false" size="sm" dismissible variant="warning" show class="m-1 my-0">
-            Warning: This is experimental unaudited software. Please check your transaction data carefully before signing
-          </b-alert> -->
-          <!-- <b-card class="m-2 p-1" header-class="warningheader" header="Welcome" v-if="false && !coinbase">
-            <b-card-text>
-              Please install the MetaMask extension and connect to the Ethereum Mainnet or an EVM compatible chain. Then refresh this page, and click the [Connect] button on the top right.
-            </b-card-text>
-          </b-card> -->
 
-          <b-card class="m-0 p-0 border-0" body-class="m-1 p-0">
-            <b-card v-if="settings.tabIndex == 0 || filteredSortedSlots.length == 0" no-body class="my-0 p-1" bg-variant="light">
-              <div class="d-flex flex-wrap m-0 p-0 bg-white">
-                <div class="mt-0 pr-1">
-                  <b-form-select size="sm" v-model="settings.selectedCard" :options="cardsOptions" @change="saveSettings" style="max-width: 30.0rem;"></b-form-select>
-                </div>
-                <div class="mt-0 pr-1">
-                  <b-button size="sm" @click="showModalCards();" variant="outline">
-                    <b-icon-files shift-v="+1" font-scale="1.0" variant="primary"></b-icon-files>
-                  </b-button>
-                </div>
-                <div class="mt-0 flex-grow-1">
-                </div>
-                <div class="mt-0 pr-1">
-                  <b-button size="sm" :disabled="false" @click="scanNFC();" variant="outline">
-                    <!-- <b-iconstack font-scale="1" animation="cylon"> -->
-                    <b-iconstack font-scale="1">
-                      <b-icon stacked icon="wifi" variant="primary" scale="0.8"></b-icon>
-                      <b-icon stacked icon="file" variant="primary" scale="1.5"></b-icon>
-                    </b-iconstack>
-                  </b-button>
-                </div>
-                <div class="mt-0 flex-grow-1">
-                </div>
-                <!-- <div class="mt-0 pr-1">
-                  <b-button size="sm" :disabled="false" @click="scanNFC();" variant="primary" v-b-popover.hover.bottom="'Scan NFC'">Scan NFC</b-button>
-                </div> -->
-                <!-- <div class="mt-0 flex-grow-1">
-                </div> -->
-                <!-- <div class="mt-0 pr-1">
-                  <b-button size="sm" :disabled="filteredSortedSlots.length == 0" @click="retrieveBalances();" variant="primary" v-b-popover.hover.bottom="'Retrieve Balances'">Retrieve Balances</b-button>
-                </div> -->
-                <div class="mt-0 pl-1">
-                  <b-button size="sm" :disabled="false" @click="settings.showInfo = !settings.showInfo; saveSettings();" @change="saveSettings" variant="none">
-                    <b-icon :icon="settings.showInfo ? 'info-circle-fill' : 'info-circle'" shift-v="+1" font-scale="1.0" variant="primary"></b-icon>
-                  </b-button>
-                </div>
-                <div class="mt-0 flex-grow-1">
-                </div>
-                <div class="mt-0 pr-1">
-                  <b-button size="sm" @click="showModalConfig();" variant="outline">
-                    <b-icon-gear shift-v="+1" font-scale="1.0" variant="primary"></b-icon-gear>
-                  </b-button>
-                </div>
-              </div>
+          <div class="d-flex flex-wrap m-0 mt-1 p-0 px-1 bg-white">
+            <div class="mt-0 pr-1">
+              <b-form-select size="sm" v-model="settings.selectedCard" :options="cardsOptions" @change="saveSettings" style="max-width: 30.0rem;"></b-form-select>
+            </div>
+            <div class="mt-0 pr-1">
+              <b-button size="sm" @click="showModalCards();" variant="outline">
+                <b-icon-files shift-v="+1" font-scale="1.0" variant="primary"></b-icon-files>
+              </b-button>
+            </div>
+            <div class="mt-0 flex-grow-1">
+            </div>
+            <div class="mt-0 pr-1">
+              <b-button size="sm" @click="scanNFC();" variant="outline">
+                <!-- <b-iconstack font-scale="1" animation="cylon"> -->
+                <b-iconstack font-scale="1">
+                  <b-icon stacked icon="wifi" variant="primary" scale="0.8"></b-icon>
+                  <b-icon stacked icon="file" variant="primary" scale="1.5"></b-icon>
+                </b-iconstack>
+              </b-button>
+            </div>
+            <div class="mt-0 flex-grow-1">
+            </div>
+            <!-- <div class="mt-0 pr-1">
+              <b-button size="sm" :disabled="filteredSortedSlots.length == 0" @click="retrieveBalances();" variant="primary" v-b-popover.hover.bottom="'Retrieve Balances'">Retrieve Balances</b-button>
+            </div> -->
+            <div class="mt-0 pl-1">
+              <b-button size="sm" :disabled="false" @click="settings.showInfo = !settings.showInfo; saveSettings();" @change="saveSettings" variant="none">
+                <b-icon :icon="settings.showInfo ? 'info-circle-fill' : 'info-circle'" shift-v="+1" font-scale="1.0" variant="primary"></b-icon>
+              </b-button>
+            </div>
+            <div class="mt-0 flex-grow-1">
+            </div>
+            <div class="mt-0 pr-1">
+              <b-button size="sm" @click="showModalConfig();" variant="outline">
+                <b-icon-gear shift-v="+1" font-scale="1.0" variant="primary"></b-icon-gear>
+              </b-button>
+            </div>
+          </div>
 
-              <!-- <b-tabs card small v-model="settings.tabIndex" align="right" class="mt-1" content-class="mt-1" nav-wrapper-class="m-0 p-2 border-0" active-tab-class="m-0 p-0">
-                <template #tabs-start>
-                  <div class="mt-2 text-left w-50">Blah</div>
-                  <li class="mt-0 nav-item align-self-center w-50">Plain text</li>
-                </template>
-                <b-tab title="Card" active no-body title-item-class="m-0 p-0 pb-1" title-link-class="m-0 p-2"></b-tab>
-                <b-tab title="Address" no-body title-item-class="m-0 p-0 pb-1" title-link-class="m-0 p-2"></b-tab>
-              </b-tabs> -->
-
-              <div class="d-flex mt-1">
-                <span class="m-1">
-                  <b-link :href="'https://etherscan.io/address/' + activeAddress" target="_blank">
-                    <font size="-1">{{ activeAddress.substring(0, 8) + '...' + activeAddress.slice(-6) }}</font>
-                  </b-link>
-                  <b-button size="sm" @click="copyToClipboard(activeAddress);" variant="outline">
-                    <b-icon-clipboard shift-v="+2" font-scale="0.9" variant="primary"></b-icon-clipboard>
-                  </b-button>
-                </span>
-                <div class="mt-0 flex-grow-1">
-                </div>
-                <b-tabs small v-model="settings.tabIndex" align="right" class="text-right" content-class="mt-1" >
-                  <b-tab title="Card"></b-tab>
-                  <b-tab title="Address"></b-tab>
-                </b-tabs>
-              </div>
-
-              Blah {{ settings.tabIndex }}
+          <b-card v-if="settings.showInfo || Object.keys(settings.cards).length == 0" no-body class="m-1 p-1" bg-variant="light">
+            <b-card-body class="mt-1 p-1">
+              <h6>Welcome to BurnerProTool (WIP)</h6>
+              This tool is being built to provide an alternative method to manage your Ethereum wallets on
+              <b-link href="https://burner.pro" target="_blank">burner.pro</b-link> NFC cards.
               <br />
-              Blah
               <br />
-              Blah
-              <!-- {{ settings.tabIndex }} -->
-
-              <b-card v-if="settings.showInfo || Object.keys(settings.cards).length == 0" no-body class="my-1 p-1">
-                <b-card-body class="mt-1 p-1">
-                  <h6>Welcome to BurnerProTool (WIP)</h6>
-
-                  This tool is being built to provide an alternative method to manage your Ethereum wallets on
-                  <b-link href="https://burner.pro" target="_blank">burner.pro</b-link> NFC cards.
-
-                  <br />
-                  <br />
-
-                  <b-icon-files shift-v="+1" font-scale="1.0" variant="primary"></b-icon-files> View cards
-
-                  <br />
-
-                  <b-iconstack font-scale="1">
-                    <b-icon stacked icon="wifi" variant="primary" scale="0.8"></b-icon>
-                    <b-icon stacked icon="file" variant="primary" scale="1.5"></b-icon>
-                  </b-iconstack> Scan Burner.pro NFC card
-
-                  <br />
-
-                  <b-icon :icon="settings.showInfo ? 'info-circle-fill' : 'info-circle'" shift-v="+1" font-scale="1.0" variant="primary"></b-icon> View info
-
-                  <br />
-
-                  <b-icon-gear shift-v="+1" font-scale="1.0" variant="primary"></b-icon-gear> Config
-
-                  <br />
-                  <br />
-
-                  We are not affiliated with burner.pro .
-                  <br />
-                  <font size="-1">Enjoy!</font>
-                  <br />
-                  <font size="-1">(c) BokkyPooBah / Bok Consulting Pty Ltd 2024</font>
-
-                </b-card-body class="mt-1 p-1">
-              </b-card>
-
-              <b-form-textarea readonly size="sm" v-model.trim="debug" rows="3" max-rows="20" class="mt-1"></b-form-textarea>
-            </b-card>
-
-            <b-card v-if="false && settings.tabIndex == 1 && filteredSortedSlots.length > 0" no-body class="my-0 p-1">
-              <b-form-group label="Active address" label-for="selected-slot">
-                <b-input-group>
-                  <b-form-select id="selected-slot" v-model="selectedSlot" :options="slotsOptions" style="max-width: 30.0rem;"></b-form-select>
-                  <b-input-group-append>
-                    <b-button :disabled="!selectedSlot" :href="'https://etherscan.io/address/' + (slots[selectedSlot] && slots[selectedSlot].address)" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-3 p-0"><b-icon-link45deg shift-v="-4" font-scale="1.2"></b-icon-link45deg></b-button>
-                    <b-button :disabled="!selectedSlot" @click="copyToClipboard((slots[selectedSlot] && slots[selectedSlot].address));" variant="link" class="m-0 ml-1 p-0"><b-icon-clipboard shift-v="+1" font-scale="1.1"></b-icon-clipboard></b-button>
-                  </b-input-group-append>
-                </b-input-group>
-              </b-form-group>
-              <b-form-group label="Action" label-for="selected-action">
-                <b-input-group>
-                  <b-form-select id="selected-action" v-model="selectedAction" :options="actionOptions" style="max-width: 10.0rem;"></b-form-select>
-                </b-input-group>
-              </b-form-group>
-              <b-form-group label="To" label-for="action-to">
-                <b-input-group>
-                  <b-form-input id="action-to" v-model.trim="action.to" style="max-width: 30.0rem;"></b-form-input>
-                </b-input-group>
-              </b-form-group>
-              <b-form-group label="Value" label-for="action-value">
-                <b-input-group>
-                  <b-form-input id="action-value" v-model.trim="action.value" style="max-width: 10.0rem;"></b-form-input>
-                  <b-input-group-append>
-                    <b-form-select v-model="action.valueType" :options="valueTypeOptions"></b-form-select>
-                  </b-input-group-append>
-                </b-input-group>
-              </b-form-group>
-              <b-form-group label="Gas Limit" label-for="action-gaslimit">
-                <b-input-group>
-                  <b-form-input id="action-gaslimit" v-model.trim="action.gasLimit" style="max-width: 10.0rem;"></b-form-input>
-                </b-input-group>
-              </b-form-group>
-              <b-form-group label="Max Fee Per Gas" label-for="action-maxfeepergas">
-                <b-input-group>
-                  <b-form-input id="action-maxfeepergas" v-model.trim="action.maxFeePerGas" style="max-width: 10.0rem;"></b-form-input>
-                  <b-input-group-append>
-                    <b-form-select v-model="action.maxFeePerGasType" :options="valueTypeOptions"></b-form-select>
-                  </b-input-group-append>
-                </b-input-group>
-              </b-form-group>
-              <b-form-group label="Max Priority Fee Per Gas" label-for="action-maxpriorityfeepergas">
-                <b-input-group>
-                  <b-form-input id="action-maxpriorityfeepergas" v-model.trim="action.maxPriorityFeePerGas" style="max-width: 10.0rem;"></b-form-input>
-                  <b-input-group-append>
-                    <b-form-select v-model="action.maxPriorityFeePerGasType" :options="valueTypeOptions"></b-form-select>
-                  </b-input-group-append>
-                </b-input-group>
-              </b-form-group>
-              <b-form-group label="Chain Id" label-for="action-chainId">
-                <b-input-group>
-                  <b-form-input id="action-chainId" v-model.trim="action.chainId" style="max-width: 10.0rem;"></b-form-input>
-                </b-input-group>
-              </b-form-group>
-              <b-form-group label="Transaction Type" label-for="action-type">
-                <b-input-group>
-                  <b-form-input id="action-type" v-model.trim="action.transactionType" style="max-width: 10.0rem;"></b-form-input>
-                </b-input-group>
-              </b-form-group>
-              <b-form-group label="Nonce" label-for="action-nonce">
-                <b-input-group>
-                  <b-form-input id="action-nonce" v-model.trim="action.nonce" style="max-width: 10.0rem;"></b-form-input>
-                </b-input-group>
-              </b-form-group>
-              <b-form-group label="password" label-for="action-password">
-                <b-input-group>
-                  <b-form-input type="password" id="action-password" v-model.trim="action.password" style="max-width: 10.0rem;"></b-form-input>
-                </b-input-group>
-              </b-form-group>
-              <b-button size="sm" :disabled="false" @click="signEthTx();" variant="primary" v-b-popover.hover.bottom="'Scan NFC To Sign'" style="max-width: 10.0rem;">Scan NFC To Sign</b-button>
-              <b-form-textarea readonly size="sm" v-model.trim="debug" rows="3" max-rows="20" class="mt-1"></b-form-textarea>
-            </b-card>
+              <b-icon-files shift-v="+1" font-scale="1.0" variant="primary"></b-icon-files> View cards
+              <br />
+              <b-iconstack font-scale="1">
+                <b-icon stacked icon="wifi" variant="primary" scale="0.8"></b-icon>
+                <b-icon stacked icon="file" variant="primary" scale="1.5"></b-icon>
+              </b-iconstack> Scan Burner.pro NFC card
+              <br />
+              <b-icon :icon="settings.showInfo ? 'info-circle-fill' : 'info-circle'" shift-v="+1" font-scale="1.0" variant="primary"></b-icon> View info
+              <br />
+              <b-icon-gear shift-v="+1" font-scale="1.0" variant="primary"></b-icon-gear> Config
+              <br />
+              <br />
+              We are not affiliated with burner.pro .
+              <br />
+              <font size="-1">Enjoy!</font>
+              <br />
+              <font size="-1">(c) BokkyPooBah / Bok Consulting Pty Ltd 2024</font>
+            </b-card-body>
           </b-card>
+
+          <b-card v-if="!settings.showInfo && Object.keys(settings.cards).length > 0" no-body class="m-1 p-1" bg-variant="light">
+            <div class="d-flex m-0 p-0">
+              <span class="m-1">
+                <b-link v-if="activeAddress" :href="'https://etherscan.io/address/' + activeAddress" target="_blank">
+                  <font size="-1">{{ activeAddress.substring(0, 8) + '...' + activeAddress.slice(-6) }}</font>
+                </b-link>
+                <b-button v-if="activeAddress" size="sm" @click="copyToClipboard(activeAddress);" variant="outline">
+                  <b-icon-clipboard shift-v="+2" font-scale="0.9" variant="primary"></b-icon-clipboard>
+                </b-button>
+              </span>
+              <div class="mt-0 flex-grow-1">
+              </div>
+              <b-tabs small v-model="settings.tabIndex" align="right" class="text-right" content-class="m-0 p-0" >
+                <b-tab title="Address" no-body></b-tab>
+                <b-tab title="Card" no-body></b-tab>
+              </b-tabs>
+            </div>
+            <b-card-body v-if="settings.tabIndex == 0" class="m-0 p-0" body-bg-variant="white">
+              Address Tab
+              Blah
+              Blah
+              Blah
+              <br /><br /><br /><br /><br /><br /><br />
+            </b-card-body>
+            <b-card-body v-if="settings.tabIndex == 1" class="m-0 p-0" body-bg-variant="white">
+              Card Tab
+              Blah
+              Blah
+              Blah
+              <br /><br /><br /><br /><br /><br /><br />
+            </b-card-body>
+            <b-form-textarea readonly size="sm" v-model.trim="debug" rows="3" max-rows="20" class="mt-1"></b-form-textarea>
+          </b-card>
+
+          <b-card v-if="false && settings.tabIndex == 1 && filteredSortedSlots.length > 0" no-body class="my-0 p-1">
+            <b-form-group label="Active address" label-for="selected-slot">
+              <b-input-group>
+                <b-form-select id="selected-slot" v-model="selectedSlot" :options="slotsOptions" style="max-width: 30.0rem;"></b-form-select>
+                <b-input-group-append>
+                  <b-button :disabled="!selectedSlot" :href="'https://etherscan.io/address/' + (slots[selectedSlot] && slots[selectedSlot].address)" variant="link" v-b-popover.hover.ds500="'View in explorer'" target="_blank" class="m-0 ml-3 p-0"><b-icon-link45deg shift-v="-4" font-scale="1.2"></b-icon-link45deg></b-button>
+                  <b-button :disabled="!selectedSlot" @click="copyToClipboard((slots[selectedSlot] && slots[selectedSlot].address));" variant="link" class="m-0 ml-1 p-0"><b-icon-clipboard shift-v="+1" font-scale="1.1"></b-icon-clipboard></b-button>
+                </b-input-group-append>
+              </b-input-group>
+            </b-form-group>
+            <b-form-group label="Action" label-for="selected-action">
+              <b-input-group>
+                <b-form-select id="selected-action" v-model="selectedAction" :options="actionOptions" style="max-width: 10.0rem;"></b-form-select>
+              </b-input-group>
+            </b-form-group>
+            <b-form-group label="To" label-for="action-to">
+              <b-input-group>
+                <b-form-input id="action-to" v-model.trim="action.to" style="max-width: 30.0rem;"></b-form-input>
+              </b-input-group>
+            </b-form-group>
+            <b-form-group label="Value" label-for="action-value">
+              <b-input-group>
+                <b-form-input id="action-value" v-model.trim="action.value" style="max-width: 10.0rem;"></b-form-input>
+                <b-input-group-append>
+                  <b-form-select v-model="action.valueType" :options="valueTypeOptions"></b-form-select>
+                </b-input-group-append>
+              </b-input-group>
+            </b-form-group>
+            <b-form-group label="Gas Limit" label-for="action-gaslimit">
+              <b-input-group>
+                <b-form-input id="action-gaslimit" v-model.trim="action.gasLimit" style="max-width: 10.0rem;"></b-form-input>
+              </b-input-group>
+            </b-form-group>
+            <b-form-group label="Max Fee Per Gas" label-for="action-maxfeepergas">
+              <b-input-group>
+                <b-form-input id="action-maxfeepergas" v-model.trim="action.maxFeePerGas" style="max-width: 10.0rem;"></b-form-input>
+                <b-input-group-append>
+                  <b-form-select v-model="action.maxFeePerGasType" :options="valueTypeOptions"></b-form-select>
+                </b-input-group-append>
+              </b-input-group>
+            </b-form-group>
+            <b-form-group label="Max Priority Fee Per Gas" label-for="action-maxpriorityfeepergas">
+              <b-input-group>
+                <b-form-input id="action-maxpriorityfeepergas" v-model.trim="action.maxPriorityFeePerGas" style="max-width: 10.0rem;"></b-form-input>
+                <b-input-group-append>
+                  <b-form-select v-model="action.maxPriorityFeePerGasType" :options="valueTypeOptions"></b-form-select>
+                </b-input-group-append>
+              </b-input-group>
+            </b-form-group>
+            <b-form-group label="Chain Id" label-for="action-chainId">
+              <b-input-group>
+                <b-form-input id="action-chainId" v-model.trim="action.chainId" style="max-width: 10.0rem;"></b-form-input>
+              </b-input-group>
+            </b-form-group>
+            <b-form-group label="Transaction Type" label-for="action-type">
+              <b-input-group>
+                <b-form-input id="action-type" v-model.trim="action.transactionType" style="max-width: 10.0rem;"></b-form-input>
+              </b-input-group>
+            </b-form-group>
+            <b-form-group label="Nonce" label-for="action-nonce">
+              <b-input-group>
+                <b-form-input id="action-nonce" v-model.trim="action.nonce" style="max-width: 10.0rem;"></b-form-input>
+              </b-input-group>
+            </b-form-group>
+            <b-form-group label="password" label-for="action-password">
+              <b-input-group>
+                <b-form-input type="password" id="action-password" v-model.trim="action.password" style="max-width: 10.0rem;"></b-form-input>
+              </b-input-group>
+            </b-form-group>
+            <b-button size="sm" :disabled="false" @click="signEthTx();" variant="primary" v-b-popover.hover.bottom="'Scan NFC To Sign'" style="max-width: 10.0rem;">Scan NFC To Sign</b-button>
+            <b-form-textarea readonly size="sm" v-model.trim="debug" rows="3" max-rows="20" class="mt-1"></b-form-textarea>
+          </b-card>
+
         </b-card>
 
         <b-card no-header body-class="m-0 p-0" class="m-0 p-0 border-0">
