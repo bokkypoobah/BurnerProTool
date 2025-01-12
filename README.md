@@ -63,6 +63,43 @@ Clicking on the [Config] button from the main page, you can insert some test dat
 
 <br />
 
+#### Set Graffiti
+
+View the current graffiti setting in the Card tab. Click on the [Write] icon to the right to update the graffiti
+
+<kbd><img src="images/burnerprotoolsetgraffiti1.png" width="200" /></kbd>
+
+The current graffiti
+
+<kbd><img src="images/burnerprotoolsetgraffiti2.png" width="200" /></kbd>
+
+Update the graffiti and click on the [Scan] button
+
+<kbd><img src="images/burnerprotoolsetgraffiti3.png" width="200" /></kbd>
+
+Scan your burner.pro NFC card
+
+<kbd><img src="images/burnerprotoolsetgraffiti4.png" width="200" /></kbd>
+
+Update successful. Rescan the NFC card from the main menu
+<kbd><img src="images/burnerprotoolsetgraffiti5.png" width="200" /></kbd>
+
+From the main menu. Click on the [Scan] button
+
+Note that the error message in this screen shows an invalid graffiti string from being written to the card from a prior test
+
+<kbd><img src="images/burnerprotoolsetgraffiti6.png" width="200" /></kbd>
+
+Scan your burner.pro NFC card
+
+<kbd><img src="images/burnerprotoolsetgraffiti7.png" width="200" /></kbd>
+
+Screen shows the updated graffiti
+
+<kbd><img src="images/burnerprotoolsetgraffiti8.png" width="200" /></kbd>
+
+<br />
+
 #### Sign Transfer ETH Message (Old, to be replaced)
 
 Slot 9 selected, with some test data. Loaded in Brave on mobile for web3 and NFC support
