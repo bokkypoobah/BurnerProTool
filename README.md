@@ -14,15 +14,56 @@ We are not affiliated with burner.pro . This tool is under development, so test 
 
 This dapp uses [libhalo.js v1.10.11](https://github.com/arx-research/libhalo/releases/download/libhalo-v1.10.11/libhalo.js) to interact with burner.pro NFC card.
 
-
 Load on NFC reader enabled mobile phone, with Burner.pro NFC card: https://bokkypoobah.github.io/BurnerProTool/
 
+#### Sample Screens
 
-Sample screen after scanning a Burner Pro NFC card. When using with a web3 enabled browser like Brave that can scan NFC cards, balances can be retrieved using [Retrieve Balances]
+Initial page
 
-<kbd><img src="images/scanNFC1.png" width="400" /></kbd>
+<kbd><img src="images/burnerprotoolexample1.png" width="200" /></kbd>
 
-#### Sign Transfer ETH Message
+Click on the [Scan NFC] button to view the NFC scanning prompt
+
+<kbd><img src="images/burnerprotoolexample2.png" width="200" /></kbd>
+
+After scanning a burner.pro NFC card that has already been set up as an Ethereum wallet
+
+<kbd><img src="images/burnerprotoolexample3.png" width="200" /></kbd>
+
+Click on the [Cards] button
+
+<kbd><img src="images/burnerprotoolexample4.png" width="200" /></kbd>
+
+Click on the [Slots] button
+
+* Addresses at slots 1, 2 and 8 are generated before the burner.pro NFC card is set up as an Ethereum wallet
+* The address at slot 9 is the Ethereum wallet that is generated when you first initialise your NFC card using https://os.burner.pro (see Review section below for screenshots)
+* Addresses at slots 8 and 9 are password protected
+* The address at slot 9 has been exported
+
+<kbd><img src="images/burnerprotoolexample5.png" width="200" /></kbd>
+
+Name your wallets in the [Cards] page
+
+<kbd><img src="images/burnerprotoolexample6.png" width="200" /></kbd>
+
+After scanning and naming my duplicate of the first NFC card
+
+<kbd><img src="images/burnerprotoolexample7.png" width="200" /></kbd>
+
+Viewing the slots of the duplicate card
+
+* The address at slot 9 has been imported
+
+<kbd><img src="images/burnerprotoolexample8.png" width="200" /></kbd>
+
+Clicking on the [Config] button from the main page, you can insert some test data (my burner.pro NFC card and the duplicate), or reset any saved data
+
+<kbd><img src="images/burnerprotoolexample9.png" width="200" /></kbd>
+
+<br />
+
+#### Sign Transfer ETH Message (Old, to be replaced)
 
 Slot 9 selected, with some test data. Loaded in Brave on mobile for web3 and NFC support
 
