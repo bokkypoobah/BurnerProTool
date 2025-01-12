@@ -172,7 +172,7 @@
           <b-form-group label="Insert test data:" label-cols="5" label-align="right">
             <b-form-input type="text" size="sm" v-model.trim="modalGraffiti.graffiti" placeholder="graffiti"></b-form-input>
           </b-form-group>
-          <b-form-group label="" label-cols="5" label-align="right" description="Click to scan NFC card. Then rescan from main menu">
+          <b-form-group label="" label-cols="5" label-align="right" :description="modalGraffiti.prompt">
             <b-button size="sm" @click="updateGraffiti();" variant="outline">
               <b-iconstack font-scale="1">
                 <b-icon stacked icon="wifi" variant="primary" scale="0.8"></b-icon>
@@ -468,6 +468,7 @@
 
           modalGraffiti: {
             graffiti: null,
+            prompt: null,
           },
 
           sync: {
@@ -685,6 +686,7 @@
           },
           showModalGraffiti() {
             this.modalGraffiti.graffiti = this.activeCardGraffiti;
+            this.modalGraffiti.prompt = "Click, then scan NFC card to set the graffiti";
             this.$bvModal.show('modal-graffiti');
           },
           async updateGraffiti() {
@@ -698,11 +700,12 @@
             try {
                 const result = await execHaloCmdWeb(command);
                 console.log(JSON.stringify(result, null, 4));
-                // this.processScanResult(result);
                 this.debug = JSON.stringify(result, null, 2);
+                this.modalGraffiti.prompt = "Graffiti updated. Rescan this NFC card from the main menu";
             } catch (e) {
                 console.log(moment().format("HH:mm:ss") + " updateGraffiti - ERROR: " + e.message);
                 this.debug = e.message;
+                this.modalGraffiti.prompt = "Graffiti updated failed: " + e.message;
             }
           },
           async scanNFC() {
