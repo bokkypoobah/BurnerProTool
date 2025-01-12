@@ -908,6 +908,7 @@
                   console.log(moment().format("HH:mm:ss") + " processScanResults - new card: " + JSON.stringify(this.settings.cards, null, 2));
                 } else {
                   Vue.set(this.settings.cards[cardId], 'slots', slots);
+                  Vue.set(this.settings.cards[cardId], 'graffiti', graffiti);
                   Vue.set(this.settings.cards[cardId], 'initialised', initialised);
                   if (!this.settings.cards[cardId].selectedSlot && initialised) {
                     Vue.set(this.settings.cards[cardId], 'selectedSlot', 9);
