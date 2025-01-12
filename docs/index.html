@@ -164,6 +164,24 @@
           </b-form-group>
         </b-modal>
 
+        <!-- :MODALGRAFFITI -->
+        <b-modal id="modal-graffiti" hide-footer size="md" body-class="m-0 p-1 pt-2" body-bg-variant="light">
+          <template #modal-title>
+            Set Graffiti For {{ activeCardName }}
+          </template>
+          <b-form-group label="Insert test data:" label-cols="5" label-align="right">
+            <b-form-input type="text" size="sm" v-model.trim="modalGraffiti.graffiti" placeholder="graffiti"></b-form-input>
+          </b-form-group>
+          <b-form-group label="" label-cols="5" label-align="right" description="Click to scan NFC card. Then rescan from main menu">
+            <b-button size="sm" @click="updateGraffiti();" variant="outline">
+              <b-iconstack font-scale="1">
+                <b-icon stacked icon="wifi" variant="primary" scale="0.8"></b-icon>
+                <b-icon stacked icon="file" variant="primary" scale="1.5"></b-icon>
+              </b-iconstack>
+            </b-button>
+          </b-form-group>
+        </b-modal>
+
         <!-- <b-alert v-if="false" size="sm" dismissible variant="warning" show class="m-1 my-0">
           Warning: This is experimental unaudited software. Please check your transaction data carefully before signing
         </b-alert> -->
@@ -253,11 +271,13 @@
               </span>
               <div class="mt-0 flex-grow-1">
               </div>
-              <b-tabs small v-model="settings.tabIndex" align="right" class="text-right" content-class="m-0 p-0" >
+              <b-tabs small v-model="settings.tabIndex" @input="saveSettings" align="right" class="text-right" content-class="m-0 p-0" >
                 <b-tab title="Address" no-body></b-tab>
                 <b-tab title="Card" no-body></b-tab>
               </b-tabs>
             </div>
+
+            <!-- Address View -->
             <b-card-body v-if="settings.tabIndex == 0" class="m-0 p-0" body-bg-variant="white">
               Address Tab
               Blah
@@ -265,12 +285,24 @@
               Blah
               <br /><br /><br /><br /><br /><br /><br />
             </b-card-body>
-            <b-card-body v-if="settings.tabIndex == 1" class="m-0 p-0" body-bg-variant="white">
-              Card Tab
-              Blah
-              Blah
-              Blah
-              <br /><br /><br /><br /><br /><br /><br />
+
+            <!-- Card View --->
+            <b-card-body v-if="settings.tabIndex == 1" class="m-0 p-1" body-bg-variant="white">
+              <b-form-group label="Name:" label-for="card-name" class="mt-2">
+                <b-input-group>
+                  <b-form-input readonly id="card-name" :value="activeCardName"></b-form-input>
+                </b-input-group>
+              </b-form-group>
+              <b-form-group label="Graffiti:" label-for="card-graffiti" class="mt-2" description="This text is potentially writeable by any NFC reader">
+                <b-input-group>
+                  <b-form-input readonly id="card-graffiti" :value="activeCardGraffiti"></b-form-input>
+                  <b-input-group-append>
+                    <b-button size="sm" @click="showModalGraffiti();" variant="primary">
+                      <b-icon-pencil-square font-scale="1" variant="outline"></b-icon-pencil-square>
+                    </b-button>
+                  </b-input-group-append>
+                </b-input-group>
+              </b-form-group>
             </b-card-body>
             <b-form-textarea readonly size="sm" v-model.trim="debug" rows="3" max-rows="20" class="mt-1"></b-form-textarea>
           </b-card>
@@ -434,6 +466,10 @@
             name: "test", // TODO: null
           },
 
+          modalGraffiti: {
+            graffiti: null,
+          },
+
           sync: {
             section: null,
             total: null,
@@ -492,11 +528,25 @@
         computed: {
 
           activeAddress() {
-            console.log(moment().format("HH:mm:ss") + " activeAddress");
+            // console.log(moment().format("HH:mm:ss") + " activeAddress");
             if (this.settings.selectedCard && this.settings.selectedCard in this.settings.cards) {
               if (this.settings.cards[this.settings.selectedCard].selectedSlot) {
                 return this.settings.cards[this.settings.selectedCard].slots[this.settings.cards[this.settings.selectedCard].selectedSlot].address;
               }
+            }
+            return null;
+          },
+          activeCardName() {
+            console.log(moment().format("HH:mm:ss") + " activeCardName");
+            if (this.settings.selectedCard && this.settings.selectedCard in this.settings.cards) {
+              return this.settings.cards[this.settings.selectedCard].name;
+            }
+            return null;
+          },
+          activeCardGraffiti() {
+            console.log(moment().format("HH:mm:ss") + " activeCardGraffiti");
+            if (this.settings.selectedCard && this.settings.selectedCard in this.settings.cards) {
+              return this.settings.cards[this.settings.selectedCard].graffiti;
             }
             return null;
           },
@@ -633,12 +683,34 @@
           showModalConfig() {
             this.$bvModal.show('modal-config');
           },
+          showModalGraffiti() {
+            this.modalGraffiti.graffiti = this.activeCardGraffiti;
+            this.$bvModal.show('modal-graffiti');
+          },
+          async updateGraffiti() {
+            localStorage.setItem('DEBUG_LIBHALO_WEB', '1'); // https://github.com/arx-research/libhalo/blob/master/docs/api-web.md#debugging-through-the-developers-console
+            console.log(moment().format("HH:mm:ss") + " updateGraffiti");
+            const command = {
+              name: "store_graffiti", // https://halo-demos.arx.org/examples/graffiti.html
+              slotNo: 1,
+              data: this.modalGraffiti.graffiti,
+            };
+            try {
+                const result = await execHaloCmdWeb(command);
+                console.log(JSON.stringify(result, null, 4));
+                // this.processScanResult(result);
+                this.debug = JSON.stringify(result, null, 2);
+            } catch (e) {
+                console.log(moment().format("HH:mm:ss") + " updateGraffiti - ERROR: " + e.message);
+                this.debug = e.message;
+            }
+          },
           async scanNFC() {
             localStorage.setItem('DEBUG_LIBHALO_WEB', '1'); // https://github.com/arx-research/libhalo/blob/master/docs/api-web.md#debugging-through-the-developers-console
             console.log(moment().format("HH:mm:ss") + " scanNFC");
             const command = {
-                name: "get_data_struct", // https://github.com/arx-research/libhalo/blob/master/docs/halo-command-set.md#command-get_data_struct
-                spec: "compressedPublicKey:1,compressedPublicKey:2,compressedPublicKey:3,compressedPublicKey:4,compressedPublicKey:5,compressedPublicKey:6,compressedPublicKey:7,compressedPublicKey:8,compressedPublicKey:9,keySlotFlags:1,keySlotFlags:2,keySlotFlags:3,keySlotFlags:4,keySlotFlags:5,keySlotFlags:6,keySlotFlags:7,keySlotFlags:8,keySlotFlags:9,graffiti:1",
+              name: "get_data_struct", // https://github.com/arx-research/libhalo/blob/master/docs/halo-command-set.md#command-get_data_struct
+              spec: "compressedPublicKey:1,compressedPublicKey:2,compressedPublicKey:3,compressedPublicKey:4,compressedPublicKey:5,compressedPublicKey:6,compressedPublicKey:7,compressedPublicKey:8,compressedPublicKey:9,keySlotFlags:1,keySlotFlags:2,keySlotFlags:3,keySlotFlags:4,keySlotFlags:5,keySlotFlags:6,keySlotFlags:7,keySlotFlags:8,keySlotFlags:9,graffiti:1",
             };
             try {
                 const result = await execHaloCmdWeb(command);
