@@ -82,6 +82,7 @@ Scan your burner.pro NFC card
 <kbd><img src="images/burnerprotoolsetgraffiti4.png" width="200" /></kbd>
 
 Update successful. Rescan the NFC card from the main menu
+
 <kbd><img src="images/burnerprotoolsetgraffiti5.png" width="200" /></kbd>
 
 From the main menu. Click on the [Scan] button
