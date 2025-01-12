@@ -54,7 +54,7 @@
         </b-navbar>
 
         <!-- :MODALCARDS -->
-        <b-modal id="modal-cards" hide-footer size="md" body-class="m-0 p-1">
+        <b-modal id="modal-cards" hide-footer size="md" body-class="m-0 p-1" body-bg-variant="light">
           <template #modal-title>
             Cards
           </template>
@@ -74,7 +74,6 @@
               <b-form-select size="sm" v-model="settings.cardsTable.pageSize" @change="saveSettings" :options="pageSizes"></b-form-select>
             </div> -->
           </div>
-          <!-- <b-table small fixed striped responsive hover selectable select-mode="single" @row-selected='cardSelected' :fields="cardsFields" :items="filteredSortedCards" show-empty empty-html="Press Escape. Then scan your Burner.pro NFC card to begin" head-variant="light" class="mx-0 my-0 mt-1"> -->
           <b-table small fixed striped responsive hover :fields="cardsFields" :items="filteredSortedCards" show-empty empty-html="Press Escape. Then scan your Burner.pro NFC card to begin" head-variant="light" class="mx-0 my-0 mt-1">
             <template #cell(select)="data">
               <b-form-checkbox size="sm" :checked="settings.selectedCard == data.item.cardId" @change="updateSelectedCard(data.item.cardId)">
@@ -85,7 +84,6 @@
             </template>
             <template #cell(address)="data">
               <div v-if="data.item.initialised">
-                <!-- <font size="-1">{{ data.item.address.substring(0, 8) + '...' + data.item.address.slice(-4) }}</font> -->
                 <b-link :href="'https://etherscan.io/address/' + data.item.address" target="_blank" v-b-popover.hover="data.item.address">
                   <font size="-1">{{ data.item.address.substring(0, 8) + '...' + data.item.address.slice(-4) }}</font>
                 </b-link>
@@ -114,25 +112,17 @@
                 Balance: {{ formatETH(data.item.balance) }}
               </font>
             </template> -->
-            <!-- <template #cell(info)="data">
-              <font size="-1">
-                <b-form-checkbox disabled v-model="data.item.isPasswordProtected">Password Protected</b-form-checkbox>
-                <b-form-checkbox disabled v-model="data.item.isImported">Imported</b-form-checkbox>
-                <b-form-checkbox disabled v-model="data.item.isExported">Exported</b-form-checkbox>
-              </font>
-            </template> -->
           </b-table>
         </b-modal>
 
         <!-- :MODALSLOTS -->
-        <b-modal id="modal-slots" hide-footer size="md" body-class="m-0 p-1">
+        <b-modal id="modal-slots" hide-footer size="md" body-class="m-0 p-1" body-bg-variant="light">
           <template #modal-title>
-            {{ modalSlots.name ? "Slots for '" + modalSlots.name + "'": "Slots" }}
+            {{ modalSlots.name ? modalSlots.name + " Slots": "Slots" }}
           </template>
           <b-alert v-if="modalSlots.cardId && settings.cards[modalSlots.cardId] && settings.cards[modalSlots.cardId].selectedSlot != 9" size="sm" dismissible variant="warning" show class="m-0">
             Warning: Burner.pro uses slot 9
           </b-alert>
-          <!-- <b-table small fixed striped responsive hover selectable select-mode="single" @row-selected='cardSelected' :fields="cardsFields" :items="slots" show-empty empty-html="Press Escape. Then scan your Burner.pro NFC card to begin" head-variant="light" class="mx-0 my-0 mt-1"> -->
           <b-table small fixed striped responsive hover :fields="slotsFields" :items="slots" show-empty head-variant="light" class="mx-0 my-0 mt-1">
             <template #cell(slot)="data">
               <b-form-checkbox size="sm" :checked="settings.cards[modalSlots.cardId].selectedSlot == data.item.slot" @change="updateSelectedSlot(modalSlots.cardId, data.item.slot)">
@@ -157,15 +147,32 @@
           </b-table>
         </b-modal>
 
+        <!-- :MODALCONFIG -->
+        <b-modal id="modal-config" hide-footer size="md" body-class="m-0 p-1" body-bg-variant="light">
+          <template #modal-title>
+            Configuration
+          </template>
+          <b-form-group label-cols-lg="2" label="Test Data" label-size="md" label-class="font-weight-bold pt-0" class="mt-3 mb-0">
+            <b-form-group label="Insert test data:" label-cols="5" label-align="right">
+              <b-button size="sm" @click="insertTestData()" variant="primary">Insert</b-button>
+            </b-form-group>
+          </b-form-group>
+          <b-form-group label-cols-lg="2" label="Reset Data" label-size="md" label-class="font-weight-bold pt-0" class="mt-3 mb-0">
+            <b-form-group label="Reset data:" label-cols="5" label-align="right" description="Refresh page after pressing button">
+              <b-button size="sm" @click="resetData()" variant="warning">Reset</b-button>
+            </b-form-group>
+          </b-form-group>
+        </b-modal>
+
         <b-card no-body class="p-0 mt-0 border-0" style="min-height: 666px;">
-          <b-alert v-if="false" size="sm" dismissible variant="warning" show class="m-1 my-0">
+          <!-- <b-alert v-if="false" size="sm" dismissible variant="warning" show class="m-1 my-0">
             Warning: This is experimental unaudited software. Please check your transaction data carefully before signing
-          </b-alert>
-          <b-card class="m-2 p-1" header-class="warningheader" header="Welcome" v-if="false && !coinbase">
+          </b-alert> -->
+          <!-- <b-card class="m-2 p-1" header-class="warningheader" header="Welcome" v-if="false && !coinbase">
             <b-card-text>
               Please install the MetaMask extension and connect to the Ethereum Mainnet or an EVM compatible chain. Then refresh this page, and click the [Connect] button on the top right.
             </b-card-text>
-          </b-card>
+          </b-card> -->
 
           <!-- <b-tabs card small v-model="settings.tabIndex" content-class="mt-3">
             <b-tab title="Cards" active no-body></b-tab>
@@ -214,17 +221,11 @@
                   </div>
                   <div class="mt-0 flex-grow-1">
                   </div>
-                  <div class="mt-0 pl-1">
-                    <b-button size="sm" :disabled="false" @click="scanNFCTest();" variant="none">
-                      <b-icon-lightning shift-v="+1" font-scale="1.0" variant="primary"></b-icon-lightning>
+                  <div class="mt-0 pr-1">
+                    <b-button size="sm" @click="showModalConfig();" variant="outline">
+                      <b-icon-gear shift-v="+1" font-scale="1.0" variant="primary"></b-icon-gear>
                     </b-button>
                   </div>
-                  <!-- <div v-if="false" class="mt-1 pl-1">
-                    <b-button size="sm" :disabled="false" @click="signingTest();" variant="primary" v-b-popover.hover.bottom="'Scan NFC Test'">Dev2</b-button>
-                  </div> -->
-                  <!-- <div v-if="false" class="mt-1 pl-1">
-                    <b-button size="sm" :disabled="false" @click="signingTest1();" variant="primary" v-b-popover.hover.bottom="'Scan NFC Test'">Dev3</b-button>
-                  </div> -->
                 </div>
 
                 <b-card v-if="settings.showInfo || Object.keys(settings.cards).length == 0" no-body class="my-1 p-1">
@@ -252,7 +253,7 @@
 
                     <br />
 
-                    <b-icon-lightning shift-v="+1" font-scale="1.0" variant="primary"></b-icon-lightning> Dev button
+                    <b-icon-gear shift-v="+1" font-scale="1.0" variant="primary"></b-icon-gear> Config
 
                     <br />
                     <br />
@@ -266,33 +267,10 @@
                   </b-card-body class="mt-1 p-1">
                 </b-card>
 
-
-                <b-table v-if="false" fixed striped responsive hover :fields="slotsFields" :items="filteredSortedSlots" show-empty empty-html="Click on the top left button and scan your Burner.pro NFC card to begin" head-variant="light" class="mx-0 my-1 mt-2">
-                  <template #cell(slot)="data">
-                    <b-badge pill variant="transparent" class="px-0">{{ data.item.slot }}</b-badge>
-                  </template>
-                  <template #cell(address)="data">
-                    <b-link :href="'https://etherscan.io/address/' + data.item.address" target="_blank" v-b-popover.hover="data.item.address">
-                      {{ data.item.address.substring(0, 8) + '...' + data.item.address.slice(-6) }}
-                    </b-link>
-                    <br />
-                    <font v-if="data.item.balance" size="-1">
-                      Balance: {{ formatETH(data.item.balance) }}
-                    </font>
-                  </template>
-                  <template #cell(info)="data">
-                    <font size="-1">
-                      <b-form-checkbox disabled v-model="data.item.isPasswordProtected">Password Protected</b-form-checkbox>
-                      <b-form-checkbox disabled v-model="data.item.isImported">Imported</b-form-checkbox>
-                      <b-form-checkbox disabled v-model="data.item.isExported">Exported</b-form-checkbox>
-                    </font>
-                  </template>
-                </b-table>
-
                 <b-form-textarea readonly size="sm" v-model.trim="debug" rows="3" max-rows="20" class="mt-1"></b-form-textarea>
               </b-card>
 
-              <b-card v-if="settings.tabIndex == 1 && filteredSortedSlots.length > 0" no-body class="my-0 p-1">
+              <b-card v-if="false && settings.tabIndex == 1 && filteredSortedSlots.length > 0" no-body class="my-0 p-1">
                 <b-form-group label="Active address" label-for="selected-slot">
                   <b-input-group>
                     <b-form-select id="selected-slot" v-model="selectedSlot" :options="slotsOptions" style="max-width: 30.0rem;"></b-form-select>
@@ -404,39 +382,12 @@
 
           debug: "Debug",
 
-          cards: {}, // address0 -> slot# -> address
-
-          // slots: {},
+          // cards: {}, // address0 -> slot# -> address
 
           selectedSlot: 9, // null,
           selectedAction: "transfereth", // null,
 
           action: {
-            // 0x3eafc1a364a2f7047958bd71f2d1b8c4a4e817584ceb9870d73c98d13d01cf15
-            // eth.getTransaction("0x3eafc1a364a2f7047958bd71f2d1b8c4a4e817584ceb9870d73c98d13d01cf15")
-            // {
-            //   accessList: [],
-            //   blockHash: "0xd6e1a24a61839ad596b472fce9ae3b7f67370702f0d674d3bbb9db60bdb6338e",
-            //   blockNumber: 21543230,
-            //   chainId: "0x1",
-            //   from: "0xa2113f1e9a66c3b0a75bb466bbbfeeec987ac92e",
-            //   gas: 21000,
-            //   gasPrice: 11492564131,
-            //   hash: "0x3eafc1a364a2f7047958bd71f2d1b8c4a4e817584ceb9870d73c98d13d01cf15",
-            //   input: "0x",
-            //   maxFeePerGas: 11900000000,
-            //   maxPriorityFeePerGas: 1676928624,
-            //   nonce: 3846,
-            //   r: "0x983f4cf80a3e93ea07fa4a3824af2d37887a2ee8e207f540dee345de94e7c3c3",
-            //   s: "0x62a831ef86bf58607c3a69484d7ff01ebcefc55ecfaa299d2039aa85c9bd7323",
-            //   to: "0x8e872af87b462f2b3b6f42b76b2f1a5f4d240f5e",
-            //   transactionIndex: 200,
-            //   type: "0x2",
-            //   v: "0x1",
-            //   value: 30000000000000000,
-            //   yParity: "0x1"
-            // }
-
             to: "0x8E872af87B462F2B3b6f42b76B2f1a5f4D240F5E", // null,
             value: "0.00000003", // null,
             valueType: "ether",
@@ -485,16 +436,10 @@
             completed: null,
             halt: false,
           },
+
           events: {},
           accounts: {},
           blockTimestamps: {},
-          modalApproval: {
-            item: null,
-            tokens: null, // ERC-20 Approval
-            spender: null, // ERC-721 Approval
-            tokenId: null, // ERC-721 Approval
-            approved: false, // ERC-721 & ERC-1155 ApprovalForAll
-          },
 
           sortOptions: [
             { value: 'addressasc', text: '▲ Addr' },
@@ -548,7 +493,6 @@
               results.push({ value: null, text: "(Scan NFC card to begin)" });
             }
             for (const [cardId, cardData] of Object.entries(this.settings.cards)) {
-              // console.log(cardId + " => " + JSON.stringify(cardData));
               const address = cardData.initialised ? cardData.slots[cardData.selectedSlot].address : "Uninitialised";
               const name = cardData.initialised ? cardData.name || address.substring(0, 10) : "Uninitialised";
               results.push({ value: cardId, text: name });
@@ -570,7 +514,6 @@
               const address = cardData.initialised ? cardData.slots[cardData.selectedSlot].address : "Uninitialised";
               results.push( { cardId, ...cardData, address } );
             }
-
             if (this.settings.cardsTable.sortOption == 'addressasc') {
               results.sort((a, b) => {
                 const addressA = a.initialised ? a.slots[a.selectedSlot].address : "Uninitialised";
@@ -617,6 +560,7 @@
             return results;
           },
 
+          // TODO: Delete
           filteredSortedSlots() {
             const results = [];
             for (const [slot, slotData] of Object.entries(this.slots)) {
@@ -672,14 +616,9 @@
             this.modalSlots.name = name;
             this.$bvModal.show('modal-slots');
           },
-          // cardSelected(item) {
-          //   console.log(moment().format("HH:mm:ss") + " cardSelected: " + JSON.stringify(item));
-          //   if (item && item.length > 0) {
-          //     this.$bvModal.hide('modal-cards');
-          //     this.settings.selectedCard = item[0].cardId;
-          //   //   this.$refs.cardsTable.clearSelected();
-          //   }
-          // },
+          showModalConfig() {
+            this.$bvModal.show('modal-config');
+          },
           async scanNFC() {
             localStorage.setItem('DEBUG_LIBHALO_WEB', '1'); // https://github.com/arx-research/libhalo/blob/master/docs/api-web.md#debugging-through-the-developers-console
             console.log(moment().format("HH:mm:ss") + " scanNFC");
@@ -697,8 +636,12 @@
                 this.debug = e.message;
             }
           },
-          async scanNFCTest() {
-            console.log(moment().format("HH:mm:ss") + " scanNFCTest");
+          resetData() {
+            console.log(moment().format("HH:mm:ss") + " resetData");
+            delete localStorage.burnerProToolSettings;
+          },
+          async insertTestData() {
+            console.log(moment().format("HH:mm:ss") + " insertTestData");
             const result = {
                 "isPartial": false,
                 "data": {
@@ -944,67 +887,67 @@
             }
           },
 
-          async signingTest() {
-            console.log(moment().format("HH:mm:ss") + " signingTest");
-            const tx = {
-              to: "0x8e872af87b462f2b3b6f42b76b2f1a5f4d240f5e",
-              value: ethers.BigNumber.from(ethers.utils.parseUnits("0.000000003", "ether")).toString(),
-              data: "0x",
-              chainId: "0x1",
-              nonce: 5,
-              gasLimit: 21000,
-              gasPrice: null,
-              type: 2,
-              maxFeePerGas: ethers.BigNumber.from(ethers.utils.parseUnits("7.0", "gwei")).toString(),
-              maxPriorityFeePerGas: ethers.BigNumber.from(ethers.utils.parseUnits("0.007", "gwei")).toString(),
-              accessList: [],
-              // v: "0x",
-              // r: "0x",
-              // s: "0x",
-            };
-            console.log(moment().format("HH:mm:ss") + " signingTest - tx: " + JSON.stringify(tx, null, 2));
-            const serializedTransaction = ethers.utils.serializeTransaction(tx, false);
-            console.log(moment().format("HH:mm:ss") + " signingTest - serializedTransaction: " + JSON.stringify(serializedTransaction, null, 2));
-            const transactionHash = ethers.utils.hashMessage(serializedTransaction);
-            console.log(moment().format("HH:mm:ss") + " signingTest - transactionHash: " + JSON.stringify(transactionHash, null, 2));
-            const decodedTransaction = ethers.utils.parseTransaction(serializedTransaction);
-            console.log(moment().format("HH:mm:ss") + " signingTest - decodedTransaction: " + JSON.stringify(decodedTransaction, null, 2));
-          },
+          // async signingTest() {
+          //   console.log(moment().format("HH:mm:ss") + " signingTest");
+          //   const tx = {
+          //     to: "0x8e872af87b462f2b3b6f42b76b2f1a5f4d240f5e",
+          //     value: ethers.BigNumber.from(ethers.utils.parseUnits("0.000000003", "ether")).toString(),
+          //     data: "0x",
+          //     chainId: "0x1",
+          //     nonce: 5,
+          //     gasLimit: 21000,
+          //     gasPrice: null,
+          //     type: 2,
+          //     maxFeePerGas: ethers.BigNumber.from(ethers.utils.parseUnits("7.0", "gwei")).toString(),
+          //     maxPriorityFeePerGas: ethers.BigNumber.from(ethers.utils.parseUnits("0.007", "gwei")).toString(),
+          //     accessList: [],
+          //     // v: "0x",
+          //     // r: "0x",
+          //     // s: "0x",
+          //   };
+          //   console.log(moment().format("HH:mm:ss") + " signingTest - tx: " + JSON.stringify(tx, null, 2));
+          //   const serializedTransaction = ethers.utils.serializeTransaction(tx, false);
+          //   console.log(moment().format("HH:mm:ss") + " signingTest - serializedTransaction: " + JSON.stringify(serializedTransaction, null, 2));
+          //   const transactionHash = ethers.utils.hashMessage(serializedTransaction);
+          //   console.log(moment().format("HH:mm:ss") + " signingTest - transactionHash: " + JSON.stringify(transactionHash, null, 2));
+          //   const decodedTransaction = ethers.utils.parseTransaction(serializedTransaction);
+          //   console.log(moment().format("HH:mm:ss") + " signingTest - decodedTransaction: " + JSON.stringify(decodedTransaction, null, 2));
+          // },
 
-          async signingTest1() {
-            console.log(moment().format("HH:mm:ss") + " signingTest1");
-            const provider = new ethers.providers.Web3Provider(window.ethereum);
-            const tx = await provider.getTransaction("0x3eafc1a364a2f7047958bd71f2d1b8c4a4e817584ceb9870d73c98d13d01cf15");
-            console.log(moment().format("HH:mm:ss") + " signingTest1 - tx: " + JSON.stringify(tx, null, 2));
-            const unsignedTx = {
-              to: tx.to,
-              value: tx.value,
-              data: tx.data,
-              gasLimit: tx.gasLimit,
-              maxFeePerGas: tx.maxFeePerGas,
-              maxPriorityFeePerGas: tx.maxPriorityFeePerGas,
-              chainId: tx.chainId,
-              nonce: tx.nonce,
-              type: tx.type,
-            };
-            console.log(moment().format("HH:mm:ss") + " signingTest1 - unsignedTx: " + JSON.stringify(unsignedTx, null, 2));
-            const serializedTx = ethers.utils.serializeTransaction(unsignedTx);
-            console.log(moment().format("HH:mm:ss") + " signingTest1 - serializedTx: " + JSON.stringify(serializedTx, null, 2));
-            const { v, r, s } = tx;
-            console.log(moment().format("HH:mm:ss") + " signingTest1 - v: " + JSON.stringify(v, null, 2));
-            console.log(moment().format("HH:mm:ss") + " signingTest1 - r: " + JSON.stringify(r, null, 2));
-            console.log(moment().format("HH:mm:ss") + " signingTest1 - s: " + JSON.stringify(s, null, 2));
-            const signature = ethers.utils.joinSignature({ v, r, s });
-            console.log(moment().format("HH:mm:ss") + " signingTest1 - signature: " + JSON.stringify(signature, null, 2));
-            const recoveredAddress = ethers.utils.recoverAddress(ethers.utils.keccak256(serializedTx), signature);
-            console.log(moment().format("HH:mm:ss") + " signingTest1 - recoveredAddress: " + JSON.stringify(recoveredAddress, null, 2));
-
-            console.log(moment().format("HH:mm:ss") + " signingTest1 - signature: " + JSON.stringify(signature, null, 2));
-            const serializedSignedTx = ethers.utils.serializeTransaction(unsignedTx, signature);
-            console.log(moment().format("HH:mm:ss") + " signingTest1 - serializedSignedTx: " + JSON.stringify(serializedSignedTx, null, 2));
-            const hash = ethers.utils.keccak256(serializedSignedTx);
-            console.log(moment().format("HH:mm:ss") + " signingTest1 - hash: " + JSON.stringify(hash, null, 2));
-          },
+          // async signingTest1() {
+          //   console.log(moment().format("HH:mm:ss") + " signingTest1");
+          //   const provider = new ethers.providers.Web3Provider(window.ethereum);
+          //   const tx = await provider.getTransaction("0x3eafc1a364a2f7047958bd71f2d1b8c4a4e817584ceb9870d73c98d13d01cf15");
+          //   console.log(moment().format("HH:mm:ss") + " signingTest1 - tx: " + JSON.stringify(tx, null, 2));
+          //   const unsignedTx = {
+          //     to: tx.to,
+          //     value: tx.value,
+          //     data: tx.data,
+          //     gasLimit: tx.gasLimit,
+          //     maxFeePerGas: tx.maxFeePerGas,
+          //     maxPriorityFeePerGas: tx.maxPriorityFeePerGas,
+          //     chainId: tx.chainId,
+          //     nonce: tx.nonce,
+          //     type: tx.type,
+          //   };
+          //   console.log(moment().format("HH:mm:ss") + " signingTest1 - unsignedTx: " + JSON.stringify(unsignedTx, null, 2));
+          //   const serializedTx = ethers.utils.serializeTransaction(unsignedTx);
+          //   console.log(moment().format("HH:mm:ss") + " signingTest1 - serializedTx: " + JSON.stringify(serializedTx, null, 2));
+          //   const { v, r, s } = tx;
+          //   console.log(moment().format("HH:mm:ss") + " signingTest1 - v: " + JSON.stringify(v, null, 2));
+          //   console.log(moment().format("HH:mm:ss") + " signingTest1 - r: " + JSON.stringify(r, null, 2));
+          //   console.log(moment().format("HH:mm:ss") + " signingTest1 - s: " + JSON.stringify(s, null, 2));
+          //   const signature = ethers.utils.joinSignature({ v, r, s });
+          //   console.log(moment().format("HH:mm:ss") + " signingTest1 - signature: " + JSON.stringify(signature, null, 2));
+          //   const recoveredAddress = ethers.utils.recoverAddress(ethers.utils.keccak256(serializedTx), signature);
+          //   console.log(moment().format("HH:mm:ss") + " signingTest1 - recoveredAddress: " + JSON.stringify(recoveredAddress, null, 2));
+          //
+          //   console.log(moment().format("HH:mm:ss") + " signingTest1 - signature: " + JSON.stringify(signature, null, 2));
+          //   const serializedSignedTx = ethers.utils.serializeTransaction(unsignedTx, signature);
+          //   console.log(moment().format("HH:mm:ss") + " signingTest1 - serializedSignedTx: " + JSON.stringify(serializedSignedTx, null, 2));
+          //   const hash = ethers.utils.keccak256(serializedSignedTx);
+          //   console.log(moment().format("HH:mm:ss") + " signingTest1 - hash: " + JSON.stringify(hash, null, 2));
+          // },
 
           async retrieveBalances() {
             console.log(moment().format("HH:mm:ss") + " retrieveBalances");
