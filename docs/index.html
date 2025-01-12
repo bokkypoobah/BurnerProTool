@@ -231,10 +231,10 @@
 
               <div class="d-flex mt-1">
                 <span class="m-1">
-                  <b-link :href="'https://etherscan.io/address/' + activeAddress" target="_blank" v-b-popover.hover="activeAddress">
+                  <b-link :href="'https://etherscan.io/address/' + activeAddress" target="_blank">
                     <font size="-1">{{ activeAddress.substring(0, 8) + '...' + activeAddress.slice(-6) }}</font>
                   </b-link>
-                  <b-button size="sm" @click="copyToClipboard(activeAddress);" variant="outline" v-b-popover.hover="'Copy address to clipboard'">
+                  <b-button size="sm" @click="copyToClipboard(activeAddress);" variant="outline">
                     <b-icon-clipboard shift-v="+2" font-scale="0.9" variant="primary"></b-icon-clipboard>
                   </b-button>
                 </span>
