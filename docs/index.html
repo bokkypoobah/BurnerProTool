@@ -24,6 +24,7 @@
     <script src="customNames.js"></script>
     <script src="deploymentData.js"></script>
     <script src="parseEtherscan.js"></script>
+    <script src="parseReservoir.js"></script>
 
     <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
@@ -257,7 +258,7 @@
               <br />
               <b-icon :icon="settings.showInfo ? 'info-circle-fill' : 'info-circle'" shift-v="+1" font-scale="1.0" variant="primary"></b-icon> View info
               <br />
-              <b-icon-gear shift-v="+1" font-scale="1.0" variant="primary"></b-icon-gear> Config
+              <b-icon-gear shift-v="+1" font-scale="1.0" variant="primary"></b-icon-gear> Config - load test data; set Etherscan and CryptoCompare API keys
               <br />
               <br />
               We are not affiliated with burner.pro .
@@ -1269,10 +1270,10 @@
             } else {
               data = JSON.parse(localStorage.cachedReservoirData || {});
               console.log(moment().format("HH:mm:ss") + " downloadFromReservoir - cached data: " + JSON.stringify(data, null, 2).substring(0, 200));
-
             }
-            // if (data.tokens) {
-            // }
+            const reservoirData = {};
+            parseReservoirData(data, chainId, reservoirData);
+            console.log(moment().format("HH:mm:ss") + " downloadFromReservoir - reservoirData: " + JSON.stringify(reservoirData, null, 2).substring(0, 1000));
 
           },
 
