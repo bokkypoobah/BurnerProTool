@@ -1071,20 +1071,48 @@
           async downloadFromEtherscan(address) {
             console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - address: " + address);
 
-            const getTransactionsUrl = "https://api.etherscan.io/v2/api?chainId=1&module=account&action=txlist&address=" + this.activeAddress + "&startblock=0&endblock=99999999&page=1&offset=100&sort=dsc&apikey=" + this.settings.etherscanAPIKey;
-            console.log("getTransactionsUrl: " + getTransactionsUrl);
-            const getTransactionsResult = await fetch(getTransactionsUrl)
-              .then(handleErrors)
-              .then(response => response.json())
-              .catch(function(error) {
-                 console.log("ERROR - downloadFromEtherscan: " + error);
-                 // Want to work around API data unavailablity - state.sync.error = true;
-                 return {};
-              });
-            console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - getTransactionsResult: " + JSON.stringify(getTransactionsResult, null, 2));
-            // if (getTransactionsResult.result) {
-            //   const balance = ethers.BigNumber.from(getTransactionsResult.result).toString();
-            //   console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - balance: " + balance);
+            const useCache = false; // For testing without hitting the API
+
+            let getTransactionsResult;
+            if (!useCache || !localStorage.cachedGetTransactionsResult) {
+              const getTransactionsUrl = "https://api.etherscan.io/v2/api?chainId=1&module=account&action=txlist&address=" + this.activeAddress + "&startblock=0&endblock=99999999&page=1&offset=100&sort=dsc&apikey=" + this.settings.etherscanAPIKey;
+              console.log("getTransactionsUrl: " + getTransactionsUrl);
+              getTransactionsResult = await fetch(getTransactionsUrl)
+                .then(handleErrors)
+                .then(response => response.json())
+                .catch(function(error) {
+                   console.log("ERROR - downloadFromEtherscan: " + error);
+                   // Want to work around API data unavailablity - state.sync.error = true;
+                   return {};
+                });
+              console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - getTransactionsResult: " + JSON.stringify(getTransactionsResult, null, 2));
+              if (useCache) {
+                localStorage.cachedGetTransactionsResult = JSON.stringify(getTransactionsResult);
+              }
+            } else {
+              getTransactionsResult = JSON.parse(localStorage.cachedGetTransactionsResult || {});
+              console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - cached getTransactionsResult: " + JSON.stringify(getTransactionsResult, null, 2));
+            }
+            if (getTransactionsResult.status == 1 &&  getTransactionsResult.result) {
+              // const balance = ethers.BigNumber.from(getTransactionsResult.result).toString();
+              // console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - balance: " + balance);
+            }
+
+            // await delay(1000);
+            // const getInternalTransactionsUrl = "https://api.etherscan.io/v2/api?chainId=1&module=account&action=txlistinternal&address=" + this.activeAddress + "&startblock=0&endblock=99999999&page=1&offset=100&sort=dsc&apikey=" + this.settings.etherscanAPIKey;
+            // console.log("getInternalTransactionsUrl: " + getInternalTransactionsUrl);
+            // const getInternalTransactionsResult = await fetch(getInternalTransactionsUrl)
+            //   .then(handleErrors)
+            //   .then(response => response.json())
+            //   .catch(function(error) {
+            //      console.log("ERROR - downloadFromEtherscan: " + error);
+            //      // Want to work around API data unavailablity - state.sync.error = true;
+            //      return {};
+            //   });
+            // console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - getInternalTransactionsResult: " + JSON.stringify(getInternalTransactionsResult, null, 2));
+            // if (getInternalTransactionsResult.status && getInternalTransactionsResult.result) {
+            // //   const balance = ethers.BigNumber.from(getInternalTransactionsResult.result).toString();
+            // //   console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - balance: " + balance);
             // }
 
             // await delay(1000);
