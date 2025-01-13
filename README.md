@@ -400,7 +400,7 @@ Click on the [Copy] button on the top right
 
 <kbd><img src="images/swaperc2004.png" width="200" /></kbd>
 
-In os.burner.pro, paste the copied info into the URL field and click [PAIR MANUALLY]
+In the os.burner.pro WalletConnect page, paste the copied info into the URL field and click [PAIR MANUALLY]
 
 <kbd><img src="images/swaperc2005.png" width="200" /></kbd>
 
