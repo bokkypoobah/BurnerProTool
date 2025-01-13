@@ -1,9 +1,21 @@
-function parseReservoirData(data, chainId, reservoirData) {
+function parseReservoirData(data, address, reservoirData) {
   console.log(moment().format("HH:mm:ss") + " parseReservoirData - data: " + JSON.stringify(data, null, 2).substring(0, 200));
-  const results = [];
-  for (const item of (data && data.tokens || [])) {
-    console.log(moment().format("HH:mm:ss") + " parseReservoirData - item: " + JSON.stringify(item, null, 2).substring(0, 200));
+  if (!(address in reservoirData)) {
+    reservoirData[address] = {};
   }
+  for (const item of (data && data.tokens.slice(0, 1) || [])) {
+    console.log(moment().format("HH:mm:ss") + " parseReservoirData - item: " + JSON.stringify(item, null, 2));
+    const chainId = item.token.chainId;
+    if (!(('' + chainId) in reservoirData[address])) {
+      reservoirData[address][chainId] = {};
+    }
+    const contract = item.token.contract;
+    const type = item.token.kind;
+    const tokenId = item.token.tokenId;
+    const count = item.ownership.tokenCount;
+    console.log(moment().format("HH:mm:ss") + " parseReservoirData - item: " + chainId + ":" + contract + "(" + type + "):" + tokenId + "x" + count);
+  }
+  console.log(moment().format("HH:mm:ss") + " parseReservoirData - reservoirData: " + JSON.stringify(reservoirData, null, 2));
 
 
 

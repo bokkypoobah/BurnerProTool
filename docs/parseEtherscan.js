@@ -2,6 +2,7 @@ function parseEtherscanGetTransactionsResult(result, chainId, etherscanData) {
   console.log(moment().format("HH:mm:ss") + " parseEtherscanGetTransactionsResult - result: " + JSON.stringify(result, null, 2).substring(0, 200));
   const results = [];
   if (result.status == 1 && result.message == "OK" && result.result) {
+    // TODO: Add address
     if (!(('' + chainId) in etherscanData)) {
       etherscanData[chainId] = {};
     }
