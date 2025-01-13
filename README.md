@@ -145,6 +145,7 @@ So this is my review of these cards.
 * [New Ethereum Wallet Setup](#new-ethereum-wallet-setup)
 * [Duplicating A Card](#duplicating-a-card)
 * [Purchase NFT on ETH Mainnet](#purchase-nft-on-eth-mainnet)
+* [List NFT for Sale](#list-nft-for-sale)
 * [Purchase NFT on Base](#purchase-nft-on-base)
 * [Supported NFT Media Types](#supported-nft-media-types)
 * [Withdraw ETH](#withdraw-eth)
@@ -305,6 +306,40 @@ From the Burner OS menu, select NFTS
 And here is Fast Food Punk Gen2 #1678
 
 <kbd><img src="images/purchasenft19.png" width="200" /></kbd>
+
+<br />
+
+---
+
+#### List NFT for Sale
+
+In Opensea, list item for sale
+
+<kbd><img src="images/listnftforsale01.png" width="200" /></kbd>
+
+<kbd><img src="images/listnftforsale02.png" width="200" /></kbd>
+
+<kbd><img src="images/listnftforsale03.png" width="200" /></kbd>
+
+<kbd><img src="images/listnftforsale04.png" width="200" /></kbd>
+
+In os.burner.pro, [ACCEPT] and scan your NFC to approve for OpenSea to transfer the NFT collection
+
+<kbd><img src="images/listnftforsale05.png" width="200" /></kbd>
+
+Then click [ACCEPT] to sign the listing data
+
+<kbd><img src="images/listnftforsale06.png" width="200" /></kbd>
+
+Scan NFC
+
+<kbd><img src="images/listnftforsale07.png" width="200" /></kbd>
+
+Item listed!
+
+<kbd><img src="images/listnftforsale08.png" width="200" /></kbd>
+
+
 
 <br />
 
