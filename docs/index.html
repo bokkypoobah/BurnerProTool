@@ -1073,10 +1073,11 @@
             console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - address: " + address);
 
             const useCache = true; // For testing without hitting the API
+            const chainId = 1;
 
             let getTransactionsResult;
             if (!useCache || !localStorage.cachedGetTransactionsResult) {
-              const getTransactionsUrl = "https://api.etherscan.io/v2/api?chainId=1&module=account&action=txlist&address=" + this.activeAddress + "&startblock=0&endblock=99999999&page=1&offset=100&sort=dsc&apikey=" + this.settings.etherscanAPIKey;
+              const getTransactionsUrl = "https://api.etherscan.io/v2/api?chainId=" + chainId + "&module=account&action=txlist&address=" + this.activeAddress + "&startblock=0&endblock=99999999&page=1&offset=100&sort=dsc&apikey=" + this.settings.etherscanAPIKey;
               console.log("getTransactionsUrl: " + getTransactionsUrl);
               getTransactionsResult = await fetch(getTransactionsUrl)
                 .then(handleErrors)
@@ -1094,7 +1095,9 @@
               getTransactionsResult = JSON.parse(localStorage.cachedGetTransactionsResult || {});
               console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - cached getTransactionsResult: " + JSON.stringify(getTransactionsResult, null, 2).substring(0, 200));
             }
-            parseEtherscanGetTransactionsResult(getTransactionsResult);
+            const etherscanData = {};
+            parseEtherscanGetTransactionsResult(getTransactionsResult, chainId, etherscanData);
+            console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - etherscanData: " + JSON.stringify(etherscanData, null, 2).substring(0, 2000));
             // if (getTransactionsResult.status == 1 &&  getTransactionsResult.result) {
               // const balance = ethers.BigNumber.from(getTransactionsResult.result).toString();
               // console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - balance: " + balance);
