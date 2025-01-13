@@ -1103,18 +1103,28 @@
               // console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - balance: " + balance);
             // }
 
-            // await delay(1000);
-            // const getInternalTransactionsUrl = "https://api.etherscan.io/v2/api?chainId=1&module=account&action=txlistinternal&address=" + this.activeAddress + "&startblock=0&endblock=99999999&page=1&offset=100&sort=dsc&apikey=" + this.settings.etherscanAPIKey;
-            // console.log("getInternalTransactionsUrl: " + getInternalTransactionsUrl);
-            // const getInternalTransactionsResult = await fetch(getInternalTransactionsUrl)
-            //   .then(handleErrors)
-            //   .then(response => response.json())
-            //   .catch(function(error) {
-            //      console.log("ERROR - downloadFromEtherscan: " + error);
-            //      // Want to work around API data unavailablity - state.sync.error = true;
-            //      return {};
-            //   });
-            // console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - getInternalTransactionsResult: " + JSON.stringify(getInternalTransactionsResult, null, 2));
+            if (!useCache || !localStorage.cachedGetInternalTransactionsResult) {
+              await delay(1000);
+              let getInternalTransactionsResult;
+              const getInternalTransactionsUrl = "https://api.etherscan.io/v2/api?chainId=1&module=account&action=txlistinternal&address=" + this.activeAddress + "&startblock=0&endblock=99999999&page=1&offset=100&sort=dsc&apikey=" + this.settings.etherscanAPIKey;
+              console.log("getInternalTransactionsUrl: " + getInternalTransactionsUrl);
+              getInternalTransactionsResult = await fetch(getInternalTransactionsUrl)
+                .then(handleErrors)
+                .then(response => response.json())
+                .catch(function(error) {
+                   console.log("ERROR - downloadFromEtherscan: " + error);
+                   // Want to work around API data unavailablity - state.sync.error = true;
+                   return {};
+                });
+              console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - getInternalTransactionsResult: " + JSON.stringify(getInternalTransactionsResult, null, 2));
+              if (useCache) {
+                localStorage.cachedGetInternalTransactionsResult = JSON.stringify(getInternalTransactionsResult);
+              }
+            } else {
+              getInternalTransactionsResult = JSON.parse(localStorage.cachedGetInternalTransactionsResult || {});
+              console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - cached getInternalTransactionsResult: " + JSON.stringify(getInternalTransactionsResult, null, 2).substring(0, 200));
+            }
+            // TODO: Process internal transactions
             // if (getInternalTransactionsResult.status && getInternalTransactionsResult.result) {
             // //   const balance = ethers.BigNumber.from(getInternalTransactionsResult.result).toString();
             // //   console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - balance: " + balance);
