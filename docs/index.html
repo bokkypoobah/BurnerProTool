@@ -1271,8 +1271,7 @@
               data = JSON.parse(localStorage.cachedReservoirData || {});
               console.log(moment().format("HH:mm:ss") + " downloadFromReservoir - cached data: " + JSON.stringify(data, null, 2).substring(0, 200));
             }
-            const reservoirData = {};
-            parseReservoirData(data, address, reservoirData);
+            const reservoirData = parseReservoirData(data);
             console.log(moment().format("HH:mm:ss") + " downloadFromReservoir - reservoirData: " + JSON.stringify(reservoirData, null, 2).substring(0, 1000));
 
           },

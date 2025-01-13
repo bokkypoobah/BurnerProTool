@@ -1,37 +1,31 @@
-function parseReservoirData(data, address, reservoirData) {
+function parseReservoirData(data) {
   console.log(moment().format("HH:mm:ss") + " parseReservoirData - data: " + JSON.stringify(data, null, 2).substring(0, 200));
-  if (!(address in reservoirData)) {
-    reservoirData[address] = {};
-  }
+  const results = {};
   for (const item of (data && data.tokens || [])) {
-    console.log(moment().format("HH:mm:ss") + " parseReservoirData - item: " + JSON.stringify(item, null, 2).substring(0, 200));
-    const chainId = item.token.chainId;
-    if (!(('' + chainId) in reservoirData[address])) {
-      reservoirData[address][chainId] = {};
+    // console.log(moment().format("HH:mm:ss") + " parseReservoirData - item: " + JSON.stringify(item, null, 2).substring(0, 200));
+    const token = item.token;
+    const chainId = token.chainId;
+    if (!(('' + chainId) in results)) {
+      results[chainId] = {};
     }
-    const contract = item.token.contract;
-    const type = item.token.kind;
-    const collectionName = item.token.collection.name;
-    const collectionSlug = item.token.collection.slug;
-    if (!(contract in reservoirData[address][chainId])) {
-      reservoirData[address][chainId][contract] = {
+    const contract = token.contract;
+    const type = token.kind;
+    const collectionName = token.collection.name;
+    const collectionSlug = token.collection.slug;
+    if (!(contract in results[chainId])) {
+      results[chainId][contract] = {
         type,
         name: collectionName,
         slug: collectionSlug,
         tokens: {},
       };
     }
-
-    const tokenId = item.token.tokenId;
+    const tokenId = token.tokenId;
     const count = item.ownership.tokenCount;
-    const name = item.token.name;
-    const description = item.token.description;
-    const image = item.token.image;
+    const name = token.name;
+    const description = token.description;
+    const image = token.image;
     const acquiredAt = parseInt(Date.parse(item.ownership.acquiredAt)/1000);
-    console.log(moment().format("HH:mm:ss") + " parseReservoirData - item: " + chainId + ":" + contract + "(" + type + "):" + tokenId + "x" + count + " " + new Date(acquiredAt * 1000).toString() + " from " + item.ownership.acquiredAt);
-
-
-    const token = item.token;
     const lastSaleTimestamp = token.lastSale && token.lastSale.timestamp || null;
     const lastSaleCurrency = token.lastSale && token.lastSale.price && token.lastSale.price.currency && token.lastSale.price.currency.symbol || null;
     const lastSaleAmount = token.lastSale && token.lastSale.price && token.lastSale.price.amount && token.lastSale.price.amount.native || null;
@@ -45,8 +39,6 @@ function parseReservoirData(data, address, reservoirData) {
         amountUSD: lastSaleAmountUSD,
       };
     }
-    console.log(moment().format("HH:mm:ss") + " parseReservoirData - lastSale: " + JSON.stringify(lastSale, null, 2));
-
     const priceExpiry = token.floorAsk && token.floorAsk.validUntil && parseInt(token.floorAsk.validUntil) || null;
     const priceSource = token.floorAsk && token.floorAsk.source && token.floorAsk.source.domain || null;
     const priceCurrency = token.floorAsk && token.floorAsk.price && token.floorAsk.price.currency && token.floorAsk.price.currency.symbol || null;
@@ -62,8 +54,6 @@ function parseReservoirData(data, address, reservoirData) {
         amountUSD: priceAmountUSD,
       };
     }
-    console.log(moment().format("HH:mm:ss") + " parseReservoirData - price: " + JSON.stringify(price, null, 2));
-
     const topBidCurrency = token.topBid && token.topBid.price && token.topBid.price.currency && token.topBid.price.currency.symbol || null;
     const topBidSource = token.topBid && token.topBid.source && token.topBid.source.domain || null;
     const topBidAmount = token.topBid && token.topBid.price && token.topBid.price.amount && token.topBid.price.amount.native || null;
@@ -81,10 +71,8 @@ function parseReservoirData(data, address, reservoirData) {
         netAmountUSD: topBidNetAmountUSD,
       };
     }
-    console.log(moment().format("HH:mm:ss") + " parseReservoirData - topBid: " + JSON.stringify(topBid, null, 2));
-
-    if (!(tokenId in reservoirData[address][chainId][contract].tokens)) {
-      reservoirData[address][chainId][contract].tokens[tokenId] = {
+    if (!(tokenId in results[chainId][contract].tokens)) {
+      results[chainId][contract].tokens[tokenId] = {
         count,
         name,
         description,
@@ -97,43 +85,6 @@ function parseReservoirData(data, address, reservoirData) {
     }
 
   }
-  console.log(moment().format("HH:mm:ss") + " parseReservoirData - reservoirData: " + JSON.stringify(reservoirData, null, 2));
-
-
-
-  // if (result.status == 1 && result.message == "OK" && result.result) {
-  //   if (!(('' + chainId) in etherscanData)) {
-  //     etherscanData[chainId] = {};
-  //   }
-  //   for (const tx of result.result) {
-  //     console.log(moment().format("HH:mm:ss") + " parseEtherscanGetTransactionsResult - tx: " + JSON.stringify(tx, null, 2).substring(0, 200));
-  //     if (!(tx.hash in etherscanData[chainId])) {
-  //       etherscanData[chainId][tx.hash] = {
-  //         tx: {
-  //           blockNumber: tx.blockNumber,
-  //           timeStamp: tx.timeStamp,
-  //           hash: tx.hash,
-  //           nonce: tx.nonce,
-  //           blockHash: tx.blockHash,
-  //           transactionIndex: tx.transactionIndex,
-  //           from: ethers.utils.getAddress(tx.from),
-  //           to: tx.to && ethers.utils.getAddress(tx.to) || null,
-  //           value: tx.value,
-  //           gas: tx.gas,
-  //           gasPrice: tx.gasPrice,
-  //           isError: tx.isError,
-  //           txreceipt_status: tx.txreceipt_status,
-  //           input: tx.input,
-  //           contractAddress: tx.contractAddress && ethers.utils.getAddress(tx.contractAddress) || null,
-  //           cumulativeGasUsed: tx.cumulativeGasUsed,
-  //           gasUsed: tx.gasUsed,
-  //           confirmations: tx.confirmations,
-  //           methodId: tx.methodId,
-  //           functionName: tx.functionName,
-  //         },
-  //       };
-  //     }
-  //   }
-  // }
-
+  console.log(moment().format("HH:mm:ss") + " parseReservoirData - results: " + JSON.stringify(results, null, 2));
+  return results;
 }
