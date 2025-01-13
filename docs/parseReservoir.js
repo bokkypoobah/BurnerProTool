@@ -3,23 +3,33 @@ function parseReservoirData(data, address, reservoirData) {
   if (!(address in reservoirData)) {
     reservoirData[address] = {};
   }
-  for (const item of (data && data.tokens.slice(4, 5) || [])) {
-    console.log(moment().format("HH:mm:ss") + " parseReservoirData - item: " + JSON.stringify(item, null, 2).substring(0, 20000));
+  for (const item of (data && data.tokens || [])) {
+    console.log(moment().format("HH:mm:ss") + " parseReservoirData - item: " + JSON.stringify(item, null, 2).substring(0, 200));
     const chainId = item.token.chainId;
     if (!(('' + chainId) in reservoirData[address])) {
       reservoirData[address][chainId] = {};
     }
     const contract = item.token.contract;
     const type = item.token.kind;
-    const tokenId = item.token.tokenId;
-    const count = item.ownership.tokenCount;
     const collectionName = item.token.collection.name;
     const collectionSlug = item.token.collection.slug;
+    if (!(contract in reservoirData[address][chainId])) {
+      reservoirData[address][chainId][contract] = {
+        type,
+        name: collectionName,
+        slug: collectionSlug,
+        tokens: {},
+      };
+    }
+
+    const tokenId = item.token.tokenId;
+    const count = item.ownership.tokenCount;
     const name = item.token.name;
     const description = item.token.description;
     const image = item.token.image;
     const acquiredAt = parseInt(Date.parse(item.ownership.acquiredAt)/1000);
     console.log(moment().format("HH:mm:ss") + " parseReservoirData - item: " + chainId + ":" + contract + "(" + type + "):" + tokenId + "x" + count + " " + new Date(acquiredAt * 1000).toString() + " from " + item.ownership.acquiredAt);
+
 
     const token = item.token;
     const lastSaleTimestamp = token.lastSale && token.lastSale.timestamp || null;
@@ -72,6 +82,19 @@ function parseReservoirData(data, address, reservoirData) {
       };
     }
     console.log(moment().format("HH:mm:ss") + " parseReservoirData - topBid: " + JSON.stringify(topBid, null, 2));
+
+    if (!(tokenId in reservoirData[address][chainId][contract].tokens)) {
+      reservoirData[address][chainId][contract].tokens[tokenId] = {
+        count,
+        name,
+        description,
+        image,
+        acquiredAt,
+        lastSale,
+        price,
+        topBid,
+      };
+    }
 
   }
   console.log(moment().format("HH:mm:ss") + " parseReservoirData - reservoirData: " + JSON.stringify(reservoirData, null, 2));
