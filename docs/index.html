@@ -296,9 +296,13 @@
                 <b-form-input type="text" size="sm" v-model.trim="settings.cryptoCompareAPIKey" @change="saveSettings();" placeholder="API key"></b-form-input>
               </b-form-group> -->
 
-
               <b-form-group label="Etherscan:" label-cols="5" label-align="right" description="Set API Key in the Config menu">
                 <b-button v-if="activeAddress" size="sm" @click="downloadFromEtherscan(activeAddress);" variant="outline">
+                  <b-icon-cloud-download shift-v="+2" font-scale="1" variant="primary"></b-icon-cloud-download>
+                </b-button>
+              </b-form-group>
+              <b-form-group label="Reservoir:" label-cols="5" label-align="right" description="Using demo-api-key">
+                <b-button v-if="activeAddress" size="sm" @click="downloadFromReservoir(activeAddress);" variant="outline">
                   <b-icon-cloud-download shift-v="+2" font-scale="1" variant="primary"></b-icon-cloud-download>
                 </b-button>
               </b-form-group>
@@ -1240,6 +1244,36 @@
             // }
 
             console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - delayed");
+          },
+
+          async downloadFromReservoir(address) {
+            console.log(moment().format("HH:mm:ss") + " downloadFromReservoir - address: " + address);
+            const useCache = true; // For testing without hitting the API
+            const chainId = 1;
+
+            let data;
+            if (!useCache || !localStorage.cachedReservoirData) {
+              let continuation = null;
+              do {
+                let url = "https://api.reservoir.tools/users/" + address + "/tokens/v10?limit=200&includeTopBid=true&includeAttributes=true&includeLastSale=true";
+                url = url + (continuation != null ? "&continuation=" + continuation : '');
+                console.log(url);
+                data = await fetch(url).then(response => response.json());
+                continuation = data.continuation;
+                console.log(moment().format("HH:mm:ss") + " downloadFromReservoir - data: " + JSON.stringify(data, null, 2));
+                if (useCache) {
+                  localStorage.cachedReservoirData = JSON.stringify(data);
+                }
+                await delay(1000);
+              } while (continuation != null);
+            } else {
+              data = JSON.parse(localStorage.cachedReservoirData || {});
+              console.log(moment().format("HH:mm:ss") + " downloadFromReservoir - cached data: " + JSON.stringify(data, null, 2).substring(0, 200));
+
+            }
+            // if (data.tokens) {
+            // }
+
           },
 
           async downloadFromCryptoCompare() {
