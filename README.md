@@ -148,6 +148,7 @@ So this is my review of these cards.
 * [Purchase NFT on Base](#purchase-nft-on-base)
 * [Supported NFT Media Types](#supported-nft-media-types)
 * [Withdraw ETH](#withdraw-eth)
+* [Swap WETH TO ERC-20](#swap-weth-to-erc-20)
 * [Questions](#questions)
 * [References](#references)
 
@@ -376,6 +377,56 @@ Transaction mined. Transaction [0xf25c...546d](https://etherscan.io/tx/0xf25cbf0
 View [TRANSACTIONS] from the Burner OS menu
 
 <kbd><img src="images/withdraw06.png" width="200" /></kbd>
+
+<br />
+
+---
+
+#### Swap WETH TO ERC-20
+
+View https://app.uniswap.org . Click [Connect]
+
+<kbd><img src="images/swaperc2001.png" width="200" /></kbd>
+
+Click [WalletConnect]
+
+<kbd><img src="images/swaperc2002.png" width="200" /></kbd>
+
+Click on the [Scan] button on the top right
+
+<kbd><img src="images/swaperc2003.png" width="200" /></kbd>
+
+Click on the [Copy] button on the top right
+
+<kbd><img src="images/swaperc2004.png" width="200" /></kbd>
+
+In os.burner.pro, paste the copied info into the URL field and click [PAIR MANUALLY]
+
+<kbd><img src="images/swaperc2005.png" width="200" /></kbd>
+
+Click [ACCEPT]
+
+<kbd><img src="images/swaperc2006.png" width="200" /></kbd>
+
+Swapping WETH for TURBO
+
+<kbd><img src="images/swaperc2007.png" width="200" /></kbd>
+
+Confirm in wallet
+
+<kbd><img src="images/swaperc2008.png" width="200" /></kbd>
+
+Click [ACCEPT], scan the Burner.pro NFC card a few times
+
+<kbd><img src="images/swaperc2009.png" width="200" /></kbd>
+
+Swapping
+
+<kbd><img src="images/swaperc2010.png" width="200" /></kbd>
+
+New TURBO balance in os.burner.pro
+
+<kbd><img src="images/swaperc2011.png" width="200" /></kbd>
 
 <br />
 
