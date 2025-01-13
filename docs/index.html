@@ -23,6 +23,7 @@
     <script src="globals.js"></script>
     <script src="customNames.js"></script>
     <script src="deploymentData.js"></script>
+    <script src="parseEtherscan.js"></script>
 
     <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
@@ -1071,7 +1072,7 @@
           async downloadFromEtherscan(address) {
             console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - address: " + address);
 
-            const useCache = false; // For testing without hitting the API
+            const useCache = true; // For testing without hitting the API
 
             let getTransactionsResult;
             if (!useCache || !localStorage.cachedGetTransactionsResult) {
@@ -1091,12 +1092,13 @@
               }
             } else {
               getTransactionsResult = JSON.parse(localStorage.cachedGetTransactionsResult || {});
-              console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - cached getTransactionsResult: " + JSON.stringify(getTransactionsResult, null, 2));
+              console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - cached getTransactionsResult: " + JSON.stringify(getTransactionsResult, null, 2).substring(0, 200));
             }
-            if (getTransactionsResult.status == 1 &&  getTransactionsResult.result) {
+            parseEtherscanGetTransactionsResult(getTransactionsResult);
+            // if (getTransactionsResult.status == 1 &&  getTransactionsResult.result) {
               // const balance = ethers.BigNumber.from(getTransactionsResult.result).toString();
               // console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - balance: " + balance);
-            }
+            // }
 
             // await delay(1000);
             // const getInternalTransactionsUrl = "https://api.etherscan.io/v2/api?chainId=1&module=account&action=txlistinternal&address=" + this.activeAddress + "&startblock=0&endblock=99999999&page=1&offset=100&sort=dsc&apikey=" + this.settings.etherscanAPIKey;
@@ -1680,7 +1682,7 @@
             const tempSettings = JSON.parse(localStorage.burnerProToolSettings);
             if ('version' in tempSettings && tempSettings.version == this.settings.version) {
               this.settings = tempSettings;
-              console.log(moment().format("HH:mm:ss") + " mounted - this.settings: " + JSON.stringify(this.settings, null, 2));
+              console.log(moment().format("HH:mm:ss") + " mounted - this.settings: " + JSON.stringify(this.settings, null, 2).substring(0, 200));
           //     if (this.settings.approvalsTable.currentPage > 1) {
           //       this.settings.approvalsTable.currentPage = 1;
           //     }
