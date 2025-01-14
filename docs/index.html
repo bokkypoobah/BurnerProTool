@@ -193,6 +193,25 @@
           </b-form-group>
         </b-modal>
 
+        <!-- :MODALNFT -->
+        <b-modal visible id="modal-nft" hide-footer size="md" body-class="m-0 p-1 pt-2" body-bg-variant="light">
+          <template #modal-title>
+            {{ modalNFT.item.name }}
+          </template>
+          <div class="text-center">
+            <b-avatar button rounded size="20rem" :src="modalNFT.item.image"></b-avatar>
+          </div>
+          <b-form-group label="Name:" label-cols="3" label-align="right" class="m-0 mt-2">
+            <b-form-input type="text" readonly size="sm" v-model.trim="modalNFT.item.name"></b-form-input>
+          </b-form-group>
+          <b-form-group label="Collection:" label-cols="3" label-align="right" class="m-0">
+            <b-form-input type="text" readonly size="sm" v-model.trim="modalNFT.item.collectionName"></b-form-input>
+          </b-form-group>
+          <b-form-group label="Description:" label-cols="3" label-align="right" class="m-0">
+            <b-textarea readonly :value="modalNFT.item.description" style="font-size: 12px;" rows="3" max-rows="7"></b-textarea>
+          </b-form-group>
+        </b-modal>
+
         <!-- <b-alert v-if="false" size="sm" dismissible variant="warning" show class="m-1 my-0">
           Warning: This is experimental unaudited software. Please check your transaction data carefully before signing
         </b-alert> -->
@@ -318,7 +337,7 @@
                     <div class="d-flex m-0 p-0">
                       <div class="mt-0 pr-1">
                         <!-- <b-embed v-if="item.media" type="iframe" aspect="16by9" :src="item.media" allowfullscreen></b-embed> -->
-                        <b-avatar button rounded size="10rem" :src="item.image"></b-avatar>
+                        <b-avatar button rounded @click="showModalNFT(item);" size="10rem" :src="item.image"></b-avatar>
                       </div>
                       <div class="flex-fill mt-0 pl-1">
                         <b-link :href="'https://opensea.io/assets/ethereum/' + item.contract + '/' + item.tokenId" target="_blank">
@@ -551,6 +570,45 @@
             prompt: null,
           },
 
+          modalNFT: {
+            // item: null,
+            item: {
+              "chainId": "1",
+              "contract": "0x286e531f363768fed5e18b468f5b76a9ffc33af5",
+              "type": "erc1155",
+              "collectionName": "Nyan Balloon",
+              "collectionSlug": "nyanballoon",
+              "tokenId": "7",
+              "count": "2",
+              "name": "Super Nyan Balloon",
+              "description": "Nyan Balloon is a character I personally created back in October 2011 that was originally meant to serve as a backstory to a certain space cat. Ultimately, I felt this idea should be unique to the person that imagines it.\n\nThis piece has been digitally remastered for 2023 and I hope it's enjoyed by everyone who collects it ✨🎈\n\nYou may view the original video here:  \nhttps://www.youtube.com/watch?v=In1IKpcviIc",
+              "image": "https://img.reservoir.tools/images/v2/mainnet/hc%2BnPcLmWxs%2FDW99DlBQ42k40ZoyYV5jCIms5qHjwvveWhEWY3fo8di0LLSegFQWLPFTwYz17NduegJDMeuu72jwUKQDrPWLt07x7AsMssldAVJ%2FIQez3uQ%2B0Y1VbeXvAW%2FGLpURm5X97%2BnFBHktSVzkes%2BV1aoviVLzEda0IhV7CEqhi2paPvLnuppSjoW15U%2BpI8K0jfeJAE8H%2BrPT5g%3D%3D.gif?width=512",
+              "media": null,
+              "acquiredAt": 1736802335,
+              "lastSale": {
+                "timestamp": 1736802335,
+                "currency": "ETH",
+                "amount": 0.01,
+                "amountUSD": 32.64071
+              },
+              "price": {
+                "source": "okx.com",
+                "expiry": 1737374243,
+                "currency": "ETH",
+                "amount": 0.01,
+                "amountUSD": 32.64071
+              },
+              "topBid": {
+                "source": "opensea.io",
+                "currency": "WETH",
+                "amount": 0.0058,
+                "amountUSD": 18.93607,
+                "netAmount": 0.00566,
+                "netAmountUSD": 18.46267
+              }
+            },
+          },
+
           sync: {
             section: null,
             total: null,
@@ -765,6 +823,11 @@
 
         // --- METHODS ---
         methods: {
+          showModalNFT(item) {
+            console.log(moment().format("HH:mm:ss") + " showModalNFT - item: " + JSON.stringify(item, null, 2));
+            this.modalNFT.item = item;
+            this.$bvModal.show('modal-nft');
+          },
           updateName(cardId, name) {
             console.log(moment().format("HH:mm:ss") + " updateName: " + JSON.stringify(cardId) + ", name: " + JSON.stringify(name));
             if (cardId in this.settings.cards) {
