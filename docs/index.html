@@ -291,20 +291,18 @@
             <!-- Address View -->
             <b-card-body v-if="settings.tabIndex == 0" class="m-0 p-1" body-bg-variant="white">
 
-              <!-- <b-form-group label="Etherscan:" label-cols="5" label-align="right" description="Get your API Key from https://etherscan.io/apis">
-                <b-form-input type="text" size="sm" v-model.trim="settings.etherscanAPIKey" @change="saveSettings();" placeholder="API key"></b-form-input>
-              </b-form-group>
-              <b-form-group label="CryptoCompare:" label-cols="5" label-align="right" description="Get your API Key from https://www.cryptocompare.com/cryptopian/api-keys">
-                <b-form-input type="text" size="sm" v-model.trim="settings.cryptoCompareAPIKey" @change="saveSettings();" placeholder="API key"></b-form-input>
-              </b-form-group> -->
-
-              <b-form-group label="Etherscan:" label-cols="5" label-align="right" description="Set API Key in the Config menu">
-                <b-button v-if="activeAddress" size="sm" @click="downloadFromEtherscan(activeAddress);" variant="outline">
+              <b-form-group label="Reservoir:" label-cols="5" label-align="right" description="Using demo-api-key">
+                <b-button v-if="activeAddress" size="sm" @click="downloadFromReservoir(activeAddress);" variant="outline">
                   <b-icon-cloud-download shift-v="+2" font-scale="1" variant="primary"></b-icon-cloud-download>
                 </b-button>
               </b-form-group>
-              <b-form-group label="Reservoir:" label-cols="5" label-align="right" description="Using demo-api-key">
-                <b-button v-if="activeAddress" size="sm" @click="downloadFromReservoir(activeAddress);" variant="outline">
+
+              {{ nfts }}
+
+              <hr />
+
+              <b-form-group label="Etherscan:" label-cols="5" label-align="right" description="Set API Key in the Config menu">
+                <b-button v-if="activeAddress" size="sm" @click="downloadFromEtherscan(activeAddress);" variant="outline">
                   <b-icon-cloud-download shift-v="+2" font-scale="1" variant="primary"></b-icon-cloud-download>
                 </b-button>
               </b-form-group>
@@ -313,10 +311,6 @@
                   <b-icon-cloud-download shift-v="+2" font-scale="1" variant="primary"></b-icon-cloud-download>
                 </b-button>
               </b-form-group>
-              <!-- <b-button v-if="activeAddress" size="sm" @click="copyToClipboard(activeAddress);" variant="outline">
-                <b-icon-currency-dollar shift-v="+2" font-scale="1" variant="primary"></b-icon-currency-dollar>
-              </b-button> -->
-
 
             </b-card-body>
 
@@ -692,6 +686,28 @@
               }
             }
             // console.log(moment().format("HH:mm:ss") + " slots: " + JSON.stringify(results, null, 2));
+            return results;
+          },
+
+          nfts() {
+            console.log(moment().format("HH:mm:ss") + " nfts");
+            const results = [];
+            for (const [chainId, chainData] of Object.entries(this.activeAddress && this.reservoirData[this.activeAddress] || {})) {
+              // console.log(moment().format("HH:mm:ss") + " chainId: " + chainId + " => " + JSON.stringify(chainData, null, 2).substring(0, 200));
+              for (const [contract, contractData] of Object.entries(chainData)) {
+                // console.log(moment().format("HH:mm:ss") + " contract: " + contract + " => " + JSON.stringify(contractData, null, 2).substring(0, 200));
+                for (const [token, tokenData] of Object.entries(contractData.tokens)) {
+                  // console.log(moment().format("HH:mm:ss") + " token: " + token + " => " + JSON.stringify(tokenData, null, 2).substring(0, 200));
+                  results.push({
+                    chainId,
+                    contract,
+                    token,
+                    ...tokenData,
+                  });
+                }
+              }
+            }
+            console.log(moment().format("HH:mm:ss") + " nfts: " + JSON.stringify(results, null, 2));
             return results;
           },
 
