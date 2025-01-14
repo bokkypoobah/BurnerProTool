@@ -617,6 +617,7 @@
           },
 
           reservoirData: {},
+          etherscanData: {},
 
           events: {},
           accounts: {},
@@ -1334,8 +1335,18 @@
               console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - cached getERC1155TransfersResult: " + JSON.stringify(getERC1155TransfersResult, null, 2).substring(0, 200));
             }
             parseEtherscanGetERC1155TransfersResult(getERC1155TransfersResult, chainId, etherscanData);
-            console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - etherscanData: " + JSON.stringify(etherscanData, null, 2).substring(0, 100000));
+            console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - etherscanData: " + JSON.stringify(etherscanData, null, 2).substring(0, 200));
 
+            Vue.set(this.etherscanData, address, etherscanData);
+            console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - this.etherscanData: " + JSON.stringify(this.etherscanData, null, 2).substring(0, 100000));
+
+            const db = new Dexie(this.db.name);
+            db.version(this.db.version).stores(this.db.schemaDefinition);
+            await db.cache.put({ objectName: "etherscanData", object: this.etherscanData }).then (function() {
+              }).catch(function(error) {
+                console.log(moment().format("HH:mm:ss") + " downloadFromReservoir - ERROR: " + e.message);
+              });
+            db.close();
 
             // await delay(1000);
             // const getBalanceUrl = "https://api.etherscan.io/v2/api?chainId=1&module=account&action=balance&address=" + this.activeAddress + "&apikey=" + this.settings.etherscanAPIKey;
@@ -1948,6 +1959,11 @@
                 if (reservoirDataItems.length == 1) {
                   this.reservoirData = reservoirDataItems[0].object;
                   console.log(moment().format("HH:mm:ss") + " mounted - this.reservoirData: " + JSON.stringify(this.reservoirData, null, 2).substring(0, 200));
+                }
+                const etherscanDataItems = await db.cache.where("objectName").equals("etherscanData").toArray();
+                if (etherscanDataItems.length == 1) {
+                  this.etherscanData = etherscanDataItems[0].object;
+                  console.log(moment().format("HH:mm:ss") + " mounted - this.etherscanData: " + JSON.stringify(this.etherscanData, null, 2).substring(0, 200));
                 }
                 db.close();
               })();
