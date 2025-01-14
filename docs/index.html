@@ -315,16 +315,21 @@
               <b-card-group deck class="m-1 ml-0 p-0">
                 <div v-for="(item, index) of pagedFilteredSortedNFTs" v-bind:key="index">
                   <b-card no-body header-class="p-1" img-top class="m-1 p-0 border-0">
-                    <b-row>
-                      <b-col cols="6">
+                    <div class="d-flex m-0 p-0">
+                      <div class="mt-0 pr-1">
                         <!-- <b-embed v-if="item.media" type="iframe" aspect="16by9" :src="item.media" allowfullscreen></b-embed> -->
                         <b-avatar button rounded size="10rem" :src="item.image"></b-avatar>
-                      </b-col>
-                      <b-col cols="6">
-                        {{ item.tokenId }}{{ item.name }}
-                        {{ item.collectionName }}
-                      </b-col>
-                    </b-row>
+                      </div>
+                      <div class="mt-0 pl-1">
+                        <b-link :href="'https://opensea.io/assets/ethereum/' + item.contract + '/' + item.tokenId" target="_blank">
+                          {{ item.name }}
+                        </b-link>
+                        <br />
+                        <b-link :href="'https://opensea.io/collection/' + item.collectionSlug" target="_blank">
+                          <font size="-1">{{ item.collectionName }}</font>
+                        </b-link>
+                      </div>
+                    </div>
                   </b-card>
                 </div>
               </b-card-group>
