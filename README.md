@@ -6,6 +6,8 @@ Skip to the [Burner.pro Review](#burnerpro-review) (WIP).
 
 We are not affiliated with burner.pro . This tool is under development, so test it with small amounts first.
 
+<kbd><img src="images/burnerprotoolnfts01.png" width="200" /></kbd>
+
 <br />
 
 ---
