@@ -6,7 +6,7 @@ function parseEtherscanGetTransactionsResult(result, chainId, etherscanData) {
       etherscanData[chainId] = {};
     }
     for (const tx of result.result) {
-      console.log(moment().format("HH:mm:ss") + " parseEtherscanGetTransactionsResult - tx: " + JSON.stringify(tx, null, 2).substring(0, 200));
+      // console.log(moment().format("HH:mm:ss") + " parseEtherscanGetTransactionsResult - tx: " + JSON.stringify(tx, null, 2).substring(0, 200));
       if (!(tx.hash in etherscanData[chainId])) {
         etherscanData[chainId][tx.hash] = {
           blockNumber: tx.blockNumber,
@@ -45,14 +45,14 @@ function parseEtherscanGetTransactionsResult(result, chainId, etherscanData) {
 
 
 function parseEtherscanGetInternalTransactionsResult(result, chainId, etherscanData) {
-  console.log(moment().format("HH:mm:ss") + " parseEtherscanGetInternalTransactionsResult - result: " + JSON.stringify(result, null, 2).substring(0, 2000));
+  console.log(moment().format("HH:mm:ss") + " parseEtherscanGetInternalTransactionsResult - result: " + JSON.stringify(result, null, 2).substring(0, 200));
   const results = [];
   if (result.status == 1 && result.message == "OK" && result.result) {
     if (!(('' + chainId) in etherscanData)) {
       etherscanData[chainId] = {};
     }
     for (const tx of result.result) {
-      console.log(moment().format("HH:mm:ss") + " parseEtherscanGetInternalTransactionsResult - tx: " + JSON.stringify(tx, null, 2).substring(0, 2000));
+      // console.log(moment().format("HH:mm:ss") + " parseEtherscanGetInternalTransactionsResult - tx: " + JSON.stringify(tx, null, 2).substring(0, 2000));
       if (!(tx.hash in etherscanData[chainId])) {
         etherscanData[chainId][tx.hash] = {
           blockNumber: tx.blockNumber,
@@ -82,14 +82,14 @@ function parseEtherscanGetInternalTransactionsResult(result, chainId, etherscanD
 }
 
 function parseEtherscanGetERC20TransfersResult(result, chainId, etherscanData) {
-  console.log(moment().format("HH:mm:ss") + " parseEtherscanGetERC20TransfersResult - result: " + JSON.stringify(result, null, 2).substring(0, 2000));
+  console.log(moment().format("HH:mm:ss") + " parseEtherscanGetERC20TransfersResult - result: " + JSON.stringify(result, null, 2).substring(0, 200));
   const results = [];
   if (result.status == 1 && result.message == "OK" && result.result) {
     if (!(('' + chainId) in etherscanData)) {
       etherscanData[chainId] = {};
     }
     for (const tx of result.result) {
-      console.log(moment().format("HH:mm:ss") + " parseEtherscanGetERC20TransfersResult - tx: " + JSON.stringify(tx, null, 2).substring(0, 2000));
+      // console.log(moment().format("HH:mm:ss") + " parseEtherscanGetERC20TransfersResult - tx: " + JSON.stringify(tx, null, 2).substring(0, 2000));
       if (!(tx.hash in etherscanData[chainId])) {
         etherscanData[chainId][tx.hash] = {
           blockNumber: tx.blockNumber,
@@ -130,7 +130,7 @@ function parseEtherscanGetERC721TransfersResult(result, chainId, etherscanData) 
       etherscanData[chainId] = {};
     }
     for (const tx of result.result) {
-      console.log(moment().format("HH:mm:ss") + " parseEtherscanGetERC721TransfersResult - tx: " + JSON.stringify(tx, null, 2).substring(0, 2000));
+      // console.log(moment().format("HH:mm:ss") + " parseEtherscanGetERC721TransfersResult - tx: " + JSON.stringify(tx, null, 2).substring(0, 2000));
       if (!(tx.hash in etherscanData[chainId])) {
         etherscanData[chainId][tx.hash] = {
           blockNumber: tx.blockNumber,
@@ -169,7 +169,7 @@ function parseEtherscanGetERC1155TransfersResult(result, chainId, etherscanData)
       etherscanData[chainId] = {};
     }
     for (const tx of result.result) {
-      console.log(moment().format("HH:mm:ss") + " parseEtherscanGetERC1155TransfersResult - tx: " + JSON.stringify(tx, null, 2).substring(0, 2000));
+      // console.log(moment().format("HH:mm:ss") + " parseEtherscanGetERC1155TransfersResult - tx: " + JSON.stringify(tx, null, 2).substring(0, 2000));
       if (!(tx.hash in etherscanData[chainId])) {
         etherscanData[chainId][tx.hash] = {
           blockNumber: tx.blockNumber,

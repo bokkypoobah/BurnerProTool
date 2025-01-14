@@ -1225,7 +1225,7 @@
             let getTransactionsResult;
             if (!useCache || !localStorage.cachedGetTransactionsResult) {
               const getTransactionsUrl = "https://api.etherscan.io/v2/api?chainId=" + chainId + "&module=account&action=txlist&address=" + this.activeAddress + "&startblock=0&endblock=99999999&page=1&offset=100&sort=desc&apikey=" + this.settings.etherscanAPIKey;
-              console.log("getTransactionsUrl: " + getTransactionsUrl);
+              console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - getTransactionsUrl: " + getTransactionsUrl);
               getTransactionsResult = await fetch(getTransactionsUrl)
                 .then(handleErrors)
                 .then(response => response.json())
@@ -1233,7 +1233,7 @@
                   console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - ERROR: " + error);
                   return {};
                 });
-              console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - getTransactionsResult: " + JSON.stringify(getTransactionsResult, null, 2));
+              console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - getTransactionsResult: " + JSON.stringify(getTransactionsResult, null, 2).substring(0, 200));
               if (useCache) {
                 localStorage.cachedGetTransactionsResult = JSON.stringify(getTransactionsResult);
               }
@@ -1242,13 +1242,13 @@
               console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - cached getTransactionsResult: " + JSON.stringify(getTransactionsResult, null, 2).substring(0, 200));
             }
             parseEtherscanGetTransactionsResult(getTransactionsResult, chainId, etherscanData);
-            console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - etherscanData: " + JSON.stringify(etherscanData, null, 2).substring(0, 1000));
+            console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - etherscanData: " + JSON.stringify(etherscanData, null, 2).substring(0, 200));
 
             let getInternalTransactionsResult;
             if (!useCache || !localStorage.cachedGetInternalTransactionsResult) {
               await delay(1000);
               const getInternalTransactionsUrl = "https://api.etherscan.io/v2/api?chainId=" + chainId + "&module=account&action=txlistinternal&address=" + this.activeAddress + "&startblock=0&endblock=99999999&page=1&offset=100&sort=desc&apikey=" + this.settings.etherscanAPIKey;
-              console.log("getInternalTransactionsUrl: " + getInternalTransactionsUrl);
+              console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - getInternalTransactionsUrl: " + getInternalTransactionsUrl);
               getInternalTransactionsResult = await fetch(getInternalTransactionsUrl)
                 .then(handleErrors)
                 .then(response => response.json())
@@ -1256,7 +1256,7 @@
                   console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - ERROR: " + error);
                    return {};
                 });
-              console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - getInternalTransactionsResult: " + JSON.stringify(getInternalTransactionsResult, null, 2));
+              console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - getInternalTransactionsResult: " + JSON.stringify(getInternalTransactionsResult, null, 2).substring(0, 200));
               if (useCache) {
                 localStorage.cachedGetInternalTransactionsResult = JSON.stringify(getInternalTransactionsResult);
               }
@@ -1265,13 +1265,13 @@
               console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - cached getInternalTransactionsResult: " + JSON.stringify(getInternalTransactionsResult, null, 2).substring(0, 200));
             }
             parseEtherscanGetInternalTransactionsResult(getInternalTransactionsResult, chainId, etherscanData);
-            console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - etherscanData: " + JSON.stringify(etherscanData, null, 2).substring(0, 100000));
+            console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - etherscanData: " + JSON.stringify(etherscanData, null, 2).substring(0, 200));
 
             let getERC20TransfersResult;
             if (!useCache || !localStorage.cachedGetERC20TransfersResult) {
               await delay(1000);
               const getERC20TransfersUrl = "https://api.etherscan.io/v2/api?chainId=" + chainId + "&module=account&action=tokentx&address=" + this.activeAddress + "&startblock=0&endblock=99999999&page=1&offset=100&sort=desc&apikey=" + this.settings.etherscanAPIKey;
-              console.log("getERC20TransfersUrl: " + getERC20TransfersUrl);
+              console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - getERC20TransfersUrl: " + getERC20TransfersUrl);
               getERC20TransfersResult = await fetch(getERC20TransfersUrl)
                 .then(handleErrors)
                 .then(response => response.json())
@@ -1279,7 +1279,7 @@
                   console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - ERROR: " + error);
                    return {};
                 });
-              console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - getERC20TransfersResult: " + JSON.stringify(getERC20TransfersResult, null, 2));
+              console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - getERC20TransfersResult: " + JSON.stringify(getERC20TransfersResult, null, 2).substring(0, 200));
               if (useCache) {
                 localStorage.cachedGetERC20TransfersResult = JSON.stringify(getERC20TransfersResult);
               }
@@ -1288,13 +1288,13 @@
               console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - cached getERC20TransfersResult: " + JSON.stringify(getERC20TransfersResult, null, 2).substring(0, 200));
             }
             parseEtherscanGetERC20TransfersResult(getERC20TransfersResult, chainId, etherscanData);
-            console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - etherscanData: " + JSON.stringify(etherscanData, null, 2).substring(0, 100000));
+            console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - etherscanData: " + JSON.stringify(etherscanData, null, 2).substring(0, 200));
 
             let getERC721TransfersResult;
             if (!useCache || !localStorage.cachedGetERC721TransfersResult) {
               await delay(1000);
               const getERC721TransfersUrl = "https://api.etherscan.io/v2/api?chainId=" + chainId + "&module=account&action=tokennfttx&address=" + this.activeAddress + "&startblock=0&endblock=99999999&page=1&offset=100&sort=desc&apikey=" + this.settings.etherscanAPIKey;
-              console.log("getERC721TransfersUrl: " + getERC721TransfersUrl);
+              console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - getERC721TransfersUrl: " + getERC721TransfersUrl);
               getERC721TransfersResult = await fetch(getERC721TransfersUrl)
                 .then(handleErrors)
                 .then(response => response.json())
@@ -1302,7 +1302,7 @@
                   console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - ERROR: " + error);
                    return {};
                 });
-              console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - getERC721TransfersResult: " + JSON.stringify(getERC721TransfersResult, null, 2));
+              console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - getERC721TransfersResult: " + JSON.stringify(getERC721TransfersResult, null, 2).substring(0, 200));
               if (useCache) {
                 localStorage.cachedGetERC721TransfersResult = JSON.stringify(getERC721TransfersResult);
               }
@@ -1311,14 +1311,13 @@
               console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - cached getERC721TransfersResult: " + JSON.stringify(getERC721TransfersResult, null, 2).substring(0, 200));
             }
             parseEtherscanGetERC721TransfersResult(getERC721TransfersResult, chainId, etherscanData);
-            console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - etherscanData: " + JSON.stringify(etherscanData, null, 2).substring(0, 100000));
-
+            console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - etherscanData: " + JSON.stringify(etherscanData, null, 2).substring(0, 200));
 
             let getERC1155TransfersResult;
             if (!useCache || !localStorage.cachedGetERC1155TransfersResult) {
               await delay(1000);
               const getERC1155TransfersUrl = "https://api.etherscan.io/v2/api?chainId=" + chainId + "&module=account&action=token1155tx&address=" + this.activeAddress + "&startblock=0&endblock=99999999&page=1&offset=100&sort=desc&apikey=" + this.settings.etherscanAPIKey;
-              console.log("getERC1155TransfersUrl: " + getERC1155TransfersUrl);
+              console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - getERC1155TransfersUrl: " + getERC1155TransfersUrl);
               getERC1155TransfersResult = await fetch(getERC1155TransfersUrl)
                 .then(handleErrors)
                 .then(response => response.json())
@@ -1326,7 +1325,7 @@
                   console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - ERROR: " + error);
                    return {};
                 });
-              console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - getERC1155TransfersResult: " + JSON.stringify(getERC1155TransfersResult, null, 2));
+              console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - getERC1155TransfersResult: " + JSON.stringify(getERC1155TransfersResult, null, 2).substring(0, 200));
               if (useCache) {
                 localStorage.cachedGetERC1155TransfersResult = JSON.stringify(getERC1155TransfersResult);
               }
@@ -1372,7 +1371,7 @@
             //   console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - blockNumber: " + blockNumber);
             // }
 
-            console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - delayed");
+            // console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - delayed");
           },
 
           async downloadFromReservoir(address) {
