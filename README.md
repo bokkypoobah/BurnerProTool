@@ -8,6 +8,10 @@ We are not affiliated with burner.pro . This tool is under development, so test 
 
 <kbd><img src="images/burnerprotoolnfts01.png" width="200" /></kbd>
 
+Click on the image for more detailed view
+
+<kbd><img src="images/burnerprotoolnfts02.png" width="200" /></kbd>
+
 <br />
 
 ---
