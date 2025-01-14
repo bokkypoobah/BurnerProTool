@@ -320,14 +320,23 @@
                         <!-- <b-embed v-if="item.media" type="iframe" aspect="16by9" :src="item.media" allowfullscreen></b-embed> -->
                         <b-avatar button rounded size="10rem" :src="item.image"></b-avatar>
                       </div>
-                      <div class="mt-0 pl-1">
+                      <div class="flex-fill mt-0 pl-1">
                         <b-link :href="'https://opensea.io/assets/ethereum/' + item.contract + '/' + item.tokenId" target="_blank">
                           {{ item.name }}
                         </b-link>
+                        <b-badge pill v-if="item.type == 'erc1155'" variant="light">{{ 'x' + item.count }}</b-badge>
                         <br />
                         <b-link :href="'https://opensea.io/collection/' + item.collectionSlug" target="_blank">
                           <font size="-1">{{ item.collectionName }}</font>
                         </b-link>
+                        <br />
+                        <font size="-1">
+                          <b-badge pill v-if="item.lastSale" variant="light" class="m-0 p-0">{{ 'Last: ' + item.lastSale.amount + (item.lastSale.currency == "ETH" ? "e" : " " + item.lastSale.currency) }}</b-badge>
+                          <b-badge pill v-if="item.price" variant="light" class="m-0 p-0">{{ 'Price: ' + item.price.amount + (item.price.currency == "ETH" ? "e": " " + item.price.currency) }}</b-badge>
+                          <b-badge pill v-if="item.price" variant="light" class="m-0 p-0">{{ 'Bid: ' + item.topBid.amount + (item.topBid.currency == "WETH" ? "w": " " + item.topBid.currency) }}</b-badge>
+                        </font>
+                        <br />
+                        <b-textarea :value="item.description" class="m-0 p-1" style="font-size: 12px; border: none;" rows="3" max-rows="4"></b-textarea>
                       </div>
                     </div>
                   </b-card>
@@ -734,6 +743,7 @@
                   results.push({
                     chainId,
                     contract,
+                    type: contractData.type,
                     collectionName: contractData.name,
                     collectionSlug: contractData.slug,
                     tokenId,
