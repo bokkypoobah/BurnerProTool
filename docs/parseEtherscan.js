@@ -146,10 +146,6 @@ function parseEtherscanGetERC721TransfersResult(result, chainId, etherscanData) 
         };
       }
       etherscanData[chainId][tx.hash].erc721.push({
-        blockNumber: tx.blockNumber,
-        timeStamp: tx.timeStamp,
-        nonce: tx.nonce,
-        blockHash: tx.blockHash,
         from: ethers.utils.getAddress(tx.from),
         contractAddress: ethers.utils.getAddress(tx.contractAddress),
         to: tx.to && ethers.utils.getAddress(tx.to) || null,
