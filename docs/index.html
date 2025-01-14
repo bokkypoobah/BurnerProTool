@@ -291,13 +291,6 @@
 
             <!-- NFTs View -->
             <b-card-body v-if="settings.tabIndex == 0" class="m-0 p-1" body-bg-variant="white">
-
-              <!-- <b-form-group label="Reservoir:" label-cols="5" label-align="right" description="Using demo-api-key">
-                <b-button v-if="activeAddress" size="sm" @click="downloadFromReservoir(activeAddress);" variant="outline">
-                  <b-icon-cloud-download shift-v="+2" font-scale="1" variant="primary"></b-icon-cloud-download>
-                </b-button>
-              </b-form-group> -->
-
               <div class="d-flex flex-wrap m-0 p-0">
                 <div class="mt-0 pr-1">
                   <b-button v-if="activeAddress" size="sm" @click="downloadFromReservoir(activeAddress);" variant="outline">
@@ -315,48 +308,17 @@
                 <div class="mt-0">
                   <b-pagination size="sm" v-model="settings.nftsTable.currentPage" @input="saveSettings" :total-rows="filteredSortedNFTs.length" :per-page="settings.nftsTable.pageSize" style="height: 0;"></b-pagination>
                 </div>
-                <!-- <div class="mt-0 pl-1">
+                <div class="mt-0 pl-1">
                   <b-form-select size="sm" v-model="settings.nftsTable.pageSize" @change="saveSettings" :options="pageSizes"></b-form-select>
-                </div> -->
+                </div>
               </div>
-
-              <div v-for="(item, index) of pagedFilteredSortedNFTs" v-bind:key="index">
-                <!-- <b-dropdown-item @click="settings.erc20.contract = item.contract; saveSettings();">{{ index }}. {{ item.contract.substring(0, 8) + '...' + item.contract.slice(-6) + ' ' + item.name }}</b-dropdown-item> -->
-                {{ index }} {{ item }}
-              </div>
-
-              <!-- {{ pagedFilteredSortedNFTs }} -->
-
-
-              <!-- <b-table small fixed striped responsive hover :fields="cardsFields" :items="filteredSortedCards" show-empty empty-html="Press Escape. Then scan your Burner.pro NFC card to begin" head-variant="light" class="mx-0 my-0 mt-1">
-                <template #cell(select)="data">
-                  <b-form-checkbox size="sm" :checked="settings.selectedCard == data.item.cardId" @change="updateSelectedCard(data.item.cardId)">
-                  </b-form-checkbox>
-                </template>
-                <template #cell(name)="data">
-                  <b-form-input type="text" size="sm" v-model.trim="data.item.name" @change="updateName(data.item.cardId, $event)" debounce="1200" placeholder="name"></b-form-input>
-                </template>
-                <template #cell(address)="data">
-                  <div v-if="data.item.initialised">
-                    <b-link :href="'https://etherscan.io/address/' + data.item.address" target="_blank">
-                      <font size="-1">{{ data.item.address.substring(0, 8) + '...' + data.item.address.slice(-4) }}</font>
-                    </b-link>
-                    <b-button size="sm" @click="copyToClipboard(data.item.address);" variant="outline">
-                      <b-icon-clipboard shift-v="+2" font-scale="0.9" variant="primary"></b-icon-clipboard>
-                    </b-button>
-                  </div>
-                  <div v-else>
-                    Uninitialised
-                  </div>
-                </template>
-                <template #cell(slots)="data">
-                  <b-button size="sm" @click="showModalSlots(data.item.cardId, data.item.name);" variant="outline">
-                    <b-icon-card-list shift-v="+1" font-scale="1.0" variant="primary"></b-icon-card-list>
-                  </b-button>
-                </template>
-              </b-table> -->
-
-
+              <b-card-group deck class="m-1 ml-0 p-0">
+                <div v-for="(item, index) of pagedFilteredSortedNFTs" v-bind:key="index">
+                  <b-card body-class="p-0" header-class="p-1" img-top class="m-1 p-0 border-0" style="max-width: 15rem;">
+                    <b-avatar button rounded size="10rem" :src="item.image"></b-avatar>
+                  </b-card>
+                </div>
+              </b-card-group>
             </b-card-body>
 
             <!-- Address View -->
@@ -755,7 +717,7 @@
           },
 
           nfts() {
-            console.log(moment().format("HH:mm:ss") + " nfts");
+            // console.log(moment().format("HH:mm:ss") + " nfts");
             const results = [];
             for (const [chainId, chainData] of Object.entries(this.activeAddress && this.reservoirData[this.activeAddress] || {})) {
               for (const [contract, contractData] of Object.entries(chainData)) {
@@ -769,7 +731,7 @@
                 }
               }
             }
-            console.log(moment().format("HH:mm:ss") + " nfts: " + JSON.stringify(results, null, 2));
+            // console.log(moment().format("HH:mm:ss") + " nfts: " + JSON.stringify(results, null, 2));
             return results;
           },
           filteredSortedNFTs() {
