@@ -315,6 +315,7 @@
               <b-card-group deck class="m-1 ml-0 p-0">
                 <div v-for="(item, index) of pagedFilteredSortedNFTs" v-bind:key="index">
                   <b-card body-class="p-0" header-class="p-1" img-top class="m-1 p-0 border-0" style="max-width: 15rem;">
+                    <!-- <b-embed v-if="item.media" type="iframe" aspect="16by9" :src="item.media" allowfullscreen></b-embed> -->
                     <b-avatar button rounded size="10rem" :src="item.image"></b-avatar>
                   </b-card>
                 </div>

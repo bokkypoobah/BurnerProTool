@@ -23,6 +23,7 @@ function parseReservoirData(data, reservoirData) {
     const name = token.name;
     const description = token.description;
     const image = token.image;
+    const media = token.media;
     const acquiredAt = parseInt(Date.parse(item.ownership.acquiredAt)/1000);
     const lastSaleTimestamp = token.lastSale && token.lastSale.timestamp || null;
     const lastSaleCurrency = token.lastSale && token.lastSale.price && token.lastSale.price.currency && token.lastSale.price.currency.symbol || null;
@@ -75,6 +76,7 @@ function parseReservoirData(data, reservoirData) {
         name,
         description,
         image,
+        media,
         acquiredAt,
         lastSale,
         price,
