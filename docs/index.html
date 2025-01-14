@@ -20,6 +20,7 @@
     <script src="js/ethers-5.7.umd.min.js" type="application/javascript"></script>
     <script src="js/moment.min.js"></script>
     <script src="js/libhalo_1.10.11.js"></script>
+    <script src="js/dexie.js"></script>
     <script src="globals.js"></script>
     <script src="customNames.js"></script>
     <script src="deploymentData.js"></script>
@@ -513,6 +514,8 @@
             halt: false,
           },
 
+          reservoirData: {},
+
           events: {},
           accounts: {},
           blockTimestamps: {},
@@ -558,6 +561,14 @@
             { key: 'info', label: 'Info', sortable: false, thStyle: 'width: 25%;', thClass: 'text-right', tdClass: 'text-right' },
           ],
 
+          db: {
+            name: "burnerprotooldata088a",
+            version: 1,
+            schemaDefinition: {
+              cache: '&objectName',
+            },
+            updated: null,
+          },
         },
 
         // --- COMPUTED ---
@@ -1249,32 +1260,30 @@
 
           async downloadFromReservoir(address) {
             console.log(moment().format("HH:mm:ss") + " downloadFromReservoir - address: " + address);
-            const useCache = true; // For testing without hitting the API
-            const chainId = 1;
-
-            let data;
-            if (!useCache || !localStorage.cachedReservoirData) {
-              let continuation = null;
-              do {
-                let url = "https://api.reservoir.tools/users/" + address + "/tokens/v10?limit=200&includeTopBid=true&includeAttributes=true&includeLastSale=true";
-                url = url + (continuation != null ? "&continuation=" + continuation : '');
-                console.log(url);
-                data = await fetch(url).then(response => response.json());
-                continuation = data.continuation;
-                console.log(moment().format("HH:mm:ss") + " downloadFromReservoir - data: " + JSON.stringify(data, null, 2));
-                if (useCache) {
-                  localStorage.cachedReservoirData = JSON.stringify(data);
-                }
+            const reservoirData = {};
+            let continuation = null;
+            do {
+              let url = "https://api.reservoir.tools/users/" + address + "/tokens/v10?limit=200&includeTopBid=true&includeAttributes=true&includeLastSale=true";
+              url = url + (continuation != null ? "&continuation=" + continuation : '');
+              console.log(moment().format("HH:mm:ss") + " downloadFromReservoir - url: " + url);
+              const data = await fetch(url).then(response => response.json());
+              continuation = data.continuation;
+              console.log(moment().format("HH:mm:ss") + " downloadFromReservoir - data: " + JSON.stringify(data, null, 2));
+              parseReservoirData(data, reservoirData);
+              console.log(moment().format("HH:mm:ss") + " downloadFromReservoir - reservoirData: " + JSON.stringify(reservoirData, null, 2).substring(0, 200));
+              if (continuation != null) {
                 await delay(1000);
-              } while (continuation != null);
-            } else {
-              data = JSON.parse(localStorage.cachedReservoirData || {});
-              console.log(moment().format("HH:mm:ss") + " downloadFromReservoir - cached data: " + JSON.stringify(data, null, 2).substring(0, 200));
-            }
-            // TODO: Move parseReservoirData into loop to handle continuations
-            const reservoirData = parseReservoirData(data);
-            console.log(moment().format("HH:mm:ss") + " downloadFromReservoir - reservoirData: " + JSON.stringify(reservoirData, null, 2).substring(0, 100000));
-
+              }
+            } while (continuation != null);
+            Vue.set(this.reservoirData, address, reservoirData);
+            console.log(moment().format("HH:mm:ss") + " downloadFromReservoir - this.reservoirData: " + JSON.stringify(this.reservoirData, null, 2).substring(0, 200));
+            const db = new Dexie(this.db.name);
+            db.version(this.db.version).stores(this.db.schemaDefinition);
+            await db.cache.put({ objectName: "reservoirData", object: this.reservoirData }).then (function() {
+              }).catch(function(error) {
+                console.log(moment().format("HH:mm:ss") + " downloadFromReservoir - error: " + e.message);
+              });
+            db.close();
           },
 
           async downloadFromCryptoCompare() {
@@ -1805,10 +1814,21 @@
             const tempSettings = JSON.parse(localStorage.burnerProToolSettings);
             if ('version' in tempSettings && tempSettings.version == this.settings.version) {
               this.settings = tempSettings;
+              if (this.settings.cardsTable.currentPage > 1) {
+                this.settings.cardsTable.currentPage = 1;
+              }
               console.log(moment().format("HH:mm:ss") + " mounted - this.settings: " + JSON.stringify(this.settings, null, 2).substring(0, 200));
-          //     if (this.settings.approvalsTable.currentPage > 1) {
-          //       this.settings.approvalsTable.currentPage = 1;
-          //     }
+
+              (async() => {
+                const db = new Dexie(this.db.name);
+                db.version(this.db.version).stores(this.db.schemaDefinition);
+                const reservoirDataItems = await db.cache.where("objectName").equals("reservoirData").toArray();
+                if (reservoirDataItems.length == 1) {
+                  this.reservoirData = reservoirDataItems[0].object;
+                  console.log(moment().format("HH:mm:ss") + " mounted - this.reservoirData: " + JSON.stringify(this.reservoirData, null, 2).substring(0, 200));
+                }
+                db.close();
+              })();
           //     if (this.settings.eventsTable.currentPage > 1) {
           //       this.settings.eventsTable.currentPage = 1;
           //     }

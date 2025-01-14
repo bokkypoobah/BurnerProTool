@@ -1,19 +1,18 @@
-function parseReservoirData(data) {
+function parseReservoirData(data, reservoirData) {
   console.log(moment().format("HH:mm:ss") + " parseReservoirData - data: " + JSON.stringify(data, null, 2).substring(0, 200));
-  const results = {};
   for (const item of (data && data.tokens || [])) {
     // console.log(moment().format("HH:mm:ss") + " parseReservoirData - item: " + JSON.stringify(item, null, 2).substring(0, 200));
     const token = item.token;
     const chainId = token.chainId;
-    if (!(('' + chainId) in results)) {
-      results[chainId] = {};
+    if (!(('' + chainId) in reservoirData)) {
+      reservoirData[chainId] = {};
     }
     const contract = token.contract;
     const type = token.kind;
     const collectionName = token.collection.name;
     const collectionSlug = token.collection.slug;
-    if (!(contract in results[chainId])) {
-      results[chainId][contract] = {
+    if (!(contract in reservoirData[chainId])) {
+      reservoirData[chainId][contract] = {
         type,
         name: collectionName,
         slug: collectionSlug,
@@ -71,8 +70,8 @@ function parseReservoirData(data) {
         netAmountUSD: topBidNetAmountUSD,
       };
     }
-    if (!(tokenId in results[chainId][contract].tokens)) {
-      results[chainId][contract].tokens[tokenId] = {
+    if (!(tokenId in reservoirData[chainId][contract].tokens)) {
+      reservoirData[chainId][contract].tokens[tokenId] = {
         count,
         name,
         description,
@@ -85,6 +84,6 @@ function parseReservoirData(data) {
     }
 
   }
-  console.log(moment().format("HH:mm:ss") + " parseReservoirData - results: " + JSON.stringify(results, null, 2));
-  return results;
+  console.log(moment().format("HH:mm:ss") + " parseReservoirData - reservoirData: " + JSON.stringify(reservoirData, null, 2));
+  return reservoirData;
 }
