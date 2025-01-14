@@ -303,7 +303,7 @@
               </div>
               <b-tabs small v-model="settings.tabIndex" @input="saveSettings" align="right" class="text-right" content-class="m-0 p-0" >
                 <b-tab title="NFTs" no-body></b-tab>
-                <b-tab title="Address" no-body></b-tab>
+                <b-tab title="Txs" no-body></b-tab>
                 <b-tab title="Card" no-body></b-tab>
               </b-tabs>
             </div>
@@ -363,13 +363,69 @@
               </b-card-group>
             </b-card-body>
 
-            <!-- Address View -->
+            <!-- Txs View -->
             <b-card-body v-if="settings.tabIndex == 1" class="m-0 p-1" body-bg-variant="white">
-              <b-form-group label="Etherscan:" label-cols="5" label-align="right" description="Set API Key in the Config menu">
+
+              <div class="d-flex flex-wrap m-0 p-0">
+                <div class="mt-0 pr-1">
+                  <b-button v-if="activeAddress" size="sm" @click="downloadFromEtherscan(activeAddress);" variant="outline">
+                    <b-icon-cloud-download shift-v="+1" font-scale="1" variant="primary"></b-icon-cloud-download>
+                  </b-button>
+                </div>
+                <!-- <div class="mt-0 pr-1" style="max-width: 8.0rem;">
+                  <b-form-input type="text" size="sm" v-model.trim="settings.nftsTable.filter" @change="saveSettings" debounce="1200" placeholder="🔍 addr/name"></b-form-input>
+                </div> -->
+                <div class="mt-0 flex-grow-1">
+                </div>
+                <div class="mt-0 pr-1" style="max-width: 6.0rem;">
+                  <b-form-select size="sm" v-model="settings.txsTable.sortOption" @change="saveSettings" :options="sortOptions"></b-form-select>
+                </div>
+                <div class="mt-0">
+                  <b-pagination size="sm" v-model="settings.txsTable.currentPage" @input="saveSettings" :total-rows="filteredSortedNFTs.length" :per-page="settings.txsTable.pageSize" style="height: 0;"></b-pagination>
+                </div>
+                <div class="mt-0 pl-1">
+                  <b-form-select size="sm" v-model="settings.txsTable.pageSize" @change="saveSettings" :options="pageSizes"></b-form-select>
+                </div>
+              </div>
+
+              <b-card-group deck class="m-1 ml-0 p-0">
+                <div v-for="(item, index) of pagedFilteredSortedTxs" v-bind:key="index">
+                  <b-card no-body header-class="p-1" img-top class="m-1 p-0 border-0">
+                    <div class="d-flex m-0 p-0">
+                      <div class="mt-0 pr-1">
+                        <!-- <b-embed v-if="item.media" type="iframe" aspect="16by9" :src="item.media" allowfullscreen></b-embed> -->
+                        <!-- <b-avatar button rounded @click="showModalNFT(item);" size="10rem" :src="item.image"></b-avatar> -->
+                        {{ JSON.stringify(item).substring(0, 100) }}
+                      </div>
+                      <!-- <div class="flex-fill mt-0 pl-1">
+                        <b-link :href="'https://opensea.io/assets/ethereum/' + item.contract + '/' + item.tokenId" target="_blank">
+                          {{ item.name }}
+                        </b-link>
+                        <b-badge pill v-if="item.type == 'erc1155'" variant="light">{{ 'x' + item.count }}</b-badge>
+                        <br />
+                        <b-link :href="'https://opensea.io/collection/' + item.collectionSlug" target="_blank">
+                          <font size="-1">{{ item.collectionName }}</font>
+                        </b-link>
+                        <br />
+                        <font size="-1">
+                          <b-badge pill v-if="item.lastSale" variant="light" class="m-0 p-0">{{ 'Last: ' + item.lastSale.amount + (item.lastSale.currency == "ETH" ? "e" : " " + item.lastSale.currency) }}</b-badge>
+                          <b-badge pill v-if="item.price" variant="light" class="m-0 p-0">{{ 'Price: ' + item.price.amount + (item.price.currency == "ETH" ? "e": " " + item.price.currency) }}</b-badge>
+                          <b-badge pill v-if="item.price" variant="light" class="m-0 p-0">{{ 'Bid: ' + item.topBid.amount + (item.topBid.currency == "WETH" ? "w": " " + item.topBid.currency) }}</b-badge>
+                        </font>
+                        <br />
+                        <b-textarea :value="item.description" class="m-0 p-1" style="font-size: 12px; border: none;" rows="3" max-rows="4"></b-textarea>
+                      </div> -->
+                    </div>
+                  </b-card>
+                </div>
+              </b-card-group>
+
+              <!-- <b-form-group label="Etherscan:" label-cols="5" label-align="right" description="Set API Key in the Config menu">
                 <b-button v-if="activeAddress" size="sm" @click="downloadFromEtherscan(activeAddress);" variant="outline">
                   <b-icon-cloud-download shift-v="+2" font-scale="1" variant="primary"></b-icon-cloud-download>
                 </b-button>
-              </b-form-group>
+              </b-form-group> -->
+              <hr />
               <b-form-group label="CryptoCompare:" label-cols="5" label-align="right" description="Set API Key in the Config menu">
                 <b-button v-if="activeAddress" size="sm" @click="downloadFromCryptoCompare();" variant="outline">
                   <b-icon-cloud-download shift-v="+2" font-scale="1" variant="primary"></b-icon-cloud-download>
@@ -557,7 +613,13 @@
               pageSize: 10,
               sortOption: 'nameasc',
             },
-            version: 3,
+            txsTable: {
+              filter: null,
+              currentPage: 1,
+              pageSize: 10,
+              sortOption: 'nameasc',
+            },
+            version: 4,
           },
 
           modalSlots: {
@@ -820,6 +882,40 @@
             return this.filteredSortedNFTs.slice((this.settings.nftsTable.currentPage - 1) * this.settings.nftsTable.pageSize, this.settings.nftsTable.currentPage * this.settings.nftsTable.pageSize);
           },
 
+          txs() {
+            const results = [];
+            for (const [chainId, chainData] of Object.entries(this.activeAddress && this.etherscanData[this.activeAddress] || {})) {
+              console.log(chainId + " => " + JSON.stringify(chainData).substring(0, 200));
+              for (const [txHash, txData] of Object.entries(chainData)) {
+                console.log(chainId + "/" + txHash.substring(0, 20) + " => " + JSON.stringify(txData).substring(0, 200));
+                results.push({
+                  chainId,
+                  txHash,
+                  ...txData,
+                });
+              }
+              // for (const [contract, contractData] of Object.entries(chainData)) {
+              //   for (const [tokenId, tokenData] of Object.entries(contractData.tokens)) {
+              //     results.push({
+              //       chainId,
+              //       contract,
+              //       type: contractData.type,
+              //       collectionName: contractData.name,
+              //       collectionSlug: contractData.slug,
+              //       tokenId,
+              //       ...tokenData,
+              //     });
+              //   }
+              // }
+            }
+            return results;
+          },
+          filteredSortedTxs() {
+            return this.txs;
+          },
+          pagedFilteredSortedTxs() {
+            return this.filteredSortedTxs.slice((this.settings.txsTable.currentPage - 1) * this.settings.txsTable.pageSize, this.settings.txsTable.currentPage * this.settings.txsTable.pageSize);
+          },
         },
 
         // --- METHODS ---
