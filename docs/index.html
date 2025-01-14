@@ -1099,9 +1099,8 @@
                 .then(handleErrors)
                 .then(response => response.json())
                 .catch(function(error) {
-                   console.log("ERROR - downloadFromEtherscan: " + error);
-                   // Want to work around API data unavailablity - state.sync.error = true;
-                   return {};
+                  console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - ERROR: " + error);
+                  return {};
                 });
               console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - getTransactionsResult: " + JSON.stringify(getTransactionsResult, null, 2));
               if (useCache) {
@@ -1264,9 +1263,15 @@
             let continuation = null;
             do {
               let url = "https://api.reservoir.tools/users/" + address + "/tokens/v10?limit=200&includeTopBid=true&includeAttributes=true&includeLastSale=true";
-              url = url + (continuation != null ? "&continuation=" + continuation : '');
+              url = url + (continuation != null ? "&continuation=" + continuation : "");
               console.log(moment().format("HH:mm:ss") + " downloadFromReservoir - url: " + url);
-              const data = await fetch(url).then(response => response.json());
+              const data = await fetch(url)
+                .then(handleErrors)
+                .then(response => response.json())
+                .catch(function(error) {
+                  console.log(moment().format("HH:mm:ss") + " downloadFromReservoir - ERROR: " + error);
+                  return {};
+                });
               continuation = data.continuation;
               console.log(moment().format("HH:mm:ss") + " downloadFromReservoir - data: " + JSON.stringify(data, null, 2));
               parseReservoirData(data, reservoirData);

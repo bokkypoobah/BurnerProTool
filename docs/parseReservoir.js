@@ -1,7 +1,6 @@
 function parseReservoirData(data, reservoirData) {
   console.log(moment().format("HH:mm:ss") + " parseReservoirData - data: " + JSON.stringify(data, null, 2).substring(0, 200));
   for (const item of (data && data.tokens || [])) {
-    // console.log(moment().format("HH:mm:ss") + " parseReservoirData - item: " + JSON.stringify(item, null, 2).substring(0, 200));
     const token = item.token;
     const chainId = token.chainId;
     if (!(('' + chainId) in reservoirData)) {
@@ -82,8 +81,7 @@ function parseReservoirData(data, reservoirData) {
         topBid,
       };
     }
-
   }
-  console.log(moment().format("HH:mm:ss") + " parseReservoirData - reservoirData: " + JSON.stringify(reservoirData, null, 2));
+  console.log(moment().format("HH:mm:ss") + " parseReservoirData - reservoirData: " + JSON.stringify(reservoirData, null, 2).substring(0, 200));
   return reservoirData;
 }
