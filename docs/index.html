@@ -314,9 +314,17 @@
               </div>
               <b-card-group deck class="m-1 ml-0 p-0">
                 <div v-for="(item, index) of pagedFilteredSortedNFTs" v-bind:key="index">
-                  <b-card body-class="p-0" header-class="p-1" img-top class="m-1 p-0 border-0" style="max-width: 15rem;">
-                    <!-- <b-embed v-if="item.media" type="iframe" aspect="16by9" :src="item.media" allowfullscreen></b-embed> -->
-                    <b-avatar button rounded size="10rem" :src="item.image"></b-avatar>
+                  <b-card no-body header-class="p-1" img-top class="m-1 p-0 border-0">
+                    <b-row>
+                      <b-col cols="6">
+                        <!-- <b-embed v-if="item.media" type="iframe" aspect="16by9" :src="item.media" allowfullscreen></b-embed> -->
+                        <b-avatar button rounded size="10rem" :src="item.image"></b-avatar>
+                      </b-col>
+                      <b-col cols="6">
+                        {{ item.tokenId }}{{ item.name }}
+                        {{ item.collectionName }}
+                      </b-col>
+                    </b-row>
                   </b-card>
                 </div>
               </b-card-group>
@@ -641,7 +649,6 @@
           },
 
           filteredSortedCards() {
-            // console.log(moment().format("HH:mm:ss") + " filteredSortedCards");
             const results = [];
             for (const [cardId, cardData] of Object.entries(this.settings.cards)) {
               const address = cardData.initialised ? cardData.slots[cardData.selectedSlot].address : "Uninitialised";
@@ -676,7 +683,6 @@
                 return ('' + addressB).localeCompare(addressA);
               });
             }
-            // console.log(moment().format("HH:mm:ss") + " filteredSortedCards: " + JSON.stringify(results));
             return results;
           },
 
@@ -706,33 +712,31 @@
           },
 
           slots() {
-            // console.log(moment().format("HH:mm:ss") + " slots");
             const results = [];
             if (this.modalSlots.cardId && this.modalSlots.cardId in this.settings.cards) {
               for (const [slot, slotData] of Object.entries(this.settings.cards[this.modalSlots.cardId].slots)) {
                 results.push({ slot, ...slotData })
               }
             }
-            // console.log(moment().format("HH:mm:ss") + " slots: " + JSON.stringify(results, null, 2));
             return results;
           },
 
           nfts() {
-            // console.log(moment().format("HH:mm:ss") + " nfts");
             const results = [];
             for (const [chainId, chainData] of Object.entries(this.activeAddress && this.reservoirData[this.activeAddress] || {})) {
               for (const [contract, contractData] of Object.entries(chainData)) {
-                for (const [token, tokenData] of Object.entries(contractData.tokens)) {
+                for (const [tokenId, tokenData] of Object.entries(contractData.tokens)) {
                   results.push({
                     chainId,
                     contract,
-                    token,
+                    collectionName: contractData.name,
+                    collectionSlug: contractData.slug,
+                    tokenId,
                     ...tokenData,
                   });
                 }
               }
             }
-            // console.log(moment().format("HH:mm:ss") + " nfts: " + JSON.stringify(results, null, 2));
             return results;
           },
           filteredSortedNFTs() {
