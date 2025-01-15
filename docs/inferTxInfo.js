@@ -4,10 +4,27 @@ function inferTxInfo(tx) {
 
   if (tx.tx && tx.tx.methodId == "0xa22cb465") {
     // setApprovalForAll(address operator, bool authorized)
-    result.action = "setApprovalForAll";
+    result.action = "ERC-721/1155: setApprovalForAll";
     result.from = tx.tx.from;
     result.contract = tx.tx.to;
     result.value = !!tx.tx.input.slice(-1);
+  } else if (tx.tx && tx.tx.methodId == "0x095ea7b3") {
+    // approve(address _spender, uint256 _value)
+    result.action = "ERC-20: approve";
+    result.from = tx.tx.from;
+    result.contract = tx.tx.to;
+    result.value = !!tx.tx.input.slice(-1);
+  } else {
+    result.from = tx.tx && tx.tx.from || null;
+    result.contract = tx.tx && tx.tx.to || null;
+
+    if (result.contract && result.contract in CUSTOMNAMES && CUSTOMNAMES[result.contract][0] == "nftexchange") {
+      result.action = "NFT Exchange";
+    } else {
+      result.action = "?";
+    }
+
+    result.value = tx.tx && tx.tx.value && (ethers.utils.formatEther(tx.tx.value) + 'e') || null;
   }
 
   console.log(moment().format("HH:mm:ss") + " inferTxInfo - result: " + JSON.stringify(result, null, 2).substring(0, 2000));

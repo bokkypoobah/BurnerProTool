@@ -403,13 +403,14 @@
                           </b-link>
                           <br />
                           <b-link v-if="item.from" :href="'https://etherscan.io/address/' + item.from" target="_blank" class="ml-3">
-                            <font size="-1">{{ item.from.substring(0, 6) + '...' + item.from.slice(-4) }}</font>
+                            <font size="-1">{{ nameOrShortAddress(item.from) }}</font>
                           </b-link>
-                          <b-badge v-if="item.action" pill variant="light" class="m-0 p-0">{{ item.action }}</b-badge>
+                          <b-icon-arrow-right font-scale="0.9" variant="secondary"></b-icon-arrow-right>
+                          <b-link v-if="item.contract" :href="'https://etherscan.io/address/' + item.contract" target="_blank">
+                            <font size="-1">{{ nameOrShortAddress(item.contract) }}</font>
+                          </b-link>
                           <br />
-                          <b-link v-if="item.contract" :href="'https://etherscan.io/address/' + item.contract" target="_blank" class="ml-3">
-                            <font size="-1">{{ item.contract.substring(0, 6) + '...' + item.contract.slice(-4) }}</font>
-                          </b-link>
+                          <b-badge v-if="item.action" pill variant="light" class="m-0 ml-3 p-0">{{ item.action }}</b-badge>
                           <b-badge v-if="item.value" pill variant="light" class="m-0 p-0">{{ item.value }}</b-badge>
                         </div>
                         <b-textarea readonly :value="JSON.stringify(item, null, 2)" class="m-0 ml-2 p-1" style="font-size: 12px; border: 1;" rows="3" max-rows="7" class="w-100"></b-textarea>
@@ -1973,16 +1974,12 @@
               return moment.unix(unixtime).fromNow();
             }
           },
-          nameOrAddress(address, length = 0) {
+          nameOrShortAddress(address, length = 0) {
             let result = null;
-            const accounts = this.accounts[this.chainId] || {};
-            if (address in accounts) {
-              result = accounts[address].customName || accounts[address].name || address;
+            if (address in CUSTOMNAMES) {
+              result = CUSTOMNAMES[address][1];
             } else {
-              result = address;
-            }
-            if (result && length > 0) {
-              result = result.substring(0, length);
+              result = address.substring(0, 6) + '...' + address.slice(-4);
             }
             return result;
           },
