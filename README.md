@@ -169,6 +169,7 @@ So this is my review of these cards.
 * [Supported NFT Media Types](#supported-nft-media-types)
 * [Withdraw ETH](#withdraw-eth)
 * [Swap WETH TO ERC-20](#swap-weth-to-erc-20)
+* [Register ENS](#register-ens)
 * [Questions](#questions)
 * [References](#references)
 
@@ -481,6 +482,122 @@ Swapping
 New TURBO balance in os.burner.pro
 
 <kbd><img src="images/swaperc2011.png" width="200" /></kbd>
+
+<br />
+
+---
+
+#### Register ENS
+
+View https://app.ens.domains . Click [Connect]
+
+<kbd><img src="images/registerens01.png" width="200" /></kbd>
+
+Click on [WalletConnect]
+
+<kbd><img src="images/registerens02.png" width="200" /></kbd>
+
+Click on the icon on the top right
+
+<kbd><img src="images/registerens03.png" width="200" /></kbd>
+
+Click the [Copy] button on the top right. Paste in the [WalletConnect] link in os.burner.pro and connect
+
+<kbd><img src="images/registerens04.png" width="200" /></kbd>
+
+Reviewing data
+
+<kbd><img src="images/registerens05.png" width="200" /></kbd>
+
+Click on [Next]
+
+<kbd><img src="images/registerens06.png" width="200" /></kbd>
+
+Click on the [Camera] icon to select to upload an avatar
+
+<kbd><img src="images/registerens07.png" width="200" /></kbd>
+
+Select image and click [Sign and Upload]
+
+<kbd><img src="images/registerens08.png" width="200" /></kbd>
+
+In os.burner.pro, click [ACCEPT]
+
+<kbd><img src="images/registerens09.png" width="200" /></kbd>
+
+Enter password
+
+<kbd><img src="images/registerens10.png" width="200" /></kbd>
+
+Scan NFC card
+
+<kbd><img src="images/registerens11.png" width="200" /></kbd>
+
+Click [ACCEPT] again
+
+<kbd><img src="images/registerens12.png" width="200" /></kbd>
+
+Scan NFC card again
+
+<kbd><img src="images/registerens13.png" width="200" /></kbd>
+
+Back in app.ens.domains click [Next]
+
+<kbd><img src="images/registerens14.png" width="200" /></kbd>
+
+Scroll down and click [Begin] to execute the first ENS "commit" transaction
+
+<kbd><img src="images/registerens15.png" width="200" /></kbd>
+
+Click [Open Wallet]
+
+<kbd><img src="images/registerens16.png" width="200" /></kbd>
+
+In os.burner.pro click [ACCEPT]
+
+<kbd><img src="images/registerens17.png" width="200" /></kbd>
+
+Swipe NFC card
+
+<kbd><img src="images/registerens18.png" width="200" /></kbd>
+
+Complete the second ENS registration step at app.ens.domains by click [Open Wallet]
+
+<kbd><img src="images/registerens19.png" width="200" /></kbd>
+
+In os.burner.pro click [ACCEPT]
+
+<kbd><img src="images/registerens20.png" width="200" /></kbd>
+
+Scan NFC card and click [ACCEPT again]
+
+<kbd><img src="images/registerens21.png" width="200" /></kbd>
+
+Scan NFC card
+
+<kbd><img src="images/registerens22.png" width="200" /></kbd>
+
+Transaction sent
+
+<kbd><img src="images/registerens23.png" width="200" /></kbd>
+
+Registration complete
+
+<kbd><img src="images/registerens24.png" width="200" /></kbd>
+
+In https://opensea.io, your newly created ENS name may not show up with the correct image. If so, click on [Refresh metadata] and refresh the whole page after a short while
+
+<kbd><img src="images/registerens25.png" width="200" /></kbd>
+
+Select [NFTs] is os.burner.pro
+
+<kbd><img src="images/registerens26.png" width="200" /></kbd>
+
+There seems to be a bug causing a crash when I try to view the details on my ENS name above
+
+<kbd><img src="images/registerens27.png" width="200" /></kbd>
+
+
 
 <br />
 
