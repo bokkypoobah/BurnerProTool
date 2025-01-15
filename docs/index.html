@@ -24,6 +24,7 @@
     <script src="globals.js"></script>
     <script src="customNames.js"></script>
     <script src="deploymentData.js"></script>
+    <script src="inferTxInfo.js"></script>
     <script src="parseEtherscan.js"></script>
     <script src="parseReservoir.js"></script>
 
@@ -395,7 +396,18 @@
                       <div class="mt-0 pr-1">
                         <!-- <b-embed v-if="item.media" type="iframe" aspect="16by9" :src="item.media" allowfullscreen></b-embed> -->
                         <!-- <b-avatar button rounded @click="showModalNFT(item);" size="10rem" :src="item.image"></b-avatar> -->
-                        {{ JSON.stringify(item).substring(0, 100) }}
+
+                        <b-link :href="'https://etherscan.io/tx/' + item.txHash" target="_blank">
+                          <font size="-1">{{ formatTimestamp(item.timestamp) }}</font>
+                        </b-link>
+
+                        <font size="-1">
+                          <pre>
+{{ item }}                            
+                          </pre>
+                        </font>
+
+                        <!-- {{ JSON.stringify(item).substring(0, 100) }} -->
                       </div>
                       <!-- <div class="flex-fill mt-0 pl-1">
                         <b-link :href="'https://opensea.io/assets/ethereum/' + item.contract + '/' + item.tokenId" target="_blank">
@@ -888,7 +900,9 @@
               console.log(chainId + " => " + JSON.stringify(chainData).substring(0, 200));
               for (const [txHash, txData] of Object.entries(chainData)) {
                 console.log(chainId + "/" + txHash.substring(0, 20) + " => " + JSON.stringify(txData).substring(0, 200));
+                const info = inferTxInfo(txData);
                 results.push({
+                  ...info,
                   chainId,
                   txHash,
                   ...txData,

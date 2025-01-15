@@ -10,7 +10,7 @@ function parseEtherscanGetTransactionsResult(result, chainId, etherscanData) {
       if (!(tx.hash in etherscanData[chainId])) {
         etherscanData[chainId][tx.hash] = {
           blockNumber: tx.blockNumber,
-          timeStamp: tx.timeStamp,
+          timestamp: tx.timeStamp,
           nonce: tx.nonce,
           blockHash: tx.blockHash,
           transactionIndex: tx.transactionIndex,
@@ -56,7 +56,7 @@ function parseEtherscanGetInternalTransactionsResult(result, chainId, etherscanD
       if (!(tx.hash in etherscanData[chainId])) {
         etherscanData[chainId][tx.hash] = {
           blockNumber: tx.blockNumber,
-          timeStamp: tx.timeStamp,
+          timestamp: tx.timeStamp,
           nonce: null,
           blockHash: null,
           transactionIndex: null,
@@ -93,7 +93,7 @@ function parseEtherscanGetERC20TransfersResult(result, chainId, etherscanData) {
       if (!(tx.hash in etherscanData[chainId])) {
         etherscanData[chainId][tx.hash] = {
           blockNumber: tx.blockNumber,
-          timeStamp: tx.timeStamp,
+          timestamp: tx.timeStamp,
           nonce: tx.nonce,
           blockHash: tx.blockHash,
           transactionIndex: tx.transactionIndex,
@@ -134,7 +134,7 @@ function parseEtherscanGetERC721TransfersResult(result, chainId, etherscanData) 
       if (!(tx.hash in etherscanData[chainId])) {
         etherscanData[chainId][tx.hash] = {
           blockNumber: tx.blockNumber,
-          timeStamp: tx.timeStamp,
+          timestamp: tx.timeStamp,
           nonce: tx.nonce,
           blockHash: tx.blockHash,
           transactionIndex: tx.transactionIndex,
@@ -173,7 +173,7 @@ function parseEtherscanGetERC1155TransfersResult(result, chainId, etherscanData)
       if (!(tx.hash in etherscanData[chainId])) {
         etherscanData[chainId][tx.hash] = {
           blockNumber: tx.blockNumber,
-          timeStamp: tx.timeStamp,
+          timestamp: tx.timeStamp,
           nonce: tx.nonce,
           blockHash: tx.blockHash,
           transactionIndex: tx.transactionIndex,
