@@ -6,11 +6,18 @@ Skip to the [Burner.pro Review](#burnerpro-review) (WIP).
 
 We are not affiliated with burner.pro . This tool is under development, so test it with small amounts first.
 
+
 <kbd><img src="images/burnerprotoolnfts01.png" width="200" /></kbd>
+
+<kbd><img src="images/burnerprotoolnfts02.png" width="200" /></kbd>
 
 Click on the image for more detailed view
 
-<kbd><img src="images/burnerprotoolnfts02.png" width="200" /></kbd>
+<kbd><img src="images/burnerprotoolnfts03.png" width="200" /></kbd>
+
+Transactions
+
+<kbd><img src="images/burnerprotooltxs01.png" width="200" /></kbd>
 
 <br />
 
