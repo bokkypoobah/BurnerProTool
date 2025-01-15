@@ -405,9 +405,9 @@
                           <b-link v-if="item.from" :href="'https://etherscan.io/address/' + item.from" target="_blank">
                             <font size="-1">{{ nameOrShortAddress(item.from) }}</font>
                           </b-link>
-                          <b-icon-arrow-right font-scale="0.9" variant="secondary"></b-icon-arrow-right>
                           <br />
-                          <b-link v-if="item.contract" :href="'https://etherscan.io/address/' + item.contract" target="_blank" class="ml-3">
+                          <b-icon-arrow-right font-scale="0.9" variant="secondary" class="ml-3"></b-icon-arrow-right>
+                          <b-link v-if="item.contract" :href="'https://etherscan.io/address/' + item.contract" target="_blank">
                             <font size="-1">{{ nameOrShortAddress(item.contract) }}</font>
                           </b-link>
                           <br />
