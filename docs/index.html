@@ -294,7 +294,7 @@
             <div class="d-flex m-0 p-0">
               <span class="m-1">
                 <b-link v-if="activeAddress" :href="'https://etherscan.io/address/' + activeAddress" target="_blank">
-                  <font size="-1">{{ activeAddress.substring(0, 8) + '...' + activeAddress.slice(-6) }}</font>
+                  <font size="-1">{{ activeAddress.substring(0, 6) + '...' + activeAddress.slice(-4) }}</font>
                 </b-link>
                 <b-button v-if="activeAddress" size="sm" @click="copyToClipboard(activeAddress);" variant="outline">
                   <b-icon-clipboard shift-v="+2" font-scale="0.9" variant="primary"></b-icon-clipboard>
@@ -398,8 +398,6 @@
                         <!-- <b-avatar button rounded @click="showModalNFT(item);" size="10rem" :src="item.image"></b-avatar> -->
 
                         <div>
-                          {{ item.timestamp }}
-                          {{ formatTimestamp(item.timestamp) }}
                           <b-link :href="'https://etherscan.io/tx/' + item.txHash" target="_blank">
                             <font size="-1">{{ formatTimestamp(item.timestamp) }}</font>
                           </b-link>
@@ -414,8 +412,7 @@
                           </b-link>
                           <b-badge v-if="item.value" pill variant="light" class="m-0 p-0">{{ item.value }}</b-badge>
                         </div>
-                        <br />
-                        <b-textarea :value="JSON.stringify(item, null, 2)" class="m-0 ml-3 p-1" style="font-size: 12px; border: none;" rows="3" max-rows="7" class="w-100"></b-textarea>
+                        <b-textarea readonly :value="JSON.stringify(item, null, 2)" class="m-0 ml-2 p-1" style="font-size: 12px; border: 1;" rows="3" max-rows="7" class="w-100"></b-textarea>
 
                         <!-- <font v-if="true || !item.action" size="-1">
                           <pre>
