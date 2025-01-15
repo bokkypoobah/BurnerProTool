@@ -123,7 +123,7 @@ function parseEtherscanGetERC20TransfersResult(result, chainId, etherscanData) {
 
 
 function parseEtherscanGetERC721TransfersResult(result, chainId, etherscanData) {
-  console.log(moment().format("HH:mm:ss") + " parseEtherscanGetERC721TransfersResult - result: " + JSON.stringify(result, null, 2).substring(0, 2000));
+  console.log(moment().format("HH:mm:ss") + " parseEtherscanGetERC721TransfersResult - result: " + JSON.stringify(result, null, 2).substring(0, 200));
   const results = [];
   if (result.status == 1 && result.message == "OK" && result.result) {
     if (!(('' + chainId) in etherscanData)) {
@@ -162,7 +162,7 @@ function parseEtherscanGetERC721TransfersResult(result, chainId, etherscanData) 
 }
 
 function parseEtherscanGetERC1155TransfersResult(result, chainId, etherscanData) {
-  console.log(moment().format("HH:mm:ss") + " parseEtherscanGetERC1155TransfersResult - result: " + JSON.stringify(result, null, 2).substring(0, 2000));
+  console.log(moment().format("HH:mm:ss") + " parseEtherscanGetERC1155TransfersResult - result: " + JSON.stringify(result, null, 2).substring(0, 200));
   const results = [];
   if (result.status == 1 && result.message == "OK" && result.result) {
     if (!(('' + chainId) in etherscanData)) {
