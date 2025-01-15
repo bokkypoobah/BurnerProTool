@@ -398,6 +398,8 @@
                         <!-- <b-avatar button rounded @click="showModalNFT(item);" size="10rem" :src="item.image"></b-avatar> -->
 
                         <div>
+                          {{ item.timestamp }}
+                          {{ formatTimestamp(item.timestamp) }}
                           <b-link :href="'https://etherscan.io/tx/' + item.txHash" target="_blank">
                             <font size="-1">{{ formatTimestamp(item.timestamp) }}</font>
                           </b-link>
