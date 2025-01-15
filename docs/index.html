@@ -413,7 +413,7 @@
                           <b-badge v-if="item.value" pill variant="light" class="m-0 p-0">{{ item.value }}</b-badge>
                         </div>
                         <br />
-                        <b-textarea :value="JSON.stringify(item, null, 2)" class="m-0 ml-3 p-1" style="font-size: 12px; border: none;" rows="3" max-rows="10" class="w-100"></b-textarea>
+                        <b-textarea :value="JSON.stringify(item, null, 2)" class="m-0 ml-3 p-1" style="font-size: 12px; border: none;" rows="3" max-rows="7" class="w-100"></b-textarea>
 
                         <!-- <font v-if="true || !item.action" size="-1">
                           <pre>
@@ -1959,11 +1959,11 @@
           },
           formatTimestamp(ts) {
             if (ts != null) {
-              if (this.settings.reportingDateTime == 1) {
-                return moment.unix(ts).utc().format("YYYY-MM-DD HH:mm:ss");
-              } else {
+              // if (this.settings.reportingDateTime == 1) {
+              //   return moment.unix(ts).utc().format("YYYY-MM-DD HH:mm:ss");
+              // } else {
                 return moment.unix(ts).format("YYYY-MM-DD HH:mm:ss");
-              }
+              // }
             }
             return null;
           },
