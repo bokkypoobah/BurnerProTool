@@ -911,9 +911,9 @@
           txs() {
             const results = [];
             for (const [chainId, chainData] of Object.entries(this.activeAddress && this.etherscanData[this.activeAddress] || {})) {
-              console.log(chainId + " => " + JSON.stringify(chainData).substring(0, 200));
+              // console.log(chainId + " => " + JSON.stringify(chainData).substring(0, 200));
               for (const [txHash, txData] of Object.entries(chainData)) {
-                console.log(chainId + "/" + txHash.substring(0, 20) + " => " + JSON.stringify(txData).substring(0, 200));
+                // console.log(chainId + "/" + txHash.substring(0, 20) + " => " + JSON.stringify(txData).substring(0, 200));
                 const info = inferTxInfo(txData);
                 results.push({
                   ...info,
