@@ -1,7 +1,12 @@
 const CUSTOMNAMES = {
   "0x0000000000000000000000000000000000000000": ["eoa", "Null", "Null:0x0000...0000"],
   "0x0000000000000000000000000000000000000001": ["eoa", "Null", "Null:0x0000...0001"],
+
+  "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2": ["erc20", "WETH", "WETH"],
+
   "0x0000000000000068F116a894984e2DB1123eB395": ["nftexchange", "OpenSea", "Seaport 1.6"],
+  "0xb2ecfE4E4D61f8790bbb9DE2D1259B9e2410CEA5": ["nftexchange", "Blur", "Blur: Marketplace 3"],
+
   "0x0Ee24c748445Fb48028a74b0ccb6b46d7D3e3b33": ["erc721", "NAH FUNGIBLE BONES", "NAH FUNGIBLE BONES"], // TODO Delete
   // "0x00000000000111AbE46ff893f3B2fdF1F759a8A8": ["nftexchange", "ExecutionDelegate", "Blur:ExecutionDelegate"],
   // "0x000000000022D473030F116dDEE9F6B43aC78BA3": ["ftexchange", "Permit2", "Uniswap:Permit2"],

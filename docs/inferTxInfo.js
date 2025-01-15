@@ -14,6 +14,22 @@ function inferTxInfo(tx) {
     result.from = tx.tx.from;
     result.contract = tx.tx.to;
     result.value = !!tx.tx.input.slice(-1);
+  } else if (tx.tx && tx.tx.methodId == "0xd0e30db0") {
+    // WETH deposit()
+    result.action = "WETH: deposit";
+    result.from = tx.tx.from;
+    result.contract = tx.tx.to;
+    result.value = tx.tx && tx.tx.value && (ethers.utils.formatEther(tx.tx.value) + 'e') || null;
+  } else if (tx.tx && tx.tx.gasUsed == 21000) {
+    result.action = "ETH: transfer";
+    result.from = tx.tx.from;
+    result.contract = tx.tx.to;
+    result.value = tx.tx && tx.tx.value && (ethers.utils.formatEther(tx.tx.value) + 'e') || null;
+  } else if (tx.internal && tx.internal.length > 0) {
+    result.action = "ETH: internal transfer";
+    result.from = tx.internal[0].from;
+    result.contract = tx.internal[0].to;
+    result.value = tx.internal[0].value && (ethers.utils.formatEther(tx.internal[0].value) + 'e') || null;
   } else {
     result.from = tx.tx && tx.tx.from || null;
     result.contract = tx.tx && tx.tx.to || null;

@@ -382,7 +382,7 @@
                   <b-form-select size="sm" v-model="settings.txsTable.sortOption" @change="saveSettings" :options="sortOptions"></b-form-select>
                 </div>
                 <div class="mt-0">
-                  <b-pagination size="sm" v-model="settings.txsTable.currentPage" @input="saveSettings" :total-rows="filteredSortedNFTs.length" :per-page="settings.txsTable.pageSize" style="height: 0;"></b-pagination>
+                  <b-pagination size="sm" v-model="settings.txsTable.currentPage" @input="saveSettings" :total-rows="filteredSortedTxs.length" :per-page="settings.txsTable.pageSize" style="height: 0;"></b-pagination>
                 </div>
                 <div class="mt-0 pl-1">
                   <b-form-select size="sm" v-model="settings.txsTable.pageSize" @change="saveSettings" :options="pageSizes"></b-form-select>
@@ -398,6 +398,7 @@
                         <!-- <b-avatar button rounded @click="showModalNFT(item);" size="10rem" :src="item.image"></b-avatar> -->
 
                         <div>
+                          <font size="-1">{{ index + 1 + '.' }}</font>
                           <b-link :href="'https://etherscan.io/tx/' + item.txHash" target="_blank">
                             <font size="-1">{{ formatTimestamp(item.timestamp) }}</font>
                           </b-link>
