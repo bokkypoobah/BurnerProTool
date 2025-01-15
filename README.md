@@ -19,6 +19,12 @@ Transactions
 
 <kbd><img src="images/burnerprotooltxs01.png" width="200" /></kbd>
 
+<kbd><img src="images/burnerprotooltxs02.png" width="200" /></kbd>
+
+<kbd><img src="images/burnerprotooltxs03.png" width="200" /></kbd>
+
+<kbd><img src="images/burnerprotooltxs04.png" width="200" /></kbd>
+
 <br />
 
 ---
