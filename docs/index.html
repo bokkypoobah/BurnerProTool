@@ -391,24 +391,37 @@
 
               <b-card-group deck class="m-1 ml-0 p-0">
                 <div v-for="(item, index) of pagedFilteredSortedTxs" v-bind:key="index">
-                  <b-card no-body header-class="p-1" img-top class="m-1 p-0 border-0">
-                    <div class="d-flex m-0 p-0">
-                      <div class="mt-0 pr-1">
+                  <b-card no-body class="m-1 p-0 border-0">
+                    <!-- <div class="d-flex m-0 p-0"> -->
+                      <!-- <div class="mt-0 pr-1"> -->
                         <!-- <b-embed v-if="item.media" type="iframe" aspect="16by9" :src="item.media" allowfullscreen></b-embed> -->
                         <!-- <b-avatar button rounded @click="showModalNFT(item);" size="10rem" :src="item.image"></b-avatar> -->
 
-                        <b-link :href="'https://etherscan.io/tx/' + item.txHash" target="_blank">
-                          <font size="-1">{{ formatTimestamp(item.timestamp) }}</font>
-                        </b-link>
+                        <div>
+                          <b-link :href="'https://etherscan.io/tx/' + item.txHash" target="_blank">
+                            <font size="-1">{{ formatTimestamp(item.timestamp) }}</font>
+                          </b-link>
+                          <br />
+                          <b-link v-if="item.from" :href="'https://etherscan.io/address/' + item.from" target="_blank" class="ml-3">
+                            <font size="-1">{{ item.from.substring(0, 6) + '...' + item.from.slice(-4) }}</font>
+                          </b-link>
+                          <b-badge v-if="item.action" pill variant="light" class="m-0 p-0">{{ item.action }}</b-badge>
+                          <br />
+                          <b-link v-if="item.contract" :href="'https://etherscan.io/address/' + item.contract" target="_blank" class="ml-3">
+                            <font size="-1">{{ item.contract.substring(0, 6) + '...' + item.contract.slice(-4) }}</font>
+                          </b-link>
+                          <b-badge v-if="item.value" pill variant="light" class="m-0 p-0">{{ item.value }}</b-badge>
+                        </div>
+                        <br />
+                        <b-textarea :value="JSON.stringify(item, null, 2)" class="m-0 ml-3 p-1" style="font-size: 12px; border: none;" rows="3" max-rows="10" class="w-100"></b-textarea>
 
-                        <font size="-1">
+                        <!-- <font v-if="true || !item.action" size="-1">
                           <pre>
-{{ item }}                            
+{{ item }}
                           </pre>
-                        </font>
-
+                        </font> -->
                         <!-- {{ JSON.stringify(item).substring(0, 100) }} -->
-                      </div>
+                      <!-- </div> -->
                       <!-- <div class="flex-fill mt-0 pl-1">
                         <b-link :href="'https://opensea.io/assets/ethereum/' + item.contract + '/' + item.tokenId" target="_blank">
                           {{ item.name }}
@@ -427,7 +440,7 @@
                         <br />
                         <b-textarea :value="item.description" class="m-0 p-1" style="font-size: 12px; border: none;" rows="3" max-rows="4"></b-textarea>
                       </div> -->
-                    </div>
+                    <!-- </div> -->
                   </b-card>
                 </div>
               </b-card-group>
@@ -907,6 +920,7 @@
                   txHash,
                   ...txData,
                 });
+                // break;
               }
               // for (const [contract, contractData] of Object.entries(chainData)) {
               //   for (const [tokenId, tokenData] of Object.entries(contractData.tokens)) {

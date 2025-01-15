@@ -1,6 +1,17 @@
 function inferTxInfo(tx) {
   console.log(moment().format("HH:mm:ss") + " inferTxInfo - tx: " + JSON.stringify(tx, null, 2).substring(0, 2000));
-  return {};
+  const result = {};
+
+  if (tx.tx && tx.tx.methodId == "0xa22cb465") {
+    // setApprovalForAll(address operator, bool authorized)
+    result.action = "setApprovalForAll";
+    result.from = tx.tx.from;
+    result.contract = tx.tx.to;
+    result.value = !!tx.tx.input.slice(-1);
+  }
+
+  console.log(moment().format("HH:mm:ss") + " inferTxInfo - result: " + JSON.stringify(result, null, 2).substring(0, 2000));
+  return result;
 }
 
 // function parseEtherscanGetTransactionsResult(result, chainId, etherscanData) {
