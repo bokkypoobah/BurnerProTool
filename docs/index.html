@@ -213,6 +213,19 @@
           </b-form-group>
         </b-modal>
 
+        <!-- :MODALNFTSOPTIONS -->
+        <b-modal id="modal-nftsoptions" hide-footer size="md" body-class="m-0 p-1 pt-2" body-bg-variant="light">
+          <template #modal-title>
+            NFTs Options
+          </template>
+          <b-form-group label="Sort:" label-for="modalnfts-sort" label-size="sm" label-align="right" label-cols="4" content-cols="8">
+            <b-form-select size="sm" id="modalnfts-sort" v-model="settings.nftsTable.sortOption" @change="saveSettings" :options="sortOptions" class="w-50  "></b-form-select>
+          </b-form-group>
+          <b-form-group label="Page size:" label-for="modalnfts-pagesize" label-size="sm" label-align="right" label-cols="4" content-cols="8">
+            <b-form-select size="sm" id="modalnfts-pagesize" v-model="settings.nftsTable.pageSize" @change="saveSettings" :options="pageSizes" class="w-25"></b-form-select>
+          </b-form-group>
+        </b-modal>
+
         <!-- <b-alert v-if="false" size="sm" dismissible variant="warning" show class="m-1 my-0">
           Warning: This is experimental unaudited software. Please check your transaction data carefully before signing
         </b-alert> -->
@@ -322,14 +335,13 @@
                 </div> -->
                 <div class="mt-0 flex-grow-1">
                 </div>
-                <div class="mt-0 pr-1" style="max-width: 6.0rem;">
-                  <b-form-select size="sm" v-model="settings.nftsTable.sortOption" @change="saveSettings" :options="sortOptions"></b-form-select>
-                </div>
                 <div class="mt-0">
                   <b-pagination size="sm" v-model="settings.nftsTable.currentPage" @input="saveSettings" :total-rows="filteredSortedNFTs.length" :per-page="settings.nftsTable.pageSize" style="height: 0;"></b-pagination>
                 </div>
                 <div class="mt-0 pl-1">
-                  <b-form-select size="sm" v-model="settings.nftsTable.pageSize" @change="saveSettings" :options="pageSizes"></b-form-select>
+                  <b-button size="sm" @click="showModalNFTsOptions();" variant="outline" class="m-0 p-0">
+                    <b-icon-three-dots-vertical font-scale="1" variant="primary"></b-icon-three-dots-vertical>
+                  </b-button>
                 </div>
               </div>
               <b-card-group deck class="m-1 ml-0 p-0">
@@ -953,6 +965,11 @@
             console.log(moment().format("HH:mm:ss") + " showModalNFT - item: " + JSON.stringify(item, null, 2));
             this.modalNFT.item = item;
             this.$bvModal.show('modal-nft');
+          },
+          showModalNFTsOptions() {
+            console.log(moment().format("HH:mm:ss") + " showModalNFTsOptions");
+            // this.modalNFTsOptions.item = item;
+            this.$bvModal.show('modal-nftsoptions');
           },
           updateName(cardId, name) {
             console.log(moment().format("HH:mm:ss") + " updateName: " + JSON.stringify(cardId) + ", name: " + JSON.stringify(name));
