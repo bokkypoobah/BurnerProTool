@@ -242,7 +242,7 @@
         <!-- :MODALADDRESS -->
         <b-modal id="modal-address" hide-footer size="md" body-class="m-0 p-1 pt-2" body-bg-variant="light">
           <template #modal-title>
-            Address {{ modalAddress.address.substring(0, 10) + '...' + modalAddress.address.slice(-8) }}
+            {{ modalAddress.address.substring(0, 10) + '...' + modalAddress.address.slice(-8) }}
           </template>
 
           <b-link v-if="modalAddress.address" :href="'https://etherscan.io/address/' + modalAddress.address" target="_blank">
@@ -445,12 +445,14 @@
                           <b-link :href="'https://etherscan.io/tx/' + item.txHash" target="_blank">
                             <font size="-1">{{ formatTimestamp(item.timestamp) }}</font>
                           </b-link>
-                          <b-link v-if="item.from" :href="'https://etherscan.io/address/' + item.from" target="_blank">
+                          <!-- <b-link v-if="item.from" :href="'https://etherscan.io/address/' + item.from" target="_blank"> -->
+                          <b-link v-if="item.from" @click="showModalAddress(item.from)">
                             <font size="-1">{{ nameOrShortAddress(item.from) }}</font>
                           </b-link>
                           <br />
                           <b-icon-arrow-right font-scale="0.9" variant="secondary" class="ml-3"></b-icon-arrow-right>
-                          <b-link v-if="item.contract" :href="'https://etherscan.io/address/' + item.contract" target="_blank">
+                          <!-- <b-link v-if="item.contract" :href="'https://etherscan.io/address/' + item.contract" target="_blank"> -->
+                          <b-link v-if="item.contract" @click="showModalAddress(item.contract)">
                             <font size="-1">{{ nameOrShortAddress(item.contract) }}</font>
                           </b-link>
                           <br />
