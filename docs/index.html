@@ -422,7 +422,7 @@
                         <!-- <b-avatar button rounded @click="showModalNFT(item);" size="10rem" :src="item.image"></b-avatar> -->
 
                         <div>
-                          <font size="-1">{{ index + 1 + '.' }}</font>
+                          <font size="-1">{{ (parseInt(index) + ((settings.txsTable.currentPage - 1) * settings.txsTable.pageSize) + 1) + '.' }}</font>
                           <b-link :href="'https://etherscan.io/tx/' + item.txHash" target="_blank">
                             <font size="-1">{{ formatTimestamp(item.timestamp) }}</font>
                           </b-link>
