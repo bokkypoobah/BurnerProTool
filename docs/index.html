@@ -648,6 +648,7 @@
             tabIndex: 0,
             showInfo: false,
             cards: {},
+            addresses: {},
             selectedCard: null,
             etherscanAPIKey: null,
             cryptoCompareAPIKey: null,
@@ -669,9 +670,10 @@
               pageSize: 10,
               sortOption: 'nameasc',
             },
-            version: 4,
+            version: 5,
           },
 
+          // TODO: Rename to modalCard, add card functions to this dialog including set graffiti, delete from db and card status (duplicated, duplicate)
           modalSlots: {
             cardId: "0x55aD5cd29e7409ed9215186056eF1a40a51b25FC", // TODO: null
             name: "test", // TODO: null
