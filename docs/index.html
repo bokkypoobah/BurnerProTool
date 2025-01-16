@@ -1507,40 +1507,43 @@
               });
             db.close();
 
-            const tokens = {};
             for (const [chainId, chainData] of Object.entries(etherscanData)) {
               for (const [txHash, txData] of Object.entries(chainData)) {
                 for (const event of txData.erc20) {
-                  if (!(event.contractAddress in tokens)) {
-                    tokens[event.contractAddress] = {
+                  if (!(event.contractAddress in this.settings.addresses)) {
+                    Vue.set(this.settings.addresses, event.contractAddress, {
                       type: "erc20",
                       symbol: event.tokenSymbol || event.tokenName,
                       name: event.tokenName,
                       decimals: event.tokenDecimal,
-                    };
+                      source: "etherscan",
+                    });
                   }
                 }
                 for (const event of txData.erc721) {
-                  if (!(event.contractAddress in tokens)) {
-                    tokens[event.contractAddress] = {
+                  if (!(event.contractAddress in this.settings.addresses)) {
+                    Vue.set(this.settings.addresses, event.contractAddress, {
                       type: "erc721",
                       symbol: event.tokenSymbol || event.tokenName,
                       name: event.tokenName,
-                    };
+                      source: "etherscan",
+                    });
                   }
                 }
                 for (const event of txData.erc1155) {
-                  if (!(event.contractAddress in tokens)) {
-                    tokens[event.contractAddress] = {
+                  if (!(event.contractAddress in this.settings.addresses)) {
+                    Vue.set(this.settings.addresses, event.contractAddress, {
                       type: "erc1155",
                       symbol: event.tokenSymbol || event.tokenName,
                       name: event.tokenName,
-                    };
+                      source: "etherscan",
+                    });
                   }
                 }
               }
             }
-            console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - tokens: " + JSON.stringify(tokens, null, 2).substring(0, 2000));
+            this.saveSettings();
+            // console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - this.settings: " + JSON.stringify(this.settings, null, 2).substring(0, 200000));
 
             // await delay(1000);
             // const getBalanceUrl = "https://api.etherscan.io/v2/api?chainId=1&module=account&action=balance&address=" + this.activeAddress + "&apikey=" + this.settings.etherscanAPIKey;
