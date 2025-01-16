@@ -245,9 +245,22 @@
             {{ modalAddress.address.substring(0, 10) + '...' + modalAddress.address.slice(-8) }}
           </template>
 
-          <b-link v-if="modalAddress.address" :href="'https://etherscan.io/address/' + modalAddress.address" target="_blank">
-            <font size="-1">{{ modalAddress.address.substring(0, 6) + '...' + modalAddress.address.slice(-4) }}</font>
-          </b-link>
+          <b-form-group label="Address:" label-cols="3" label-align="right" class="mt-1">
+            <div class="d-flex m-0 p-0">
+              <div class="mt-0 pr-1">
+                <b-button v-if="modalAddress.address" size="sm" :href="'https://etherscan.io/address/' + modalAddress.address" target="_blank" variant="link" class="mt-1">
+                  <font size="-1">{{ modalAddress.address.substring(0, 10) + '...' + modalAddress.address.slice(-8) }}</font>
+                </b-button>
+              </div>
+              <div class="mt-0 flex-grow-1">
+              </div>
+              <div class="mt-0 pl-1">
+                <b-button size="sm" @click="copyToClipboard(modalAddress.address);" variant="outline" class="mt-1">
+                  <b-icon-clipboard shift-v="+2" font-scale="0.9" variant="primary"></b-icon-clipboard>
+                </b-button>
+              </div>
+            </div>
+          </b-form-group>
 
           <!-- <b-form-group label="Sort:" label-for="modaltxs-sort" label-size="sm" label-align="right" label-cols="4" content-cols="8">
             <b-form-select size="sm" id="modaltxs-sort" v-model="settings.txsTable.sortOption" @change="saveSettings" :options="sortOptions" class="w-50"></b-form-select>
