@@ -6,7 +6,7 @@ function parseReservoirData(data, reservoirData) {
     if (!(('' + chainId) in reservoirData)) {
       reservoirData[chainId] = {};
     }
-    const contract = token.contract;
+    const contract = ethers.utils.getAddress(token.contract);
     const type = token.kind;
     const collectionName = token.collection.name;
     const collectionSlug = token.collection.slug;

@@ -71,7 +71,7 @@ function parseEtherscanGetInternalTransactionsResult(result, chainId, etherscanD
         from: ethers.utils.getAddress(tx.from),
         to: tx.to && ethers.utils.getAddress(tx.to) || null,
         value: tx.value,
-        contractAddress: tx.contractAddress,
+        contractAddress: tx.contractAddress && ethers.utils.getAddress(tx.contractAddress) || null,
         input: tx.input,
         type: tx.type,
         gas: tx.gas,
@@ -106,7 +106,7 @@ function parseEtherscanGetERC20TransfersResult(result, chainId, etherscanData) {
       }
       etherscanData[chainId][tx.hash].erc20.push({
         from: ethers.utils.getAddress(tx.from),
-        contractAddress: ethers.utils.getAddress(tx.contractAddress),
+        contractAddress: tx.contractAddress && ethers.utils.getAddress(tx.contractAddress) || null,
         to: tx.to && ethers.utils.getAddress(tx.to) || null,
         value: tx.value,
         tokenName: tx.tokenName,
@@ -147,7 +147,7 @@ function parseEtherscanGetERC721TransfersResult(result, chainId, etherscanData) 
       }
       etherscanData[chainId][tx.hash].erc721.push({
         from: ethers.utils.getAddress(tx.from),
-        contractAddress: ethers.utils.getAddress(tx.contractAddress),
+        contractAddress: tx.contractAddress && ethers.utils.getAddress(tx.contractAddress) || null,
         to: tx.to && ethers.utils.getAddress(tx.to) || null,
         tokenId: tx.tokenId,
         tokenName: tx.tokenName,
@@ -186,7 +186,7 @@ function parseEtherscanGetERC1155TransfersResult(result, chainId, etherscanData)
       }
       etherscanData[chainId][tx.hash].erc1155.push({
         from: ethers.utils.getAddress(tx.from),
-        contractAddress: ethers.utils.getAddress(tx.contractAddress),
+        contractAddress: tx.contractAddress && ethers.utils.getAddress(tx.contractAddress) || null,
         to: tx.to && ethers.utils.getAddress(tx.to) || null,
         tokenId: tx.tokenId,
         tokenName: tx.tokenName,

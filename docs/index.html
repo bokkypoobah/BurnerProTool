@@ -1598,9 +1598,9 @@
                   return {};
                 });
               continuation = data.continuation;
-              console.log(moment().format("HH:mm:ss") + " downloadFromReservoir - data: " + JSON.stringify(data, null, 2));
+              console.log(moment().format("HH:mm:ss") + " downloadFromReservoir - data: " + JSON.stringify(data, null, 2).substring(0, 200));
               parseReservoirData(data, reservoirData);
-              console.log(moment().format("HH:mm:ss") + " downloadFromReservoir - reservoirData: " + JSON.stringify(reservoirData, null, 2).substring(0, 200));
+              console.log(moment().format("HH:mm:ss") + " downloadFromReservoir - reservoirData: " + JSON.stringify(reservoirData, null, 2).substring(0, 20000));
               if (continuation != null) {
                 await delay(1000);
               }
@@ -1614,6 +1614,20 @@
                 console.log(moment().format("HH:mm:ss") + " downloadFromReservoir - ERROR: " + e.message);
               });
             db.close();
+
+            for (const [chainId, chainData] of Object.entries(reservoirData)) {
+              for (const [contract, contractData] of Object.entries(chainData)) {
+                if (!(contract in this.settings.addresses) || this.settings.addresses[contract].source == "etherscan") {
+                  Vue.set(this.settings.addresses, contract, {
+                    type: contractData.type,
+                    symbol: contractData.name,
+                    name: contractData.name,
+                    source: "reservoir",
+                  });
+                }
+              }
+            }
+            this.saveSettings();
           },
 
           async downloadFromCryptoCompare() {
