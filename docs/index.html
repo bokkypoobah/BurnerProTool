@@ -101,7 +101,7 @@
               </div>
             </template>
             <template #cell(card)="data">
-              <b-button size="sm" @click="showModalSlots(data.item.cardId, data.item.name);" variant="outline">
+              <b-button size="sm" @click="showModalCard(data.item.cardId, data.item.name);" variant="outline">
                 <!-- <b-icon-card-list shift-v="+1" font-scale="1.0" variant="primary"></b-icon-card-list> -->
                 <b-iconstack font-scale="1">
                   <b-icon stacked icon="grip-vertical" shift-h="0" shift-v="-3" variant="primary" scale="0.6"></b-icon>
@@ -124,17 +124,17 @@
           </b-table>
         </b-modal>
 
-        <!-- :MODALSLOTS -->
+        <!-- :MODALCARD -->
         <b-modal id="modal-card" hide-footer size="md" body-class="m-0 p-1" body-bg-variant="light">
           <template #modal-title>
-            Card {{ "'" + modalSlots.name + "'" }}
+            Card {{ modalCard.name && ("'" + modalCard.name + "'") }}
           </template>
-          <b-alert v-if="modalSlots.cardId && settings.cards[modalSlots.cardId] && settings.cards[modalSlots.cardId].selectedSlot != 9" size="sm" dismissible variant="warning" show class="m-0">
+          <b-alert v-if="modalCard.cardId && settings.cards[modalCard.cardId] && settings.cards[modalCard.cardId].selectedSlot != 9" size="sm" dismissible variant="warning" show class="m-0">
             Warning: Burner.pro uses slot 9
           </b-alert>
           <b-table small fixed striped responsive hover :fields="slotsFields" :items="slots" show-empty head-variant="light" class="mx-0 my-0 mt-1">
             <template #cell(slot)="data">
-              <b-form-checkbox size="sm" :checked="settings.cards[modalSlots.cardId].selectedSlot == data.item.slot" @change="updateSelectedSlot(modalSlots.cardId, data.item.slot)">
+              <b-form-checkbox size="sm" :checked="settings.cards[modalCard.cardId].selectedSlot == data.item.slot" @change="updateSelectedSlot(modalCard.cardId, data.item.slot)">
                 <font size="-1">
                   {{ data.item.slot }}
                 </font>
@@ -755,7 +755,7 @@
           },
 
           // TODO: Rename to modalCard, add card functions to this dialog including set graffiti, delete from db and card status (duplicated, duplicate)
-          modalSlots: {
+          modalCard: {
             cardId: "0x55aD5cd29e7409ed9215186056eF1a40a51b25FC", // TODO: null
             name: "test", // TODO: null
           },
@@ -1003,8 +1003,8 @@
 
           slots() {
             const results = [];
-            if (this.modalSlots.cardId && this.modalSlots.cardId in this.settings.cards) {
-              for (const [slot, slotData] of Object.entries(this.settings.cards[this.modalSlots.cardId].slots)) {
+            if (this.modalCard.cardId && this.modalCard.cardId in this.settings.cards) {
+              for (const [slot, slotData] of Object.entries(this.settings.cards[this.modalCard.cardId].slots)) {
                 results.push({ slot, ...slotData })
               }
             }
@@ -1214,10 +1214,10 @@
           showModalCards() {
             this.$bvModal.show('modal-cards');
           },
-          showModalSlots(cardId, name) {
-            console.log(moment().format("HH:mm:ss") + " showModalSlots - cardId: " + cardId + ", name: " + name);
-            this.modalSlots.cardId = cardId;
-            this.modalSlots.name = name;
+          showModalCard(cardId, name) {
+            console.log(moment().format("HH:mm:ss") + " showModalCard - cardId: " + cardId + ", name: " + name);
+            this.modalCard.cardId = cardId;
+            this.modalCard.name = name;
             this.$bvModal.show('modal-card');
           },
           showModalConfig() {
