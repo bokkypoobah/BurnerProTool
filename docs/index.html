@@ -264,7 +264,7 @@
             <b-form-select :disabled="modalAddressAddressOnCards.length > 0" size="sm" :value="modalAddressAddressType" @change="modalAddressAddressTypeSelected($event);" :options="addressTypeOptions" class="w-50"></b-form-select>
           </b-form-group>
           <b-form-group label="Name:" label-cols="3" label-align="right" class="m-0">
-            <b-form-input size="sm" :value="modalAddressAddressName" @change="modalAddressAddressNameUpdated($event);" class="w-50"></b-form-input>
+            <b-form-input size="sm" :value="modalAddressAddressName" @change="modalAddressAddressNameUpdated($event);" class="w-75"></b-form-input>
           </b-form-group>
           <b-form-group v-if="modalAddressAddressType == 'erc20'" label="Decimals:" label-cols="3" label-align="right" class="m-0" description="0 to 18 decimal places">
             <b-form-input size="sm" type="number" min="0" max="18" step="1" :value="modalAddressAddressDecimals" @change="modalAddressAddressDecimalsUpdated($event);" class="w-25"></b-form-input>
@@ -378,7 +378,7 @@
                 <!-- </b-button> -->
 
                 <b-link v-if="activeAddress" @click="showModalAddress(activeAddress);">
-                  <font size="-1">{{ activeAddress.substring(0, 6) + '...' + activeAddress.slice(-4) }}</font>
+                  <font size="-1">{{ nameOrShortAddress(activeAddress) }}</font>
                 </b-link>
                 <b-button v-if="activeAddress" size="sm" @click="copyToClipboard(activeAddress);" variant="outline">
                   <b-icon-clipboard shift-v="+4" font-scale="0.9" variant="primary"></b-icon-clipboard>
@@ -1122,12 +1122,12 @@
             this.$bvModal.show('modal-txsoptions');
           },
           showModalAddress(address) {
-            console.log(moment().format("HH:mm:ss") + " showModalAddress: " + address);
+            // console.log(moment().format("HH:mm:ss") + " showModalAddress: " + address);
             this.modalAddress.address = address;
             this.$bvModal.show('modal-address');
           },
           modalAddressAddressTypeSelected(type) {
-            console.log(moment().format("HH:mm:ss") + " modalAddressAddressTypeSelected - type: " + JSON.stringify(type));
+            // console.log(moment().format("HH:mm:ss") + " modalAddressAddressTypeSelected - type: " + JSON.stringify(type));
             if (!(this.modalAddress.address in this.settings.addresses)) {
               Vue.set(this.settings.addresses, this.modalAddress.address, {
                 type,
@@ -1142,7 +1142,7 @@
             this.saveSettings();
           },
           modalAddressAddressNameUpdated(name) {
-            console.log(moment().format("HH:mm:ss") + " modalAddressAddressNameUpdated - name: " + JSON.stringify(name));
+            // console.log(moment().format("HH:mm:ss") + " modalAddressAddressNameUpdated - name: " + JSON.stringify(name));
             if (!(this.modalAddress.address in this.settings.addresses)) {
               Vue.set(this.settings.addresses, this.modalAddress.address, {
                 type: null,
@@ -1157,7 +1157,7 @@
             this.saveSettings();
           },
           modalAddressAddressDecimalsUpdated(decimals) {
-            console.log(moment().format("HH:mm:ss") + " modalAddressAddressDecimalsUpdated - decimals: " + JSON.stringify(decimals));
+            // console.log(moment().format("HH:mm:ss") + " modalAddressAddressDecimalsUpdated - decimals: " + JSON.stringify(decimals));
             if (!(this.modalAddress.address in this.settings.addresses)) {
               Vue.set(this.settings.addresses, this.modalAddress.address, {
                 type: null,
@@ -2272,10 +2272,15 @@
           },
           nameOrShortAddress(address, length = 0) {
             let result = null;
-            if (address in CUSTOMNAMES) {
-              result = CUSTOMNAMES[address][1];
-            } else {
-              result = address.substring(0, 6) + '...' + address.slice(-4);
+            if (address in this.settings.addresses) {
+              result = this.settings.addresses[address].name;
+            }
+            if (!result) {
+              if (address in CUSTOMNAMES) {
+                result = CUSTOMNAMES[address][1];
+              } else {
+                result = address.substring(0, 6) + '...' + address.slice(-4);
+              }
             }
             return result;
           },
