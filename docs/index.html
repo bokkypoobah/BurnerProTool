@@ -160,7 +160,7 @@
             <b-form-group label="Etherscan:" label-for="etherscan-apikey">
               <b-form-input type="text" size="sm" id="etherscan-apikey" v-model.trim="settings.etherscanAPIKey" @change="saveSettings();" placeholder="See https://etherscan.io/apis"></b-form-input>
             </b-form-group>
-            <b-form-group label="CryptoCompare:" label-for="cryptocompare-apikey">
+            <b-form-group label="CryptoCompare:" label-for="cryptocompar ie-apikey">
               <b-form-input type="text" size="sm" id="cryptocompare-apikey" v-model.trim="settings.cryptoCompareAPIKey" @change="saveSettings();" placeholder="See https://www.cryptocompare.com/cryptopian/api-keys"></b-form-input>
             </b-form-group>
           </b-form-group>
@@ -1159,6 +1159,10 @@
                   db.version(this.db.version).stores(this.db.schemaDefinition);
                   const status = await db.cache.clear();
                   db.close();
+                  alert('Click OK. This page will be reloaded in 5 seconds.')
+                  setTimeout(function() {
+                    window.location.reload();
+                  }, 5000);
                 }
               })
               .catch(err => {
