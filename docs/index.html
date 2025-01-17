@@ -170,7 +170,7 @@
             </b-form-group>
           </b-form-group>
           <b-form-group label-cols-lg="2" label="Reset Data" label-size="md" label-class="font-weight-bold pt-0" class="mt-3 mb-0">
-            <b-form-group label="Reset data:" label-cols="5" label-align="right" description="Refresh page after pressing button">
+            <b-form-group label="Reset data:" label-cols="5" label-align="right">
               <b-button size="sm" @click="resetData()" variant="warning">Reset</b-button>
             </b-form-group>
           </b-form-group>
@@ -265,6 +265,9 @@
           </b-form-group>
           <b-form-group label="Name:" label-cols="3" label-align="right" class="mt-1">
             <b-form-input size="sm" :value="modalAddressAddressName" @change="modalAddressAddressNameUpdated($event);" style="max-width: 30.0rem;"></b-form-input>
+          </b-form-group>
+          <b-form-group v-if="modalAddressAddressType == 'erc20'" label="Decimals:" label-cols="3" label-align="right" class="mt-1" description="0 to 18 decimal places">
+            <b-form-input size="sm" type="number" min="0" max="18" step="1" :value="modalAddressAddressDecimals" @change="modalAddressAddressDecimalsUpdated($event);" class="w-25"></b-form-input>
           </b-form-group>
           <b-form-group v-if="modalAddressAddressOnCards.length > 0" label="Cards:" label-cols="3" label-align="right" class="mt-1">
             <font size="-1">
@@ -1027,6 +1030,17 @@
             return null;
           },
 
+          modalAddressAddressDecimals() {
+            console.log(moment().format("HH:mm:ss") + " modalAddressAddressDecimals - this.modalAddress.address: " + this.modalAddress.address);
+            if (this.modalAddress.address in this.settings.addresses && this.settings.addresses[this.modalAddress.address].name) {
+              return this.settings.addresses[this.modalAddress.address].decimals;
+            }
+            if (this.modalAddress.address in CUSTOMNAMES) {
+              return CUSTOMNAMES[this.modalAddress.address][3];
+            }
+            return null;
+          },
+
           nfts() {
             const results = [];
             for (const [chainId, chainData] of Object.entries(this.activeAddress && this.reservoirData[this.activeAddress] || {})) {
@@ -1142,6 +1156,21 @@
             }
             this.saveSettings();
           },
+          modalAddressAddressDecimalsUpdated(decimals) {
+            console.log(moment().format("HH:mm:ss") + " modalAddressAddressDecimalsUpdated - decimals: " + JSON.stringify(decimals));
+            if (!(this.modalAddress.address in this.settings.addresses)) {
+              Vue.set(this.settings.addresses, this.modalAddress.address, {
+                type: null,
+                symbol: null,
+                name: null,
+                decimals,
+                source: "input",
+              });
+            } else {
+              Vue.set(this.settings.addresses[this.modalAddress.address], 'decimals', decimals);
+            }
+            this.saveSettings();
+          },
           updateName(cardId, name) {
             console.log(moment().format("HH:mm:ss") + " updateName: " + JSON.stringify(cardId) + ", name: " + JSON.stringify(name));
             if (cardId in this.settings.cards) {
@@ -1234,7 +1263,7 @@
                   db.version(this.db.version).stores(this.db.schemaDefinition);
                   const status = await db.cache.clear();
                   db.close();
-                  alert('Click OK. This page will be reloaded in 5 seconds.')
+                  alert('This page will be reloaded in 5 seconds.')
                   setTimeout(function() {
                     window.location.reload();
                   }, 5000);
@@ -1693,8 +1722,8 @@
                   if (!(event.contractAddress in this.settings.addresses)) {
                     Vue.set(this.settings.addresses, event.contractAddress, {
                       type: "erc20",
-                      symbol: event.tokenSymbol || event.tokenName,
-                      name: event.tokenName,
+                      symbol: event.tokenSymbol, //  || event.tokenName,
+                      name: event.tokenSymbol,
                       decimals: event.tokenDecimal,
                       source: "etherscan",
                     });
