@@ -89,8 +89,8 @@
             </template>
             <template #cell(address)="data">
               <div v-if="data.item.initialised">
-                <b-link :href="'https://etherscan.io/address/' + data.item.address" target="_blank">
-                  <font size="-1">{{ data.item.address.substring(0, 8) + '...' + data.item.address.slice(-4) }}</font>
+                <b-link @click="showModalAddress(data.item.address)" target="_blank">
+                  <font size="-1">{{ nameOrShortAddress(data.item.address) }}</font>
                 </b-link>
                 <b-button size="sm" @click="copyToClipboard(data.item.address);" variant="outline">
                   <b-icon-clipboard shift-v="+2" font-scale="0.9" variant="primary"></b-icon-clipboard>
@@ -102,7 +102,6 @@
             </template>
             <template #cell(card)="data">
               <b-button size="sm" @click="showModalCard(data.item.cardId, data.item.name);" variant="outline">
-                <!-- <b-icon-card-list shift-v="+1" font-scale="1.0" variant="primary"></b-icon-card-list> -->
                 <b-iconstack font-scale="1">
                   <b-icon stacked icon="lock" shift-h="0" shift-v="0" variant="primary" scale="0.6"></b-icon>
                   <b-icon stacked icon="file" variant="primary" scale="1.0"></b-icon>
@@ -141,8 +140,8 @@
               </b-form-checkbox>
             </template>
             <template #cell(address)="data">
-              <b-link :href="'https://etherscan.io/address/' + data.item.address" target="_blank">
-                <font size="-1">{{ data.item.address.substring(0, 10) + '...' + data.item.address.slice(-6) }}</font>
+              <b-link @click="showModalAddress(data.item.address)" target="_blank">
+                <font size="-1">{{ nameOrShortAddress(data.item.address) }}</font>
               </b-link>
               <b-button size="sm" @click="copyToClipboard(data.item.address);" variant="outline">
                 <b-icon-clipboard shift-v="+2" font-scale="0.9" variant="primary"></b-icon-clipboard>
