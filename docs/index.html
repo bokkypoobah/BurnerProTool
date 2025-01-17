@@ -259,9 +259,17 @@
                 </b-button>
               </div>
             </div>
+          </b-form-group>
+          <b-form-group label="Type:" label-cols="3" label-align="right" class="mt-1">
+            <b-form-select :disabled="modalAddressAddressOnCards.length > 0" size="sm" :value="modalAddressAddressType" @change="modalAddressAddressTypeSelected($event);" :options="addressTypeOptions" class="w-50"></b-form-select>
+          </b-form-group>
+          <b-form-group label="Name:" label-cols="3" label-align="right" class="mt-1">
+            <b-form-input size="sm" :value="modalAddressAddressName" @change="modalAddressAddressNameUpdated($event);" style="max-width: 30.0rem;"></b-form-input>
+          </b-form-group>
+          <b-form-group v-if="modalAddressAddressOnCards.length > 0" label="Cards:" label-cols="3" label-align="right" class="mt-1">
             <font size="-1">
               <b-table small fixed striped responsive hover :fields="modalAddressAddressOnCardsFields" :items="modalAddressAddressOnCards" show-empty empty-html="n/a" head-variant="light" class="mx-0 my-0 mt-1">
-                <template #cell(oncard)="data">
+                <template #cell(card)="data">
                   {{ data.item.name }}
                 </template>
                 <template #cell(slot)="data">
@@ -272,8 +280,6 @@
               </b-table>
             </font>
           </b-form-group>
-
-          <!-- {{ modalAddressAddressOnCards }} -->
           <!-- <b-form-group label="Sort:" label-for="modaltxs-sort" label-size="sm" label-align="right" label-cols="4" content-cols="8">
             <b-form-select size="sm" id="modaltxs-sort" v-model="settings.txsTable.sortOption" @change="saveSettings" :options="sortOptions" class="w-50"></b-form-select>
           </b-form-group>
@@ -807,6 +813,19 @@
             { value: 100, text: '100' },
           ],
 
+          addressTypeOptions: [
+            { value: null, text: '(select)' },
+            { value: 'nfccard', text: 'NFC Card' },
+            { value: 'eoa', text: 'EOA' },
+            { value: 'erc20', text: 'ERC-20' },
+            { value: 'erc721', text: 'ERC-721' },
+            { value: 'erc1155', text: 'ERC-1155' },
+            { value: 'ftexchange', text: 'ERC-20 Exchange' },
+            { value: 'nftexchange', text: 'NFT Exchange' },
+            { value: 'ens', text: 'ENS Contract' },
+            { value: 'contract', text: 'Contract' },
+          ],
+
           actionOptions: [
             { value: null, text: 'Select action' },
             { value: 'transfereth', text: 'Transfer ETH' },
@@ -834,7 +853,7 @@
           ],
 
           modalAddressAddressOnCardsFields: [
-            { key: 'oncard', label: 'On Card', sortable: false, thStyle: 'width: 70%;', tdClass: 'text-left' },
+            { key: 'card', label: 'Card', sortable: false, thStyle: 'width: 70%;', tdClass: 'text-left' },
             { key: 'slot', label: 'Slot', sortable: false, thStyle: 'width: 30%;', tdClass: 'text-left' },
           ],
 
@@ -982,6 +1001,32 @@
             return results;
           },
 
+          modalAddressAddressType() {
+            console.log(moment().format("HH:mm:ss") + " modalAddressAddressType - this.modalAddress.address: " + this.modalAddress.address);
+            if (this.modalAddressAddressOnCards.length > 0) {
+              return "nfccard";
+            } else {
+              if (this.modalAddress.address in this.settings.addresses && this.settings.addresses[this.modalAddress.address].type) {
+                return this.settings.addresses[this.modalAddress.address].type;
+              }
+              if (this.modalAddress.address in CUSTOMNAMES) {
+                return CUSTOMNAMES[this.modalAddress.address][0];
+              }
+            }
+            return null;
+          },
+
+          modalAddressAddressName() {
+            console.log(moment().format("HH:mm:ss") + " modalAddressAddressName - this.modalAddress.address: " + this.modalAddress.address);
+            if (this.modalAddress.address in this.settings.addresses && this.settings.addresses[this.modalAddress.address].name) {
+              return this.settings.addresses[this.modalAddress.address].name;
+            }
+            if (this.modalAddress.address in CUSTOMNAMES) {
+              return CUSTOMNAMES[this.modalAddress.address][1];
+            }
+            return null;
+          },
+
           nfts() {
             const results = [];
             for (const [chainId, chainData] of Object.entries(this.activeAddress && this.reservoirData[this.activeAddress] || {})) {
@@ -1066,6 +1111,36 @@
             console.log(moment().format("HH:mm:ss") + " showModalAddress: " + address);
             this.modalAddress.address = address;
             this.$bvModal.show('modal-address');
+          },
+          modalAddressAddressTypeSelected(type) {
+            console.log(moment().format("HH:mm:ss") + " modalAddressAddressTypeSelected - type: " + JSON.stringify(type));
+            if (!(this.modalAddress.address in this.settings.addresses)) {
+              Vue.set(this.settings.addresses, this.modalAddress.address, {
+                type,
+                symbol: null,
+                name: null,
+                decimals: null,
+                source: "input",
+              });
+            } else {
+              Vue.set(this.settings.addresses[this.modalAddress.address], 'type', type);
+            }
+            this.saveSettings();
+          },
+          modalAddressAddressNameUpdated(name) {
+            console.log(moment().format("HH:mm:ss") + " modalAddressAddressNameUpdated - name: " + JSON.stringify(name));
+            if (!(this.modalAddress.address in this.settings.addresses)) {
+              Vue.set(this.settings.addresses, this.modalAddress.address, {
+                type: null,
+                symbol: null,
+                name,
+                decimals: null,
+                source: "input",
+              });
+            } else {
+              Vue.set(this.settings.addresses[this.modalAddress.address], 'name', name);
+            }
+            this.saveSettings();
           },
           updateName(cardId, name) {
             console.log(moment().format("HH:mm:ss") + " updateName: " + JSON.stringify(cardId) + ", name: " + JSON.stringify(name));
