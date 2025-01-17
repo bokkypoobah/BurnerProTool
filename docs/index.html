@@ -229,7 +229,7 @@
         <!-- :MODALTXSOPTIONS -->
         <b-modal id="modal-txsoptions" hide-footer size="md" body-class="m-0 p-1 pt-2" body-bg-variant="light">
           <template #modal-title>
-            NFTs Options
+            Txs Options
           </template>
           <b-form-group label="Sort:" label-for="modaltxs-sort" label-size="sm" label-align="right" label-cols="4" content-cols="8">
             <b-form-select size="sm" id="modaltxs-sort" v-model="settings.txsTable.sortOption" @change="saveSettings" :options="sortOptions" class="w-50"></b-form-select>
@@ -1011,7 +1011,7 @@
           },
 
           modalAddressAddressType() {
-            console.log(moment().format("HH:mm:ss") + " modalAddressAddressType - this.modalAddress.address: " + this.modalAddress.address);
+            // console.log(moment().format("HH:mm:ss") + " modalAddressAddressType - this.modalAddress.address: " + this.modalAddress.address);
             if (this.modalAddressAddressOnCards.length > 0) {
               return "nfccard";
             } else {
@@ -1026,7 +1026,7 @@
           },
 
           modalAddressAddressName() {
-            console.log(moment().format("HH:mm:ss") + " modalAddressAddressName - this.modalAddress.address: " + this.modalAddress.address);
+            // console.log(moment().format("HH:mm:ss") + " modalAddressAddressName - this.modalAddress.address: " + this.modalAddress.address);
             if (this.modalAddress.address in this.settings.addresses && this.settings.addresses[this.modalAddress.address].name) {
               return this.settings.addresses[this.modalAddress.address].name;
             }
@@ -1037,7 +1037,7 @@
           },
 
           modalAddressAddressDecimals() {
-            console.log(moment().format("HH:mm:ss") + " modalAddressAddressDecimals - this.modalAddress.address: " + this.modalAddress.address);
+            // console.log(moment().format("HH:mm:ss") + " modalAddressAddressDecimals - this.modalAddress.address: " + this.modalAddress.address);
             if (this.modalAddress.address in this.settings.addresses && this.settings.addresses[this.modalAddress.address].name) {
               return this.settings.addresses[this.modalAddress.address].decimals;
             }
