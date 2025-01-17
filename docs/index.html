@@ -157,10 +157,10 @@
             Configuration
           </template>
           <b-form-group label="API Keys" label-size="md" label-class="font-weight-bold pt-0" class="mt-3 mb-0">
-            <b-form-group label="Etherscan" label-for="etherscan-apikey">
+            <b-form-group label="Etherscan:" label-for="etherscan-apikey">
               <b-form-input type="text" size="sm" id="etherscan-apikey" v-model.trim="settings.etherscanAPIKey" @change="saveSettings();" placeholder="See https://etherscan.io/apis"></b-form-input>
             </b-form-group>
-            <b-form-group label="CryptoCompare" label-for="cryptocompare-apikey">
+            <b-form-group label="CryptoCompare:" label-for="cryptocompare-apikey">
               <b-form-input type="text" size="sm" id="cryptocompare-apikey" v-model.trim="settings.cryptoCompareAPIKey" @change="saveSettings();" placeholder="See https://www.cryptocompare.com/cryptopian/api-keys"></b-form-input>
             </b-form-group>
           </b-form-group>
@@ -363,11 +363,16 @@
             <div class="d-flex m-0 p-0">
               <span class="m-1">
                 <!-- <b-link v-if="activeAddress" :href="'https://etherscan.io/address/' + activeAddress" target="_blank"> -->
-                <b-link v-if="activeAddress" @click="showModalAddress(activeAddress)">
+                <!-- <b-button v-if="activeAddress" size="sm" @click="showModalAddress(activeAddress);" variant="link"> -->
+                  <!-- <font size="-1">{{ activeAddress.substring(0, 6) + '...' + activeAddress.slice(-4) }}</font> -->
+                  <!-- <b-form-text text-variant="info">{{ activeAddress.substring(0, 6) + '...' + activeAddress.slice(-4) }}</b-form-text> -->
+                <!-- </b-button> -->
+
+                <b-link v-if="activeAddress" @click="showModalAddress(activeAddress);">
                   <font size="-1">{{ activeAddress.substring(0, 6) + '...' + activeAddress.slice(-4) }}</font>
                 </b-link>
                 <b-button v-if="activeAddress" size="sm" @click="copyToClipboard(activeAddress);" variant="outline">
-                  <b-icon-clipboard shift-v="+2" font-scale="0.9" variant="primary"></b-icon-clipboard>
+                  <b-icon-clipboard shift-v="+4" font-scale="0.9" variant="primary"></b-icon-clipboard>
                 </b-button>
               </span>
               <div class="mt-0 flex-grow-1">
@@ -1135,8 +1140,6 @@
             }
           },
           async resetData() {
-            console.log(moment().format("HH:mm:ss") + " resetData");
-
             this.$bvModal.msgBoxConfirm('Reset all data?', {
                 title: 'Please Confirm',
                 size: 'sm',
