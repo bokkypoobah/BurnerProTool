@@ -100,9 +100,13 @@
                 Uninitialised
               </div>
             </template>
-            <template #cell(slots)="data">
+            <template #cell(card)="data">
               <b-button size="sm" @click="showModalSlots(data.item.cardId, data.item.name);" variant="outline">
-                <b-icon-card-list shift-v="+1" font-scale="1.0" variant="primary"></b-icon-card-list>
+                <!-- <b-icon-card-list shift-v="+1" font-scale="1.0" variant="primary"></b-icon-card-list> -->
+                <b-iconstack font-scale="1">
+                  <b-icon stacked icon="grip-vertical" shift-h="0" shift-v="-3" variant="primary" scale="0.6"></b-icon>
+                  <b-icon stacked icon="file" variant="primary" scale="1.0"></b-icon>
+                </b-iconstack>
               </b-button>
             </template>
             <!-- <template #cell(slot)="data">
@@ -121,9 +125,9 @@
         </b-modal>
 
         <!-- :MODALSLOTS -->
-        <b-modal id="modal-slots" hide-footer size="md" body-class="m-0 p-1" body-bg-variant="light">
+        <b-modal id="modal-card" hide-footer size="md" body-class="m-0 p-1" body-bg-variant="light">
           <template #modal-title>
-            {{ modalSlots.name ? modalSlots.name + " Slots": "Slots" }}
+            Card {{ "'" + modalSlots.name + "'" }}
           </template>
           <b-alert v-if="modalSlots.cardId && settings.cards[modalSlots.cardId] && settings.cards[modalSlots.cardId].selectedSlot != 9" size="sm" dismissible variant="warning" show class="m-0">
             Warning: Burner.pro uses slot 9
@@ -304,12 +308,17 @@
         <b-card no-body class="p-0 mt-0 border-0" style="min-height: 666px;">
 
           <div class="d-flex flex-wrap m-0 mt-1 p-0 px-1 bg-white">
-            <div class="mt-0 pr-1">
+            <div class="mt-0 pr-0">
               <b-form-select size="sm" v-model="settings.selectedCard" :options="cardsOptions" @change="saveSettings" style="max-width: 30.0rem;"></b-form-select>
             </div>
             <div class="mt-0 pr-1">
               <b-button size="sm" @click="showModalCards();" variant="outline">
-                <b-icon-files shift-v="+1" font-scale="1.0" variant="primary"></b-icon-files>
+                <!-- <b-icon-files shift-v="+1" font-scale="1.0" variant="primary"></b-icon-files> -->
+                <!-- <b-icon-grip-vertical shift-v="+1" font-scale="1.0" variant="primary"></b-icon-grip-vertical> -->
+                <b-iconstack font-scale="1">
+                  <b-icon stacked icon="grip-vertical" shift-h="-1" shift-v="-4" variant="primary" scale="0.6"></b-icon>
+                  <b-icon stacked icon="files" variant="primary" scale="1.0"></b-icon>
+                </b-iconstack>
               </b-button>
             </div>
             <div class="mt-0 flex-grow-1">
@@ -349,7 +358,12 @@
               <b-link href="https://burner.pro" target="_blank">burner.pro</b-link> NFC cards.
               <br />
               <br />
-              <b-icon-files shift-v="+1" font-scale="1.0" variant="primary"></b-icon-files> View cards
+              <!-- <b-icon-files shift-v="+1" font-scale="1.0" variant="primary"></b-icon-files> View cards -->
+              <b-iconstack font-scale="1">
+                <b-icon stacked icon="grip-vertical" shift-h="-1" shift-v="-4" variant="primary" scale="0.6"></b-icon>
+                <b-icon stacked icon="files" variant="primary" scale="1.0"></b-icon>
+              </b-iconstack>
+              View cards
               <br />
               <b-iconstack font-scale="1">
                 <b-icon stacked icon="wifi" variant="primary" scale="0.8"></b-icon>
@@ -853,7 +867,7 @@
             { key: 'select', label: '', sortable: false, thStyle: 'width: 10%;', tdClass: 'text-truncate' },
             { key: 'name', label: 'Name', sortable: false, thStyle: 'width: 30%;', tdClass: 'text-truncate' },
             { key: 'address', label: 'Address', sortable: false, thStyle: 'width: 45%;', tdClass: 'text-truncate' },
-            { key: 'slots', label: 'Slots', sortable: false, thStyle: 'width: 15%;', thClass: 'text-left', tdClass: 'text-left' },
+            { key: 'card', label: 'Card', sortable: false, thStyle: 'width: 15%;', thClass: 'text-left', tdClass: 'text-left' },
           ],
 
           slotsFields: [
@@ -1204,7 +1218,7 @@
             console.log(moment().format("HH:mm:ss") + " showModalSlots - cardId: " + cardId + ", name: " + name);
             this.modalSlots.cardId = cardId;
             this.modalSlots.name = name;
-            this.$bvModal.show('modal-slots');
+            this.$bvModal.show('modal-card');
           },
           showModalConfig() {
             this.$bvModal.show('modal-config');
