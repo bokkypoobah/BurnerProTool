@@ -136,7 +136,7 @@
           </b-form-group>
           <b-table small fixed striped responsive hover :fields="slotsFields" :items="slots" show-empty head-variant="light" class="mx-0 my-0 mt-1">
             <template #cell(slot)="data">
-              <b-form-checkbox size="sm" :checked="settings.cards[modalCard.cardId].selectedSlot == data.item.slot" @change="updateSelectedSlot(modalCard.cardId, data.item.slot)">
+              <b-form-checkbox size="sm" :checked="settings.cards[modalCard.cardId] && settings.cards[modalCard.cardId].selectedSlot == data.item.slot" @change="updateSelectedSlot(modalCard.cardId, data.item.slot)">
                 <font size="-1">
                   {{ data.item.slot }}
                 </font>
@@ -156,6 +156,11 @@
               <b-icon icon="box-arrow-in-down-right" shift-v="+1" font-scale="1.0" :variant="data.item.isImported ? 'primary' : 'secondary'" v-b-popover.hover="data.item.isImported ? 'Imported' : 'Not imported'"></b-icon>
             </template>
           </b-table>
+          <b-form-group label="" label-cols="3" label-align="right" class="m-0 mt-2">
+            <b-button size="sm" @click="modalCardDeleteCard(modalCard.cardId, modalCard.name);" variant="warning">
+              Delete
+            </b-button>
+          </b-form-group>
         </b-modal>
 
         <!-- :MODALCONFIG -->
@@ -1257,6 +1262,32 @@
             this.modalCard.cardId = cardId;
             this.modalCard.name = name;
             this.$bvModal.show('modal-card');
+          },
+          modalCardDeleteCard(cardId, name) {
+            console.log(moment().format("HH:mm:ss") + " modalCardDeleteCard - cardId: " + cardId + ", name: " + name);
+            this.$bvModal.msgBoxConfirm("Delete card" + (name ? (" '" + name + "'?") : "?"), {
+                title: 'Please Confirm',
+                size: 'sm',
+                buttonSize: 'sm',
+                okVariant: 'danger',
+                okTitle: 'Yes',
+                cancelTitle: 'No',
+                footerClass: 'p-2',
+                hideHeaderClose: false,
+                // centered: true
+              })
+              .then(async value1 => {
+                if (value1) {
+                  event.preventDefault();
+                  Vue.delete(this.settings.cards, cardId);
+                  this.settings.selectedCard = Object.keys(this.settings.cards).length > 0 && Object.keys(this.settings.cards)[0] || null;
+                  this.saveSettings();
+                  this.$bvModal.hide('modal-card');
+                }
+              })
+              .catch(err => {
+                // An error occurred
+              });
           },
           showModalConfig() {
             this.$bvModal.show('modal-config');
