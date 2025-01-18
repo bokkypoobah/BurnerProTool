@@ -128,20 +128,12 @@
           <template #modal-title>
             Card {{ modalCard.name && ("'" + modalCard.name + "'") }}
           </template>
-          <div v-if="modalCard.cardId && settings.cards[modalCard.cardId]">
-            <b-alert v-if="!settings.cards[modalCard.cardId].initialised" size="sm" dismissible variant="info" show class="m-0">
-              INFO: This Burner.pro NFC card has not been initialised
-            </b-alert>
-            <b-alert v-else-if="settings.cards[modalCard.cardId].selectedSlot != 9" size="sm" dismissible variant="warning" show class="m-0">
-              WARNING: Burner.pro uses slot 9
-            </b-alert>
-            <b-alert v-else-if="settings.cards[modalCard.cardId].slots[9].isExported" size="sm" dismissible variant="info" show class="m-0">
-              INFO: This Burner.pro has been duplicated
-            </b-alert>
-            <b-alert v-else-if="settings.cards[modalCard.cardId].slots[9].isImported" size="sm" dismissible variant="info" show class="m-0">
-              INFO: This Burner.pro is a duplicate
-            </b-alert>
-          </div>
+          <b-alert v-if="modalCard.cardId && settings.cards[modalCard.cardId] && settings.cards[modalCard.cardId].initialised && settings.cards[modalCard.cardId].selectedSlot != 9" size="sm" dismissible variant="warning" show class="m-0">
+            WARNING: Burner.pro uses slot 9
+          </b-alert>
+          <b-form-group label="Status:" label-cols="3" label-align="right" :description="modalCardCardStatus.message" class="m-0 mt-2">
+            <b-form-select size="sm" disabled :value="modalCardCardStatus.code" :options="cardStatusOptions" class="w-50"></b-form-select>
+          </b-form-group>
           <b-table small fixed striped responsive hover :fields="slotsFields" :items="slots" show-empty head-variant="light" class="mx-0 my-0 mt-1">
             <template #cell(slot)="data">
               <b-form-checkbox size="sm" :checked="settings.cards[modalCard.cardId].selectedSlot == data.item.slot" @change="updateSelectedSlot(modalCard.cardId, data.item.slot)">
@@ -847,6 +839,15 @@
             { value: 100, text: '100' },
           ],
 
+          cardStatusOptions: [
+            { value: null, text: '(unknown)' },
+            { value: 'noninitialised', text: 'Not Initialised' },
+            { value: 'exported', text: 'Exported' },
+            { value: 'imported', text: 'Imported' },
+            { value: 'importedandexported', text: 'Imported, then Exported' },
+            { value: 'notimportedorexported', text: 'Not Imported and Not Exported' },
+          ],
+
           addressTypeOptions: [
             { value: null, text: '(select)' },
             { value: 'nfccard', text: 'NFC Card' },
@@ -1019,6 +1020,33 @@
               }
             }
             return results;
+          },
+
+          modalCardCardStatus() {
+            let code = null;
+            let message = null;
+            if (this.modalCard.cardId && this.modalCard.cardId in this.settings.cards) {
+              if (!this.settings.cards[this.modalCard.cardId].initialised) {
+                code = "noninitialised";
+                message = "This card has not been initialised";
+              } else if (this.settings.cards[this.modalCard.cardId].slots["9"]) {
+                const slot9 = this.settings.cards[this.modalCard.cardId].slots["9"];
+                if (slot9.isExported && !slot9.isImported) {
+                  code = "exported";
+                  message = "Slot 9 private key has been exported";
+                } else if (!slot9.isExported && slot9.isImported) {
+                  code = "imported";
+                  message = "Slot 9 private key has been imported";
+                } else if (slot9.isExported && slot9.isImported) {
+                  code = "importedandexported";
+                  message = "Slot 9 private key has been imported, then exported";
+                } else {
+                  code = "notimportedorexported";
+                  message = "Slot 9 private key has been not been imported or exported";
+                }
+              }
+            }
+            return { code, message };
           },
 
           modalAddressAddressOnCards() {
