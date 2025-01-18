@@ -97,7 +97,7 @@
                 </b-button>
               </div>
               <div v-else>
-                Uninitialised
+                <font size="-1">(Uninitialised)</font>
               </div>
             </template>
             <template #cell(card)="data">
@@ -128,9 +128,20 @@
           <template #modal-title>
             Card {{ modalCard.name && ("'" + modalCard.name + "'") }}
           </template>
-          <b-alert v-if="modalCard.cardId && settings.cards[modalCard.cardId] && settings.cards[modalCard.cardId].selectedSlot != 9" size="sm" dismissible variant="warning" show class="m-0">
-            Warning: Burner.pro uses slot 9
-          </b-alert>
+          <div v-if="modalCard.cardId && settings.cards[modalCard.cardId]">
+            <b-alert v-if="!settings.cards[modalCard.cardId].initialised" size="sm" dismissible variant="info" show class="m-0">
+              INFO: This Burner.pro NFC card has not been initialised
+            </b-alert>
+            <b-alert v-else-if="settings.cards[modalCard.cardId].selectedSlot != 9" size="sm" dismissible variant="warning" show class="m-0">
+              WARNING: Burner.pro uses slot 9
+            </b-alert>
+            <b-alert v-else-if="settings.cards[modalCard.cardId].slots[9].isExported" size="sm" dismissible variant="info" show class="m-0">
+              INFO: This Burner.pro has been duplicated
+            </b-alert>
+            <b-alert v-else-if="settings.cards[modalCard.cardId].slots[9].isImported" size="sm" dismissible variant="info" show class="m-0">
+              INFO: This Burner.pro is a duplicate
+            </b-alert>
+          </div>
           <b-table small fixed striped responsive hover :fields="slotsFields" :items="slots" show-empty head-variant="light" class="mx-0 my-0 mt-1">
             <template #cell(slot)="data">
               <b-form-checkbox size="sm" :checked="settings.cards[modalCard.cardId].selectedSlot == data.item.slot" @change="updateSelectedSlot(modalCard.cardId, data.item.slot)">
@@ -923,8 +934,8 @@
               results.push({ value: null, text: "(Scan NFC card to begin)" });
             }
             for (const [cardId, cardData] of Object.entries(this.settings.cards)) {
-              const address = cardData.initialised ? cardData.slots[cardData.selectedSlot].address : "Uninitialised";
-              const name = cardData.initialised ? cardData.name || address.substring(0, 10) : "Uninitialised";
+              const address = cardData.initialised ? cardData.slots[cardData.selectedSlot].address : "(Uninitialised)";
+              const name = cardData.initialised ? cardData.name || address.substring(0, 10) : "(Uninitialised)";
               results.push({ value: cardId, text: name });
             }
             // const keys = Object.keys(this.slots);
