@@ -1038,16 +1038,16 @@
                 const slot9 = this.settings.cards[this.modalCard.cardId].slots["9"];
                 if (slot9.isExported && !slot9.isImported) {
                   code = "exported";
-                  message = "Slot 9 private key has been exported. This card has been duplicated";
+                  message = "This card has been duplicated - slot 9 private key has been exported";
                 } else if (!slot9.isExported && slot9.isImported) {
                   code = "imported";
-                  message = "Slot 9 private key has been imported. This card is a duplicate";
+                  message = "This card is a duplicate - slot 9 private key has been imported";
                 } else if (slot9.isExported && slot9.isImported) {
                   code = "importedandexported";
-                  message = "Slot 9 private key has been imported, then exported. This card is a duplicate that has been duplicated";
+                  message = "This card is a duplicate that has been duplicated - slot 9 private key has been imported, then exported";
                 } else {
                   code = "notimportedorexported";
-                  message = "Slot 9 private key has been not been imported or exported. This card has not been duplicated";
+                  message = "This card has not been duplicated - slot 9 private key has been not been imported or exported";
                 }
               }
             }
