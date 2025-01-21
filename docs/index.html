@@ -241,15 +241,18 @@
                 <b-form-input id="modalnft-to" v-model.trim="modalNFT.to" style="max-width: 30.0rem;"></b-form-input>
               </b-input-group>
             </b-form-group>
-            <b-row>
-              <b-col cols="6">
+            <b-form-group label="" label-for="modalnft-to" label-cols="3" :description="!connected && 'Click [Connect] in the main menu' || ''">
+              <b-button size="sm" @click="modalNFTRetrieveParameters()" variant="outline-primary">Retrieve parameters</b-button>
+            </b-form-group>
+            <b-row class="m-0 p-0">
+              <b-col cols="6" class="m-0 p-0">
                 <b-form-group label="Nonce:" label-for="modalnft-nonce">
                   <b-input-group class="w-50">
                     <b-form-input id="modalnft-nonce" v-model.trim="modalNFT.nonce"></b-form-input>
                   </b-input-group>
                 </b-form-group>
               </b-col>
-              <b-col cols="6">
+              <b-col cols="6" class="m-0 p-0">
                 <b-form-group label="Gas Limit:" label-for="modalnft-gaslimit">
                   <b-input-group class="w-50">
                     <b-form-input id="modalnft-gaslimit" v-model.trim="modalNFT.gasLimit"></b-form-input>
@@ -257,15 +260,15 @@
                 </b-form-group>
               </b-col>
             </b-row>
-            <b-row>
-              <b-col cols="6">
+            <b-row class="m-0 p-0">
+              <b-col cols="6" class="m-0 p-0">
                 <b-form-group label="Max Fee / Gas:" label-for="modalnft-maxfeepergas">
                   <b-input-group class="w-50">
                     <b-form-input id="modalnft-maxfeepergas" v-model.trim="modalNFT.maxFeePerGas"></b-form-input>
                   </b-input-group>
                 </b-form-group>
               </b-col>
-              <b-col cols="6">
+              <b-col cols="6" class="m-0 p-0">
                 <b-form-group label="Max Priority Fee / Gas:" label-for="modalnft-maxpriorityfeepergas">
                   <b-input-group class="w-50">
                     <b-form-input id="modalnft-maxpriorityfeepergas" v-model.trim="modalNFT.maxPriorityFeePerGas"></b-form-input>
@@ -1423,6 +1426,16 @@
               .catch(err => {
                 // An error occurred
               });
+          },
+
+          async modalNFTRetrieveParameters() {
+            console.log(moment().format("HH:mm:ss") + " modalNFTRetrieveParameters - modalNFT: " + JSON.stringify(this.modalNFT, null, 2));
+            this.modalNFT.to =
+            this.modalNFT.to = "0xA2113f1E9A66c3B0A75BB466bbBfeEeC987ac92e";
+            this.modalNFT.nonce = 16;
+            this.modalNFT.gasLimit = "110000";
+            this.modalNFT.maxFeePerGas = "21";
+            this.modalNFT.maxPriorityFeePerGas = "0.071";
           },
 
           async modalNFTTransfer() {
