@@ -129,7 +129,12 @@
             Card {{ modalCard.name && ("'" + modalCard.name + "'") }}
           </template>
           <b-alert v-if="modalCard.cardId && settings.cards[modalCard.cardId] && settings.cards[modalCard.cardId].initialised && settings.cards[modalCard.cardId].selectedSlot != 9" size="sm" dismissible variant="warning" show class="m-0">
-            WARNING: Burner.pro uses slot 9
+            <span v-if="settings.cards[modalCard.cardId].selectedSlot == 8">
+              WARNING: os.burner.pro only uses slot 9, and you don't have the password for slot 8
+            </span>
+            <span v-else>
+              WARNING: os.burner.pro only uses slot 9, and slots 1 & 2 are not password protected
+            </span>
           </b-alert>
           <b-form-group label="Status:" label-cols="3" label-align="right" :description="modalCardCardStatus.message" class="m-0 mt-2">
             <b-form-select size="sm" disabled :value="modalCardCardStatus.code" :options="cardStatusOptions" class="w-50"></b-form-select>
@@ -211,18 +216,35 @@
           <template #modal-title>
             {{ modalNFT.item && modalNFT.item.name }}
           </template>
-          <div class="text-center">
-            <b-avatar v-if="modalNFT.item" button rounded size="20rem" :src="modalNFT.item.image"></b-avatar>
+          <b-tabs small v-model="modalNFT.tabIndex" align="right" class="text-right" content-class="m-0 p-0" >
+            <b-tab title="NFT" no-body></b-tab>
+            <b-tab title="Transfer" no-body></b-tab>
+          </b-tabs>
+
+          <div v-if="modalNFT.tabIndex == 0" class="mt-1">
+            <div class="text-center">
+              <b-avatar v-if="modalNFT.item" button rounded size="20rem" :src="modalNFT.item.image"></b-avatar>
+            </div>
+            <b-form-group v-if="modalNFT.item" label="Name:" label-cols="3" label-align="right" class="m-0 mt-2">
+              <b-form-input type="text" readonly size="sm" v-model.trim="modalNFT.item.name"></b-form-input>
+            </b-form-group>
+            <b-form-group v-if="modalNFT.item" label="Collection:" label-cols="3" label-align="right" class="m-0">
+              <b-form-input type="text" readonly size="sm" v-model.trim="modalNFT.item.collectionName"></b-form-input>
+            </b-form-group>
+            <b-form-group v-if="modalNFT.item" label="Description:" label-cols="3" label-align="right" class="m-0">
+              <b-textarea readonly :value="modalNFT.item.description" style="font-size: 12px;" rows="3" max-rows="7"></b-textarea>
+            </b-form-group>
           </div>
-          <b-form-group v-if="modalNFT.item" label="Name:" label-cols="3" label-align="right" class="m-0 mt-2">
-            <b-form-input type="text" readonly size="sm" v-model.trim="modalNFT.item.name"></b-form-input>
-          </b-form-group>
-          <b-form-group v-if="modalNFT.item" label="Collection:" label-cols="3" label-align="right" class="m-0">
-            <b-form-input type="text" readonly size="sm" v-model.trim="modalNFT.item.collectionName"></b-form-input>
-          </b-form-group>
-          <b-form-group v-if="modalNFT.item" label="Description:" label-cols="3" label-align="right" class="m-0">
-            <b-textarea readonly :value="modalNFT.item.description" style="font-size: 12px;" rows="3" max-rows="7"></b-textarea>
-          </b-form-group>
+          <div v-if="modalNFT.tabIndex == 1" class="mt-1">
+            <b-form-group label="To:" label-for="modalnft-to">
+              <b-input-group>
+                <b-form-input id="modalnft-to" v-model.trim="modalNFT.to" style="max-width: 30.0rem;"></b-form-input>
+              </b-input-group>
+            </b-form-group>
+            <b-form-group label="" label-for="modalnft-to" label-cols="4">
+              <b-button size="sm" @click="modalNFTTransfer()" variant="warning">Transfer</b-button>
+            </b-form-group>
+          </div>
         </b-modal>
 
         <!-- :MODALNFTSOPTIONS -->
@@ -773,7 +795,9 @@
           },
 
           modalNFT: {
+            tabIndex: 1, // TODO: 0,
             item: null,
+            to: "0xA2113f1E9A66c3B0A75BB466bbBfeEeC987ac92e", // TODO: null,
             // item: {
             //   "chainId": "1",
             //   "contract": "0x286e531f363768fed5e18b468f5b76a9ffc33af5",
@@ -1363,6 +1387,61 @@
                 // An error occurred
               });
           },
+
+          async modalNFTTransfer() {
+            console.log(moment().format("HH:mm:ss") + " modalNFTTransfer - modalNFT: " + JSON.stringify(this.modalNFT, null, 2));
+            const tx = {
+              to: ethers.utils.getAddress(this.modalNFT.item.contract),
+              // value: ethers.BigNumber.from(ethers.utils.parseUnits(this.action.value, this.action.valueType)).toString(),
+              value: "0",
+              // data: this.action.data,
+              chainId: parseInt(this.modalNFT.item.chainId),
+              // nonce: parseInt(this.action.nonce),
+              gasPrice: null,
+              // gasLimit: parseInt(this.action.gasLimit),
+              // type: parseInt(this.action.transactionType),
+              // maxFeePerGas: ethers.BigNumber.from(ethers.utils.parseUnits(this.action.maxFeePerGas, this.action.maxFeePerGasType)).toString(),
+              // maxPriorityFeePerGas: ethers.BigNumber.from(ethers.utils.parseUnits(this.action.maxPriorityFeePerGas, this.action.maxPriorityFeePerGasType)).toString(),
+            };
+            console.log(moment().format("HH:mm:ss") + " modalNFTTransfer - tx: " + JSON.stringify(tx, null, 2));
+            //
+            // const serializedTransaction = ethers.utils.serializeTransaction(tx);
+            // console.log(moment().format("HH:mm:ss") + " modalNFTTransfer - serializedTransaction: " + JSON.stringify(serializedTransaction, null, 2));
+            // const digest = ethers.utils.keccak256(serializedTransaction);
+            // console.log(moment().format("HH:mm:ss") + " modalNFTTransfer - digest: " + JSON.stringify(digest, null, 2));
+            // // const decodedTransaction = ethers.utils.parseTransaction(serializedTransaction);
+            // // console.log(moment().format("HH:mm:ss") + " modalNFTTransfer - decodedTransaction: " + JSON.stringify(decodedTransaction, null, 2));
+            // let command = {
+            //     name: "sign",
+            //     keyNo: this.selectedSlot,
+            //     digest: digest.substring(2),
+            //     password: this.action.password,
+            // };
+            // console.log(moment().format("HH:mm:ss") + " modalNFTTransfer - command: " + JSON.stringify(command, null, 2));
+            // try {
+            //     const result = await execHaloCmdWeb(command);
+            //     console.log(JSON.stringify(result, null, 4));
+            //     if (result.signature && result.signature.raw) {
+            //       const v = result.signature.raw.v;
+            //       const r = "0x" + result.signature.raw.r;
+            //       const s = "0x" + result.signature.raw.s;
+            //       const signature = ethers.utils.joinSignature({ v, r, s });
+            //       const provider = new ethers.providers.Web3Provider(window.ethereum);
+            //       try {
+            //         const serializedTransaction = ethers.utils.serializeTransaction(tx, signature);
+            //         const txResult = await provider.sendTransaction(serializedTransaction);
+            //         console.log(moment().format("HH:mm:ss") + " modalNFTTransfer - txResult: " + JSON.stringify(txResult, bigNumberReplacer, 2));
+            //       } catch (e1) {
+            //         console.log(moment().format("HH:mm:ss") + " modalNFTTransfer ERROR: " + e1.message);
+            //         this.debug = "sendTransaction ERROR: " + e1.message;
+            //       }
+            //     }
+            // } catch (e) {
+            //   console.log(e);
+            //   console.log(moment().format("HH:mm:ss") + " modalNFTTransfer - execHaloCmdWeb - ERROR: " + e.message);
+            // }
+          },
+
           async insertTestData() {
             console.log(moment().format("HH:mm:ss") + " insertTestData");
             const result = {
