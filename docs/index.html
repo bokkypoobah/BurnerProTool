@@ -241,6 +241,38 @@
                 <b-form-input id="modalnft-to" v-model.trim="modalNFT.to" style="max-width: 30.0rem;"></b-form-input>
               </b-input-group>
             </b-form-group>
+            <b-row>
+              <b-col cols="6">
+                <b-form-group label="Nonce:" label-for="modalnft-nonce">
+                  <b-input-group class="w-50">
+                    <b-form-input id="modalnft-nonce" v-model.trim="modalNFT.nonce"></b-form-input>
+                  </b-input-group>
+                </b-form-group>
+              </b-col>
+              <b-col cols="6">
+                <b-form-group label="Gas Limit:" label-for="modalnft-gaslimit">
+                  <b-input-group class="w-50">
+                    <b-form-input id="modalnft-gaslimit" v-model.trim="modalNFT.gasLimit"></b-form-input>
+                  </b-input-group>
+                </b-form-group>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col cols="6">
+                <b-form-group label="Max Fee / Gas:" label-for="modalnft-maxfeepergas">
+                  <b-input-group class="w-50">
+                    <b-form-input id="modalnft-maxfeepergas" v-model.trim="modalNFT.maxFeePerGas"></b-form-input>
+                  </b-input-group>
+                </b-form-group>
+              </b-col>
+              <b-col cols="6">
+                <b-form-group label="Max Priority Fee / Gas:" label-for="modalnft-maxpriorityfeepergas">
+                  <b-input-group class="w-50">
+                    <b-form-input id="modalnft-maxpriorityfeepergas" v-model.trim="modalNFT.maxPriorityFeePerGas"></b-form-input>
+                  </b-input-group>
+                </b-form-group>
+              </b-col>
+            </b-row>
             <b-form-group label="" label-for="modalnft-to" label-cols="4">
               <b-button size="sm" @click="modalNFTTransfer()" variant="warning">Transfer</b-button>
             </b-form-group>
@@ -798,6 +830,11 @@
             tabIndex: 1, // TODO: 0,
             item: null,
             to: "0xA2113f1E9A66c3B0A75BB466bbBfeEeC987ac92e", // TODO: null,
+            nonce: 15, // TODO: null,
+            gasLimit: "100000", // TODO: null,
+            maxFeePerGas: "20", // TODO: null,
+            maxPriorityFeePerGas: "0.07", // TODO: null,
+
             // item: {
             //   "chainId": "1",
             //   "contract": "0x286e531f363768fed5e18b468f5b76a9ffc33af5",
