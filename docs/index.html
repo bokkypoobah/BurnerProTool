@@ -1471,6 +1471,18 @@
 
           async modalNFTTransfer() {
             console.log(moment().format("HH:mm:ss") + " modalNFTTransfer - modalNFT: " + JSON.stringify(this.modalNFT, null, 2));
+
+            const abi = ["function transferFrom(address _from, address _to, uint256 _tokenId) external payable"];
+            const interface = new ethers.utils.Interface(abi);
+            // console.log(moment().format("HH:mm:ss") + " modalNFTTransfer - interface: " + JSON.stringify(interface, null, 2));
+            const from = ethers.utils.getAddress(this.activeAddress);
+            // console.log(moment().format("HH:mm:ss") + " modalNFTTransfer - from: " + from);
+            const to = ethers.utils.getAddress(this.modalNFT.to);
+            // console.log(moment().format("HH:mm:ss") + " modalNFTTransfer - to: " + to);
+
+            const encodedData = interface.encodeFunctionData("transferFrom", [from, to, this.modalNFT.item.tokenId]);
+            console.log(moment().format("HH:mm:ss") + " modalNFTTransfer - encodedData: " + JSON.stringify(encodedData, null, 2));
+
             const tx = {
               to: ethers.utils.getAddress(this.modalNFT.item.contract),
               // value: ethers.BigNumber.from(ethers.utils.parseUnits(this.action.value, this.action.valueType)).toString(),
