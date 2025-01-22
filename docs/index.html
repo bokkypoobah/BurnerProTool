@@ -1430,12 +1430,43 @@
 
           async modalNFTRetrieveParameters() {
             console.log(moment().format("HH:mm:ss") + " modalNFTRetrieveParameters - modalNFT: " + JSON.stringify(this.modalNFT, null, 2));
-            this.modalNFT.to =
+            // this.modalNFT.to =
             this.modalNFT.to = "0xA2113f1E9A66c3B0A75BB466bbBfeEeC987ac92e";
             this.modalNFT.nonce = 16;
             this.modalNFT.gasLimit = "110000";
             this.modalNFT.maxFeePerGas = "21";
             this.modalNFT.maxPriorityFeePerGas = "0.071";
+
+            // const tx = {
+            //   to: ethers.utils.getAddress(this.modalNFT.item.contract),
+            //   // value: ethers.BigNumber.from(ethers.utils.parseUnits(this.action.value, this.action.valueType)).toString(),
+            //   value: "0",
+            //   // data: this.action.data,
+            //   chainId: parseInt(this.modalNFT.item.chainId),
+            //   // nonce: parseInt(this.action.nonce),
+            //   gasPrice: null,
+            //   // gasLimit: parseInt(this.action.gasLimit),
+            //   // type: parseInt(this.action.transactionType),
+            //   // maxFeePerGas: ethers.BigNumber.from(ethers.utils.parseUnits(this.action.maxFeePerGas, this.action.maxFeePerGasType)).toString(),
+            //   // maxPriorityFeePerGas: ethers.BigNumber.from(ethers.utils.parseUnits(this.action.maxPriorityFeePerGas, this.action.maxPriorityFeePerGasType)).toString(),
+            // };
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            const feeData = await provider.getFeeData();
+            console.log(moment().format("HH:mm:ss") + " modalNFTRetrieveParameters - feeData: " + JSON.stringify(feeData, bigNumberReplacer, 2));
+            // feeData: {
+            //   "lastBaseFeePerGas": "7944313780",
+            //   "maxFeePerGas": "17388627560",
+            //   "maxPriorityFeePerGas": "1500000000",
+            //   "gasPrice": "7947083611"
+            // }
+            const transactionCount = await provider.getTransactionCount(this.activeAddress);
+            console.log(moment().format("HH:mm:ss") + " modalNFTRetrieveParameters - transactionCount: " + transactionCount);
+            // const signer = new ethers.VoidSigner(this.activeAddress, provider);
+            // const contract = new ethers.Contract(ethers.utils.getAddress(this.modalNFT.item.contract), ERC721ABI, signer);
+            // const from = await signer.getAddress();
+            // console.log("from: " + from);
+            // const estimatedGas = await contract.transferFrom(from, ethers.utils.getAddress(this.modalNFT.to), this.modalNFT.item.tokenId);
+            // console.log("estimatedGas: " + estimatedGas);
           },
 
           async modalNFTTransfer() {
