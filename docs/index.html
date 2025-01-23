@@ -281,6 +281,11 @@
                 </b-form-group>
               </b-col>
             </b-row>
+            <b-form-group label="password" label-for="modalnft-password">
+              <b-input-group>
+                <b-form-input type="password" id="modalnft-password" v-model.trim="modalNFT.password" style="max-width: 10.0rem;"></b-form-input>
+              </b-input-group>
+            </b-form-group>
             <b-form-group label="" label-for="modalnft-to" label-cols="4" :description="!connected && 'Click [Connect] in the main menu' || ''">
               <b-button size="sm" :disabled="!modalNFT.to || (modalNFT.item && modalNFT.item.type == 'erc1155' && modalNFT.tokens == 0)" @click="modalNFTTransfer()" variant="warning">Scan NFC & Transfer</b-button>
             </b-form-group>
@@ -843,6 +848,7 @@
             gasLimit: "100000", // TODO: null,
             maxFeePerGas: null,
             maxPriorityFeePerGas: null,
+            password: null,
 
             // item: {
             //   "chainId": "1",
@@ -1516,35 +1522,35 @@
             console.log(moment().format("HH:mm:ss") + " modalNFTTransfer - digest: " + JSON.stringify(digest, null, 2));
             const decodedTransaction = ethers.utils.parseTransaction(serializedTransaction);
             console.log(moment().format("HH:mm:ss") + " modalNFTTransfer - decodedTransaction: " + JSON.stringify(decodedTransaction, bigNumberReplacer, 2));
-            // let command = {
-            //     name: "sign",
-            //     keyNo: this.selectedSlot,
-            //     digest: digest.substring(2),
-            //     password: this.action.password,
-            // };
-            // console.log(moment().format("HH:mm:ss") + " modalNFTTransfer - command: " + JSON.stringify(command, null, 2));
-            // try {
-            //     const result = await execHaloCmdWeb(command);
-            //     console.log(JSON.stringify(result, null, 4));
-            //     if (result.signature && result.signature.raw) {
-            //       const v = result.signature.raw.v;
-            //       const r = "0x" + result.signature.raw.r;
-            //       const s = "0x" + result.signature.raw.s;
-            //       const signature = ethers.utils.joinSignature({ v, r, s });
-            //       const provider = new ethers.providers.Web3Provider(window.ethereum);
-            //       try {
-            //         const serializedTransaction = ethers.utils.serializeTransaction(tx, signature);
-            //         const txResult = await provider.sendTransaction(serializedTransaction);
-            //         console.log(moment().format("HH:mm:ss") + " modalNFTTransfer - txResult: " + JSON.stringify(txResult, bigNumberReplacer, 2));
-            //       } catch (e1) {
-            //         console.log(moment().format("HH:mm:ss") + " modalNFTTransfer ERROR: " + e1.message);
-            //         this.debug = "sendTransaction ERROR: " + e1.message;
-            //       }
-            //     }
-            // } catch (e) {
-            //   console.log(e);
-            //   console.log(moment().format("HH:mm:ss") + " modalNFTTransfer - execHaloCmdWeb - ERROR: " + e.message);
-            // }
+            let command = {
+                name: "sign",
+                keyNo: this.selectedSlot,
+                digest: digest.substring(2),
+                password: this.modalNFT.password,
+            };
+            console.log(moment().format("HH:mm:ss") + " modalNFTTransfer - command: " + JSON.stringify(command, null, 2));
+            try {
+                const result = await execHaloCmdWeb(command);
+                console.log(JSON.stringify(result, null, 4));
+                if (result.signature && result.signature.raw) {
+                  const v = result.signature.raw.v;
+                  const r = "0x" + result.signature.raw.r;
+                  const s = "0x" + result.signature.raw.s;
+                  const signature = ethers.utils.joinSignature({ v, r, s });
+                  const provider = new ethers.providers.Web3Provider(window.ethereum);
+                  try {
+                    const serializedTransaction = ethers.utils.serializeTransaction(tx, signature);
+                    const txResult = await provider.sendTransaction(serializedTransaction);
+                    console.log(moment().format("HH:mm:ss") + " modalNFTTransfer - txResult: " + JSON.stringify(txResult, bigNumberReplacer, 2));
+                  } catch (e1) {
+                    console.log(moment().format("HH:mm:ss") + " modalNFTTransfer ERROR: " + e1.message);
+                    this.debug = "sendTransaction ERROR: " + e1.message;
+                  }
+                }
+            } catch (e) {
+              console.log(e);
+              console.log(moment().format("HH:mm:ss") + " modalNFTTransfer - execHaloCmdWeb - ERROR: " + e.message);
+            }
           },
 
           async insertTestData() {
