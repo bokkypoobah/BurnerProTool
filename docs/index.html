@@ -246,9 +246,9 @@
                 <b-form-input type="range" id="modalnft-tokens" v-model.trim="modalNFT.tokens" min="0" :max="modalNFT.item.count"></b-form-input>
               </b-input-group>
             </b-form-group>
-            <b-form-group label="" label-cols="3" :description="!connected && 'Click [Connect] in the main menu' || ''">
+            <!-- <b-form-group label="" label-cols="3" :description="!connected && 'Click [Connect] in the main menu' || ''">
               <b-button size="sm" @click="modalNFTRetrieveParameters()" variant="outline-primary">Retrieve parameters</b-button>
-            </b-form-group>
+            </b-form-group> -->
             <b-row class="m-0 p-0">
               <b-col cols="6" class="m-0 p-0">
                 <b-form-group label="Nonce:" label-for="modalnft-nonce">
@@ -282,7 +282,7 @@
               </b-col>
             </b-row>
             <b-form-group label="" label-for="modalnft-to" label-cols="4" :description="!connected && 'Click [Connect] in the main menu' || ''">
-              <b-button size="sm" @click="modalNFTTransfer()" variant="warning">Transfer</b-button>
+              <b-button size="sm" :disabled="!modalNFT.to || (modalNFT.item && modalNFT.item.type == 'erc1155' && modalNFT.tokens == 0)" @click="modalNFTTransfer()" variant="warning">Scan NFC & Transfer</b-button>
             </b-form-group>
           </div>
         </b-modal>
@@ -1500,21 +1500,22 @@
               value: "0",
               data: encodedData,
               chainId: parseInt(this.modalNFT.item.chainId),
-              // nonce: parseInt(this.action.nonce),
+              nonce: parseInt(this.modalNFT.nonce),
               gasPrice: null,
-              // gasLimit: parseInt(this.action.gasLimit),
+              gasLimit: parseInt(this.modalNFT.gasLimit),
               // type: parseInt(this.action.transactionType),
-              // maxFeePerGas: ethers.BigNumber.from(ethers.utils.parseUnits(this.action.maxFeePerGas, this.action.maxFeePerGasType)).toString(),
-              // maxPriorityFeePerGas: ethers.BigNumber.from(ethers.utils.parseUnits(this.action.maxPriorityFeePerGas, this.action.maxPriorityFeePerGasType)).toString(),
+              type: 2,
+              maxFeePerGas: ethers.BigNumber.from(ethers.utils.parseUnits(this.modalNFT.maxFeePerGas, "gwei")).toString(),
+              maxPriorityFeePerGas: ethers.BigNumber.from(ethers.utils.parseUnits(this.modalNFT.maxPriorityFeePerGas, "gwei")).toString(),
             };
             console.log(moment().format("HH:mm:ss") + " modalNFTTransfer - tx: " + JSON.stringify(tx, null, 2));
             //
-            // const serializedTransaction = ethers.utils.serializeTransaction(tx);
-            // console.log(moment().format("HH:mm:ss") + " modalNFTTransfer - serializedTransaction: " + JSON.stringify(serializedTransaction, null, 2));
-            // const digest = ethers.utils.keccak256(serializedTransaction);
-            // console.log(moment().format("HH:mm:ss") + " modalNFTTransfer - digest: " + JSON.stringify(digest, null, 2));
-            // // const decodedTransaction = ethers.utils.parseTransaction(serializedTransaction);
-            // // console.log(moment().format("HH:mm:ss") + " modalNFTTransfer - decodedTransaction: " + JSON.stringify(decodedTransaction, null, 2));
+            const serializedTransaction = ethers.utils.serializeTransaction(tx);
+            console.log(moment().format("HH:mm:ss") + " modalNFTTransfer - serializedTransaction: " + JSON.stringify(serializedTransaction, null, 2));
+            const digest = ethers.utils.keccak256(serializedTransaction);
+            console.log(moment().format("HH:mm:ss") + " modalNFTTransfer - digest: " + JSON.stringify(digest, null, 2));
+            const decodedTransaction = ethers.utils.parseTransaction(serializedTransaction);
+            console.log(moment().format("HH:mm:ss") + " modalNFTTransfer - decodedTransaction: " + JSON.stringify(decodedTransaction, bigNumberReplacer, 2));
             // let command = {
             //     name: "sign",
             //     keyNo: this.selectedSlot,
