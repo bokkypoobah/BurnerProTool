@@ -241,7 +241,12 @@
                 <b-form-input id="modalnft-to" v-model.trim="modalNFT.to" style="max-width: 30.0rem;"></b-form-input>
               </b-input-group>
             </b-form-group>
-            <b-form-group label="" label-for="modalnft-to" label-cols="3" :description="!connected && 'Click [Connect] in the main menu' || ''">
+            <b-form-group v-if="modalNFT.item && modalNFT.item.type == 'erc1155'" label="Tokens:" label-for="modalnft-tokens" :description="modalNFT.tokens + ' of ' + modalNFT.item.count">
+              <b-input-group>
+                <b-form-input type="range" id="modalnft-tokens" v-model.trim="modalNFT.tokens" min="0" :max="modalNFT.item.count"></b-form-input>
+              </b-input-group>
+            </b-form-group>
+            <b-form-group label="" label-cols="3" :description="!connected && 'Click [Connect] in the main menu' || ''">
               <b-button size="sm" @click="modalNFTRetrieveParameters()" variant="outline-primary">Retrieve parameters</b-button>
             </b-form-group>
             <b-row class="m-0 p-0">
@@ -263,14 +268,14 @@
             <b-row class="m-0 p-0">
               <b-col cols="6" class="m-0 p-0">
                 <b-form-group label="Max Fee / Gas:" label-for="modalnft-maxfeepergas">
-                  <b-input-group class="w-50">
+                  <b-input-group class="w-75">
                     <b-form-input id="modalnft-maxfeepergas" v-model.trim="modalNFT.maxFeePerGas"></b-form-input>
                   </b-input-group>
                 </b-form-group>
               </b-col>
               <b-col cols="6" class="m-0 p-0">
                 <b-form-group label="Max Priority Fee / Gas:" label-for="modalnft-maxpriorityfeepergas">
-                  <b-input-group class="w-50">
+                  <b-input-group class="w-75">
                     <b-form-input id="modalnft-maxpriorityfeepergas" v-model.trim="modalNFT.maxPriorityFeePerGas"></b-form-input>
                   </b-input-group>
                 </b-form-group>
@@ -833,11 +838,11 @@
             tabIndex: 1, // TODO: 0,
             item: null,
             to: "0xA2113f1E9A66c3B0A75BB466bbBfeEeC987ac92e", // TODO: null,
-            value: "1", // TODO: null, ERC-1155
-            nonce: 15, // TODO: null,
+            tokens: "1", // TODO: null, ERC-1155
+            nonce: null,
             gasLimit: "100000", // TODO: null,
-            maxFeePerGas: "20", // TODO: null,
-            maxPriorityFeePerGas: "0.07", // TODO: null,
+            maxFeePerGas: null,
+            maxPriorityFeePerGas: null,
 
             // item: {
             //   "chainId": "1",
@@ -1237,10 +1242,11 @@
 
         // --- METHODS ---
         methods: {
-          showModalNFT(item) {
+          async showModalNFT(item) {
             // console.log(moment().format("HH:mm:ss") + " showModalNFT - item: " + JSON.stringify(item, null, 2));
             this.modalNFT.item = item;
             this.$bvModal.show('modal-nft');
+            await this.modalNFTRetrieveParameters();
           },
           showModalNFTsOptions() {
             // console.log(moment().format("HH:mm:ss") + " showModalNFTsOptions");
@@ -1431,26 +1437,11 @@
 
           async modalNFTRetrieveParameters() {
             console.log(moment().format("HH:mm:ss") + " modalNFTRetrieveParameters - modalNFT: " + JSON.stringify(this.modalNFT, null, 2));
-            // this.modalNFT.to =
-            this.modalNFT.to = "0xA2113f1E9A66c3B0A75BB466bbBfeEeC987ac92e";
-            this.modalNFT.nonce = 16;
-            this.modalNFT.gasLimit = "110000";
-            this.modalNFT.maxFeePerGas = "21";
-            this.modalNFT.maxPriorityFeePerGas = "0.071";
 
-            // const tx = {
-            //   to: ethers.utils.getAddress(this.modalNFT.item.contract),
-            //   // value: ethers.BigNumber.from(ethers.utils.parseUnits(this.action.value, this.action.valueType)).toString(),
-            //   value: "0",
-            //   // data: this.action.data,
-            //   chainId: parseInt(this.modalNFT.item.chainId),
-            //   // nonce: parseInt(this.action.nonce),
-            //   gasPrice: null,
-            //   // gasLimit: parseInt(this.action.gasLimit),
-            //   // type: parseInt(this.action.transactionType),
-            //   // maxFeePerGas: ethers.BigNumber.from(ethers.utils.parseUnits(this.action.maxFeePerGas, this.action.maxFeePerGasType)).toString(),
-            //   // maxPriorityFeePerGas: ethers.BigNumber.from(ethers.utils.parseUnits(this.action.maxPriorityFeePerGas, this.action.maxPriorityFeePerGasType)).toString(),
-            // };
+            // TODO: Testing
+            this.modalNFT.to = "0xA2113f1E9A66c3B0A75BB466bbBfeEeC987ac92e";
+            this.modalNFT.gasLimit = "123456";
+
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const feeData = await provider.getFeeData();
             console.log(moment().format("HH:mm:ss") + " modalNFTRetrieveParameters - feeData: " + JSON.stringify(feeData, bigNumberReplacer, 2));
@@ -1460,8 +1451,15 @@
             //   "maxPriorityFeePerGas": "1500000000",
             //   "gasPrice": "7947083611"
             // }
-            const transactionCount = await provider.getTransactionCount(this.activeAddress);
-            console.log(moment().format("HH:mm:ss") + " modalNFTRetrieveParameters - transactionCount: " + transactionCount);
+
+            this.modalNFT.maxFeePerGas = ethers.utils.formatUnits(feeData.maxFeePerGas, "gwei");
+            console.log(moment().format("HH:mm:ss") + " modalNFTRetrieveParameters - this.modalNFT.maxFeePerGas: " + this.modalNFT.maxFeePerGas);
+
+            this.modalNFT.maxPriorityFeePerGas = ethers.utils.formatUnits(feeData.maxPriorityFeePerGas, "gwei");
+            console.log(moment().format("HH:mm:ss") + " modalNFTRetrieveParameters - this.modalNFT.maxPriorityFeePerGas: " + this.modalNFT.maxPriorityFeePerGas);
+
+            this.modalNFT.nonce = await provider.getTransactionCount(this.activeAddress);
+            console.log(moment().format("HH:mm:ss") + " modalNFTRetrieveParameters - this.modalNFT.nonce: " + this.modalNFT.nonce);
             // const signer = new ethers.VoidSigner(this.activeAddress, provider);
             // const contract = new ethers.Contract(ethers.utils.getAddress(this.modalNFT.item.contract), ERC721ABI, signer);
             // const from = await signer.getAddress();
@@ -1489,10 +1487,10 @@
               console.log(moment().format("HH:mm:ss") + " modalNFTTransfer - ERC-721 encodedData: " + JSON.stringify(encodedData, null, 2));
             } else {
               const erc1155SafeTransferFromAbi = [
-                "function safeTransferFrom(address from, address to, uint256 tokenId, uint256 value, bytes calldata _data) external", // https://eips.ethereum.org/EIPS/eip-1155
+                "function safeTransferFrom(address from, address to, uint256 tokenId, uint256 tokens, bytes calldata _data) external", // https://eips.ethereum.org/EIPS/eip-1155
               ];
               const interface = new ethers.utils.Interface(erc1155SafeTransferFromAbi);
-              encodedData = interface.encodeFunctionData("safeTransferFrom", [from, to, this.modalNFT.item.tokenId, ethers.BigNumber.from(this.modalNFT.value), "0x"]);
+              encodedData = interface.encodeFunctionData("safeTransferFrom", [from, to, this.modalNFT.item.tokenId, ethers.BigNumber.from(this.modalNFT.tokens), "0x"]);
               console.log(moment().format("HH:mm:ss") + " modalNFTTransfer - ERC-1155 encodedData: " + JSON.stringify(encodedData, null, 2));
             }
 
