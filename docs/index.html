@@ -1502,6 +1502,8 @@
 
             const tx = {
               to: ethers.utils.getAddress(this.modalNFT.item.contract),
+              // from: this.activeAddress, // TODO: Can use this for estimateGas
+              // from: "0xA2113f1E9A66c3B0A75BB466bbBfeEeC987ac92e", // TODO: for testing
               value: "0",
               data: encodedData,
               chainId: parseInt(this.modalNFT.item.chainId),
@@ -1513,6 +1515,15 @@
               maxPriorityFeePerGas: ethers.BigNumber.from(ethers.utils.parseUnits(this.modalNFT.maxPriorityFeePerGas, "gwei")).toString(),
             };
             console.log(moment().format("HH:mm:ss") + " modalNFTTransfer - tx: " + JSON.stringify(tx, null, 2));
+
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            const estimatedGas = await provider.estimateGas(tx);
+            console.log(moment().format("HH:mm:ss") + " modalNFTTransfer - estimatedGas: " + estimatedGas);
+            // const signer = new ethers.VoidSigner(this.activeAddress, provider);
+            // const contract = new ethers.Contract(ethers.utils.getAddress(this.modalNFT.item.contract), ERC721ABI, signer);
+            // const from = await signer.getAddress();
+            // console.log(moment().format("HH:mm:ss") + " modalNFTTransfer - from: " + from);
+
             const serializedTransaction = ethers.utils.serializeTransaction(tx);
             console.log(moment().format("HH:mm:ss") + " modalNFTTransfer - serializedTransaction: " + JSON.stringify(serializedTransaction, null, 2));
             const digest = ethers.utils.keccak256(serializedTransaction);
@@ -1535,7 +1546,7 @@
                   const r = "0x" + result.signature.raw.r;
                   const s = "0x" + result.signature.raw.s;
                   const signature = ethers.utils.joinSignature({ v, r, s });
-                  const provider = new ethers.providers.Web3Provider(window.ethereum);
+                  // const provider = new ethers.providers.Web3Provider(window.ethereum);
                   try {
                     const serializedTransaction = ethers.utils.serializeTransaction(tx, signature);
                     const txResult = await provider.sendTransaction(serializedTransaction);
