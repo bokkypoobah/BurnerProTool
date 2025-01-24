@@ -1526,7 +1526,7 @@
                 digest: digest.substring(2),
                 password: this.modalNFT.password,
             };
-            console.log(moment().format("HH:mm:ss") + " modalNFTTransfer - command: " + JSON.stringify(command, null, 2));
+            console.log(moment().format("HH:mm:ss") + " modalNFTTransfer - command: " + JSON.stringify({ ...command, password: undefined }, null, 2));
             try {
                 const result = await execHaloCmdWeb(command);
                 console.log(JSON.stringify(result, null, 4));
