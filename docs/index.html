@@ -191,13 +191,13 @@
                 <b-nav-form>
                   <div class="d-flex mt-1 mt-md-0">
                     <div class="m-0 p-0">
-                      <b-form-select size="sm" id="modaladdressesoptions-addresstype" v-model="settings.addressesTable.addressType" @change="saveSettings" :options="addressTypeFilterOptions" style="max-width: 12.0rem;"></b-form-select>
+                      <b-form-select size="sm" v-model="settings.addressesTable.addressType" @change="saveSettings" :options="addressTypeFilterOptions" style="max-width: 12.0rem;"></b-form-select>
                     </div>
                     <div class="m-0 ml-1 p-0">
-                      <b-form-select size="sm" id="modaladdressesoptions-sort" v-model="settings.addressesTable.sortOption" @change="saveSettings" :options="sortOptions" style="max-width: 12.0rem;"></b-form-select>
+                      <b-form-select size="sm" v-model="settings.addressesTable.sortOption" @change="saveSettings" :options="sortOptions" style="max-width: 12.0rem;"></b-form-select>
                     </div>
                     <div class="m-0 ml-1 p-0">
-                      <b-form-select size="sm" id="modaladdressesoptions-pagesize" v-model="settings.addressesTable.pageSize" @change="saveSettings" :options="pageSizes" style="max-width: 6.0rem;"></b-form-select>
+                      <b-form-select size="sm" v-model="settings.addressesTable.pageSize" @change="saveSettings" :options="pageSizes" style="max-width: 6.0rem;"></b-form-select>
                     </div>
                   </div>
                 </b-nav-form>
@@ -1175,42 +1175,47 @@
             const results = [];
             for (const [address, addressData] of Object.entries(this.settings.addresses)) {
               let include = true;
-              if (this.settings.addressesTable.addressType != null && this.settings.addressesTable.addressType != addressData.type) {
+              if (this.settings.addressesTable.filter != null && this.settings.addressesTable.filter.length > 0) {
+                let regex = null;
+                try {
+                  regex = new RegExp(this.settings.addressesTable.filter, 'i');
+                } catch (e) {
+                  console.log("filteredSortedAddresses - regex error: " + e.message);
+                  regex = new RegExp(/thequickbrowndogjumpsoverthelazyfox/, 'i');
+                }
+                if (!regex.test(address) && !regex.test(addressData.name)) {
+                  include = false;
+                }
+              }
+              // TODO: Fix NFC card address, EOA, eth
+              if (this.settings.addressesTable.addressType && this.settings.addressesTable.addressType != addressData.type) {
                 include = false;
               }
               if (include) {
                 results.push( { address, ...addressData } );
               }
             }
-            // if (this.settings.cardsTable.sortOption == 'addressasc') {
-            //   results.sort((a, b) => {
-            //     const addressA = a.initialised ? a.slots[a.selectedSlot].address : "Uninitialised";
-            //     const addressB = b.initialised ? b.slots[b.selectedSlot].address : "Uninitialised";
-            //     return ('' + addressA).localeCompare(addressB);
-            //   });
-            // } else if (this.settings.cardsTable.sortOption == 'addressdsc') {
-            //   results.sort((a, b) => {
-            //     const addressA = a.initialised ? a.slots[a.selectedSlot].address : "Uninitialised";
-            //     const addressB = b.initialised ? b.slots[b.selectedSlot].address : "Uninitialised";
-            //     return ('' + addressB).localeCompare(addressA);
-            //   });
-            // } else if (this.settings.cardsTable.sortOption == 'nameasc') {
-            //   results.sort((a, b) => {
-            //     const addressA = a.initialised ? a.slots[a.selectedSlot].address : "Uninitialised";
-            //     const addressB = b.initialised ? b.slots[b.selectedSlot].address : "Uninitialised";
-            //     const nameA = a.initialised ? a.name || addressA.substring(0, 10) : "Uninitialised";
-            //     const nameB = b.initialised ? b.name || addressB.substring(0, 10) : "Uninitialised";
-            //     return ('' + addressA).localeCompare(addressB);
-            //   });
-            // } else if (this.settings.cardsTable.sortOption == 'namedsc') {
-            //   results.sort((a, b) => {
-            //     const addressA = a.initialised ? a.slots[a.selectedSlot].address : "Uninitialised";
-            //     const addressB = b.initialised ? b.slots[b.selectedSlot].address : "Uninitialised";
-            //     const nameA = a.initialised ? a.name || addressA.substring(0, 10) : "Uninitialised";
-            //     const nameB = b.initialised ? b.name || addressB.substring(0, 10) : "Uninitialised";
-            //     return ('' + addressB).localeCompare(addressA);
-            //   });
-            // }
+            if (this.settings.addressesTable.sortOption == 'addressasc') {
+              results.sort((a, b) => {
+                return ('' + a.address).localeCompare(b.address);
+              });
+            } else if (this.settings.addressesTable.sortOption == 'addressdsc') {
+              results.sort((a, b) => {
+                return ('' + b.address).localeCompare(a.address);
+              });
+            } else if (this.settings.addressesTable.sortOption == 'nameasc') {
+              results.sort((a, b) => {
+                const nameA = a.name || a.address;
+                const nameB = b.name || b.address;
+                return ('' + nameA).localeCompare(nameB);
+              });
+            } else if (this.settings.addressesTable.sortOption == 'namedsc') {
+              results.sort((a, b) => {
+                const nameA = a.name || a.address;
+                const nameB = b.name || b.address;
+                return ('' + nameB).localeCompare(nameA);
+              });
+            }
             return results;
           },
           pagedFilteredSortedAddresses() {
