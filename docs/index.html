@@ -205,6 +205,25 @@
             </b-collapse>
           </b-navbar>
           <b-table small fixed striped responsive hover :fields="addressesFields" :items="pagedFilteredSortedAddresses" show-empty empty-html="Press Escape. Then scan your Burner.pro NFC card to begin" head-variant="light" class="mx-0 my-0 mt-1">
+            <template #cell(one)="data">
+              <b-row class="m-0 p-0">
+                <b-col class="m-0 p-0">
+                  <font size="-1">{{ (parseInt(data.index) + ((settings.addressesTable.currentPage - 1) * settings.addressesTable.pageSize) + 1) + '.' }}</font>
+                </b-col>
+                <b-col cols="11" class="m-0 p-0">
+                  <b-link @click="showModalAddress(data.item.address)" target="_blank">
+                    <font size="-1">{{ data.item.address.substring(0, 6) + '...' + data.item.address.slice(-4) }}</font>
+                  </b-link>
+                  <font size="-1">{{ nameOrShortAddress(data.item.address) }}</font>
+                  <br />
+                  <b-badge pill variant="transparent" class="m-0 p-0">
+                    {{ addressTypeOptions.filter((e) => e.value == data.item.type)[0] && addressTypeOptions.filter((e) => e.value == data.item.type)[0].text }}
+                  </b-badge>
+                </b-col>
+              </b-row>
+              <!-- <b-form-checkbox size="sm" :checked="settings.selectedCard == data.item.cardId" @change="updateSelectedCard(data.item.cardId)">
+              </b-form-checkbox> -->
+            </template>
             <!-- <template #cell(select)="data">
               <b-form-checkbox size="sm" :checked="settings.selectedCard == data.item.cardId" @change="updateSelectedCard(data.item.cardId)">
               </b-form-checkbox>
@@ -1025,7 +1044,7 @@
           ],
 
           addressTypeOptions: [
-            { value: null, text: '(select)' },
+            { value: null, text: '(unknown)' },
             { value: 'nfccard', text: 'NFC Card' },
             { value: 'eoa', text: 'EOA' },
             { value: 'erc20', text: 'ERC-20' },
@@ -1058,9 +1077,10 @@
           ],
 
           addressesFields: [
-            { key: 'select', label: '', sortable: false, thStyle: 'width: 10%;', tdClass: 'text-truncate' },
-            { key: 'address', label: 'Address', sortable: false, thStyle: 'width: 45%;', tdClass: 'text-truncate' },
-            { key: 'name', label: 'Name', sortable: false, thStyle: 'width: 30%;', tdClass: 'text-truncate' },
+            { key: 'one', label: '', sortable: false, thStyle: 'width: 100%;', tdClass: 'text-truncate' },
+            // { key: 'select', label: '', sortable: false, thStyle: 'width: 10%;', tdClass: 'text-truncate' },
+            // { key: 'address', label: 'Address', sortable: false, thStyle: 'width: 45%;', tdClass: 'text-truncate' },
+            // { key: 'name', label: 'Name', sortable: false, thStyle: 'width: 30%;', tdClass: 'text-truncate' },
             // { key: 'card', label: 'Card', sortable: false, thStyle: 'width: 15%;', thClass: 'text-left', tdClass: 'text-left' },
           ],
 
@@ -1173,6 +1193,14 @@
           filteredSortedAddresses() {
             console.log(moment().format("HH:mm:ss") + " filteredSortedAddresses - this.settings.addresses: " + JSON.stringify(this.settings.addresses, null, 2));
             const results = [];
+            const nfcCardAddresses = {};
+            for (const [cardId, cardData] of Object.entries(this.settings.cards)) {
+              for (const [slot, slotData] of Object.entries(cardData.slots)) {
+                if (!(slotData.address in nfcCardAddresses)) {
+                  nfcCardAddresses[slotData.address] = cardData.name + ' - #' + slot;
+                }
+              }
+            }
             for (const [address, addressData] of Object.entries(this.settings.addresses)) {
               let include = true;
               if (this.settings.addressesTable.filter != null && this.settings.addressesTable.filter.length > 0) {
@@ -1187,12 +1215,15 @@
                   include = false;
                 }
               }
-              // TODO: Fix NFC card address, EOA, eth
-              if (this.settings.addressesTable.addressType && this.settings.addressesTable.addressType != addressData.type) {
+              let type = addressData.type;
+              if (address in nfcCardAddresses) {
+                type = "nfccard";
+              }
+              if (this.settings.addressesTable.addressType && this.settings.addressesTable.addressType != type) {
                 include = false;
               }
               if (include) {
-                results.push( { address, ...addressData } );
+                results.push( { address, ...addressData, type } );
               }
             }
             if (this.settings.addressesTable.sortOption == 'addressasc') {
