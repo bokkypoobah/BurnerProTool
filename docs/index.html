@@ -179,15 +179,20 @@
             </div>
             <div class="mt-0 flex-grow-1">
             </div>
-            <div class="mt-0 pr-1" style="max-width: 6.0rem;">
+            <!-- <div class="mt-0 pr-1" style="max-width: 6.0rem;">
               <b-form-select size="sm" v-model="settings.addressesTable.sortOption" @change="saveSettings" :options="sortOptions"></b-form-select>
-            </div>
+            </div> -->
             <div class="mt-0">
               <b-pagination size="sm" v-model="settings.addressesTable.currentPage" @input="saveSettings" :total-rows="filteredSortedAddresses.length" :per-page="settings.addressesTable.pageSize" style="height: 0;"></b-pagination>
             </div>
             <!-- <div class="mt-0 pl-1">
               <b-form-select size="sm" v-model="settings.addressesTable.pageSize" @change="saveSettings" :options="pageSizes"></b-form-select>
             </div> -->
+            <div class="mt-0 pl-1">
+              <b-button size="sm" @click="showModalAddressesOptions();" variant="outline" class="m-0 p-0">
+                <b-icon-three-dots-vertical font-scale="1" variant="primary"></b-icon-three-dots-vertical>
+              </b-button>
+            </div>
           </div>
           <b-table small fixed striped responsive hover :fields="addressesFields" :items="pagedFilteredSortedAddresses" show-empty empty-html="Press Escape. Then scan your Burner.pro NFC card to begin" head-variant="light" class="mx-0 my-0 mt-1">
             <!-- <template #cell(select)="data">
@@ -345,6 +350,19 @@
           </div>
         </b-modal>
 
+        <!-- :MODALADDRESSESOPTIONS -->
+        <b-modal id="modal-addressesoptions" hide-footer size="md" body-class="m-0 p-1 pt-2" body-bg-variant="light">
+          <template #modal-title>
+            Addresses Options
+          </template>
+          <b-form-group label="Sort:" label-for="modaladdressesoptions-sort" label-size="sm" label-align="right" label-cols="4" content-cols="8">
+            <b-form-select size="sm" id="modaladdressesoptions-sort" v-model="settings.addressesTable.sortOption" @change="saveSettings" :options="sortOptions" class="w-50"></b-form-select>
+          </b-form-group>
+          <b-form-group label="Page size:" label-for="modaladdressesoptions-pagesize" label-size="sm" label-align="right" label-cols="4" content-cols="8">
+            <b-form-select size="sm" id="modaladdressesoptions-pagesize" v-model="settings.addressesTable.pageSize" @change="saveSettings" :options="pageSizes" class="w-25"></b-form-select>
+          </b-form-group>
+        </b-modal>
+
         <!-- :MODALNFTSOPTIONS -->
         <b-modal id="modal-nftsoptions" hide-footer size="md" body-class="m-0 p-1 pt-2" body-bg-variant="light">
           <template #modal-title>
@@ -469,14 +487,12 @@
             <!-- <div class="mt-0 pr-1">
               <b-button size="sm" :disabled="filteredSortedSlots.length == 0" @click="retrieveBalances();" variant="primary" v-b-popover.hover.bottom="'Retrieve Balances'">Retrieve Balances</b-button>
             </div> -->
-            <div class="mt-0 pl-1">
+            <div class="mt-0">
               <b-button size="sm" :disabled="false" @click="settings.showInfo = !settings.showInfo; saveSettings();" @change="saveSettings" variant="none">
                 <b-icon :icon="settings.showInfo ? 'info-circle-fill' : 'info-circle'" shift-v="+1" font-scale="1.0" variant="primary"></b-icon>
               </b-button>
             </div>
-            <div class="mt-0 flex-grow-1">
-            </div>
-            <div class="mt-0 pr-1">
+            <div class="mt-0 pl-1">
               <b-button size="sm" @click="showModalConfig();" variant="outline">
                 <b-icon-gear shift-v="+1" font-scale="1.0" variant="primary"></b-icon-gear>
               </b-button>
@@ -1374,6 +1390,10 @@
             this.modalNFT.item = item;
             this.$bvModal.show('modal-nft');
             await this.modalNFTRetrieveParameters();
+          },
+          showModalAddressesOptions() {
+            // console.log(moment().format("HH:mm:ss") + " showModalAddressesOptions");
+            this.$bvModal.show('modal-addressesoptions');
           },
           showModalNFTsOptions() {
             // console.log(moment().format("HH:mm:ss") + " showModalNFTsOptions");
