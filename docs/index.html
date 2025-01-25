@@ -168,6 +168,59 @@
           </b-form-group>
         </b-modal>
 
+        <!-- :MODALADDRESSES -->
+        <b-modal id="modal-addresses" hide-footer size="md" body-class="m-0 p-1" body-bg-variant="light">
+          <template #modal-title>
+            Addresses
+          </template>
+          <div class="d-flex flex-wrap m-0 p-0">
+            <div class="mt-0 pr-1" style="max-width: 8.0rem;">
+              <b-form-input type="text" size="sm" v-model.trim="settings.addressesTable.filter" @change="saveSettings" debounce="1200" placeholder="🔍 addr/name"></b-form-input>
+            </div>
+            <div class="mt-0 flex-grow-1">
+            </div>
+            <div class="mt-0 pr-1" style="max-width: 6.0rem;">
+              <b-form-select size="sm" v-model="settings.addressesTable.sortOption" @change="saveSettings" :options="sortOptions"></b-form-select>
+            </div>
+            <div class="mt-0">
+              <b-pagination size="sm" v-model="settings.addressesTable.currentPage" @input="saveSettings" :total-rows="filteredSortedAddresses.length" :per-page="settings.addressesTable.pageSize" style="height: 0;"></b-pagination>
+            </div>
+            <!-- <div class="mt-0 pl-1">
+              <b-form-select size="sm" v-model="settings.addressesTable.pageSize" @change="saveSettings" :options="pageSizes"></b-form-select>
+            </div> -->
+          </div>
+          <b-table small fixed striped responsive hover :fields="addressesFields" :items="pagedFilteredSortedAddresses" show-empty empty-html="Press Escape. Then scan your Burner.pro NFC card to begin" head-variant="light" class="mx-0 my-0 mt-1">
+            <!-- <template #cell(select)="data">
+              <b-form-checkbox size="sm" :checked="settings.selectedCard == data.item.cardId" @change="updateSelectedCard(data.item.cardId)">
+              </b-form-checkbox>
+            </template> -->
+            <!-- <template #cell(name)="data">
+              <b-form-input type="text" size="sm" v-model.trim="data.item.name" @change="updateName(data.item.cardId, $event)" debounce="1200" placeholder="name"></b-form-input>
+            </template> -->
+            <!-- <template #cell(address)="data">
+              <div v-if="data.item.initialised">
+                <b-link @click="showModalAddress(data.item.address)" target="_blank">
+                  <font size="-1">{{ nameOrShortAddress(data.item.address) }}</font>
+                </b-link>
+                <b-button size="sm" @click="copyToClipboard(data.item.address);" variant="outline">
+                  <b-icon-clipboard shift-v="+2" font-scale="0.9" variant="primary"></b-icon-clipboard>
+                </b-button>
+              </div>
+              <div v-else>
+                <font size="-1">(Uninitialised)</font>
+              </div>
+            </template> -->
+            <!-- <template #cell(card)="data">
+              <b-button size="sm" @click="showModalCard(data.item.cardId, data.item.name);" variant="outline">
+                <b-iconstack font-scale="1">
+                  <b-icon stacked icon="lock" shift-h="0" shift-v="0" variant="primary" scale="0.6"></b-icon>
+                  <b-icon stacked icon="file" variant="primary" scale="1.0"></b-icon>
+                </b-iconstack>
+              </b-button>
+            </template> -->
+          </b-table>
+        </b-modal>
+
         <!-- :MODALCONFIG -->
         <b-modal id="modal-config" hide-footer size="md" body-class="m-0 p-1" body-bg-variant="light">
           <template #modal-title>
@@ -393,6 +446,11 @@
                   <b-icon stacked icon="lock" shift-h="-1" shift-v="-1" variant="primary" scale="0.6"></b-icon>
                   <b-icon stacked icon="files" variant="primary" scale="1.0"></b-icon>
                 </b-iconstack>
+              </b-button>
+            </div>
+            <div class="mt-0">
+              <b-button size="sm" @click="showModalAddresses();" variant="outline">
+                <b-icon-card-list shift-v="+1" font-scale="1.0" variant="primary"></b-icon-card-list>
               </b-button>
             </div>
             <div class="mt-0 flex-grow-1">
@@ -813,6 +871,13 @@
               pageSize: 10,
               sortOption: 'nameasc',
             },
+            addressesTable: {
+              filter: null,
+              addressType: null,
+              currentPage: 1,
+              pageSize: 10,
+              sortOption: 'nameasc',
+            },
             nftsTable: {
               filter: null,
               currentPage: 1,
@@ -825,7 +890,7 @@
               pageSize: 10,
               sortOption: 'nameasc',
             },
-            version: 5,
+            version: 6,
           },
 
           // TODO: Rename to modalCard, add card functions to this dialog including set graffiti, delete from db and card status (duplicated, duplicate)
@@ -962,6 +1027,13 @@
             { key: 'card', label: 'Card', sortable: false, thStyle: 'width: 15%;', thClass: 'text-left', tdClass: 'text-left' },
           ],
 
+          addressesFields: [
+            { key: 'select', label: '', sortable: false, thStyle: 'width: 10%;', tdClass: 'text-truncate' },
+            { key: 'address', label: 'Address', sortable: false, thStyle: 'width: 45%;', tdClass: 'text-truncate' },
+            { key: 'name', label: 'Name', sortable: false, thStyle: 'width: 30%;', tdClass: 'text-truncate' },
+            // { key: 'card', label: 'Card', sortable: false, thStyle: 'width: 15%;', thClass: 'text-left', tdClass: 'text-left' },
+          ],
+
           slotsFields: [
             { key: 'slot', label: 'Slot', sortable: false, thStyle: 'width: 20%;', thClass: 'text-left', tdClass: 'text-left' },
             { key: 'address', label: 'Address', sortable: false, thStyle: 'width: 55%;', thClass: 'text-left', tdClass: 'text-left' },
@@ -1065,6 +1137,50 @@
                 return ('' + addressB).localeCompare(addressA);
               });
             }
+            return results;
+          },
+
+          filteredSortedAddresses() {
+            console.log(moment().format("HH:mm:ss") + " filteredSortedAddresses - this.settings.addresses: " + JSON.stringify(this.settings.addresses, null, 2));
+            const results = [];
+            for (const [address, addressData] of Object.entries(this.settings.addresses)) {
+              // const address = cardData.initialised ? cardData.slots[cardData.selectedSlot].address : "Uninitialised";
+              results.push( { address, ...addressData } );
+            }
+            // if (this.settings.cardsTable.sortOption == 'addressasc') {
+            //   results.sort((a, b) => {
+            //     const addressA = a.initialised ? a.slots[a.selectedSlot].address : "Uninitialised";
+            //     const addressB = b.initialised ? b.slots[b.selectedSlot].address : "Uninitialised";
+            //     return ('' + addressA).localeCompare(addressB);
+            //   });
+            // } else if (this.settings.cardsTable.sortOption == 'addressdsc') {
+            //   results.sort((a, b) => {
+            //     const addressA = a.initialised ? a.slots[a.selectedSlot].address : "Uninitialised";
+            //     const addressB = b.initialised ? b.slots[b.selectedSlot].address : "Uninitialised";
+            //     return ('' + addressB).localeCompare(addressA);
+            //   });
+            // } else if (this.settings.cardsTable.sortOption == 'nameasc') {
+            //   results.sort((a, b) => {
+            //     const addressA = a.initialised ? a.slots[a.selectedSlot].address : "Uninitialised";
+            //     const addressB = b.initialised ? b.slots[b.selectedSlot].address : "Uninitialised";
+            //     const nameA = a.initialised ? a.name || addressA.substring(0, 10) : "Uninitialised";
+            //     const nameB = b.initialised ? b.name || addressB.substring(0, 10) : "Uninitialised";
+            //     return ('' + addressA).localeCompare(addressB);
+            //   });
+            // } else if (this.settings.cardsTable.sortOption == 'namedsc') {
+            //   results.sort((a, b) => {
+            //     const addressA = a.initialised ? a.slots[a.selectedSlot].address : "Uninitialised";
+            //     const addressB = b.initialised ? b.slots[b.selectedSlot].address : "Uninitialised";
+            //     const nameA = a.initialised ? a.name || addressA.substring(0, 10) : "Uninitialised";
+            //     const nameB = b.initialised ? b.name || addressB.substring(0, 10) : "Uninitialised";
+            //     return ('' + addressB).localeCompare(addressA);
+            //   });
+            // }
+            return results;
+          },
+          pagedFilteredSortedAddresses() {
+            const results = this.filteredSortedAddresses.slice((this.settings.addressesTable.currentPage - 1) * this.settings.addressesTable.pageSize, this.settings.addressesTable.currentPage * this.settings.addressesTable.pageSize);
+            console.log(moment().format("HH:mm:ss") + " pagedFilteredSortedAddresses - results: " + JSON.stringify(results, null, 2));
             return results;
           },
 
@@ -1333,6 +1449,9 @@
           },
           showModalCards() {
             this.$bvModal.show('modal-cards');
+          },
+          showModalAddresses() {
+            this.$bvModal.show('modal-addresses');
           },
           showModalCard(cardId, name) {
             console.log(moment().format("HH:mm:ss") + " showModalCard - cardId: " + cardId + ", name: " + name);
