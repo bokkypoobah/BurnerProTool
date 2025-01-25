@@ -180,7 +180,12 @@
             <b-nav-form>
               <b-pagination size="sm" v-model="settings.addressesTable.currentPage" @input="saveSettings" :total-rows="filteredSortedAddresses.length" :per-page="settings.addressesTable.pageSize" limit="3" class="m-0 p-0 ml-md-1"></b-pagination>
             </b-nav-form>
-            <b-navbar-toggle target="modaladdresses-nav-collapse" class="m-0 p-0"></b-navbar-toggle>
+            <b-navbar-toggle target="modaladdresses-nav-collapse" class="m-0 p-0 border-0" style="outline: none;">
+              <template #default="{ expanded }">
+                <b-icon v-if="expanded" icon="three-dots-vertical" variant="primary"></b-icon>
+                <b-icon v-else icon="three-dots-vertical" variant="primary"></b-icon>
+              </template>
+            </b-navbar-toggle>
             <b-collapse id="modaladdresses-nav-collapse" is-nav>
               <b-navbar-nav small class="ml-auto">
                 <b-nav-form>
@@ -538,7 +543,12 @@
                 <b-nav-form>
                   <b-pagination size="sm" v-model="settings.nftsTable.currentPage" @input="saveSettings" :total-rows="filteredSortedNFTs.length" :per-page="settings.nftsTable.pageSize" limit="3" class="m-0 p-0 ml-md-1"></b-pagination>
                 </b-nav-form>
-                <b-navbar-toggle target="nfts-nav-collapse" class="m-0 p-0"></b-navbar-toggle>
+                <b-navbar-toggle target="nfts-nav-collapse" class="m-0 p-0 border-0" style="outline: none;">
+                  <template #default="{ expanded }">
+                    <b-icon v-if="expanded" icon="three-dots-vertical" variant="primary"></b-icon>
+                    <b-icon v-else icon="three-dots-vertical" variant="primary"></b-icon>
+                  </template>
+                </b-navbar-toggle>
                 <b-collapse id="nfts-nav-collapse" is-nav>
                   <b-navbar-nav small class="ml-auto">
                     <b-nav-form>
@@ -595,7 +605,12 @@
                 <b-nav-form>
                   <b-pagination size="sm" v-model="settings.txsTable.currentPage" @input="saveSettings" :total-rows="filteredSortedTxs.length" :per-page="settings.txsTable.pageSize" limit="3" class="m-0 p-0 ml-md-1"></b-pagination>
                 </b-nav-form>
-                <b-navbar-toggle target="txs-nav-collapse" class="m-0 p-0"></b-navbar-toggle>
+                <b-navbar-toggle target="txs-nav-collapse" class="m-0 p-0 border-0" style="outline: none;">
+                  <template #default="{ expanded }">
+                    <b-icon v-if="expanded" icon="three-dots-vertical" variant="primary"></b-icon>
+                    <b-icon v-else icon="three-dots-vertical" variant="primary"></b-icon>
+                  </template>
+                </b-navbar-toggle>
                 <b-collapse id="txs-nav-collapse" is-nav>
                   <b-navbar-nav small class="ml-auto">
                     <b-nav-form>
