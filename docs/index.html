@@ -346,19 +346,6 @@
           </div>
         </b-modal>
 
-        <!-- :MODALTXSOPTIONS -->
-        <b-modal id="modal-txsoptions" hide-footer size="md" body-class="m-0 p-1 pt-2" body-bg-variant="light">
-          <template #modal-title>
-            Txs Options
-          </template>
-          <b-form-group label="Sort:" label-for="modaltxs-sort" label-size="sm" label-align="right" label-cols="4" content-cols="8">
-            <b-form-select size="sm" id="modaltxs-sort" v-model="settings.txsTable.sortOption" @change="saveSettings" :options="sortOptions" class="w-50"></b-form-select>
-          </b-form-group>
-          <b-form-group label="Page size:" label-for="modaltxs-pagesize" label-size="sm" label-align="right" label-cols="4" content-cols="8">
-            <b-form-select size="sm" id="modaltxs-pagesize" v-model="settings.txsTable.pageSize" @change="saveSettings" :options="pageSizes" class="w-25"></b-form-select>
-          </b-form-group>
-        </b-modal>
-
         <!-- :MODALADDRESS -->
         <b-modal id="modal-address" hide-footer size="md" body-class="m-0 p-1 pt-2" body-bg-variant="light">
           <template #modal-title>
@@ -596,27 +583,28 @@
             <!-- Txs View -->
             <b-card-body v-if="settings.tabIndex == 1" class="m-0 p-1" body-bg-variant="white">
 
-              <div class="d-flex flex-wrap m-0 p-0">
-                <div class="mt-0 pr-1">
+              <b-navbar toggleable="md" type="light" variant="none" class="m-0 p-0">
+                <b-nav-form>
+                  <b-form-input type="text" size="sm" v-model.trim="settings.nftsTable.filter" @change="saveSettings" debounce="1200" placeholder="🔍 name" style="max-width: 7.0rem;"></b-form-input>
+                </b-nav-form>
+                <b-nav-form>
                   <b-button v-if="activeAddress" size="sm" @click="downloadFromEtherscan(activeAddress);" variant="outline">
                     <b-icon-cloud-download shift-v="+1" font-scale="1" variant="primary"></b-icon-cloud-download>
                   </b-button>
-                </div>
-                <!-- <div class="mt-0 pr-1" style="max-width: 8.0rem;">
-                  <b-form-input type="text" size="sm" v-model.trim="settings.nftsTable.filter" @change="saveSettings" debounce="1200" placeholder="🔍 addr/name"></b-form-input>
-                </div> -->
-                <div class="mt-0 flex-grow-1">
-                </div>
-                <div class="mt-0">
-                  <b-pagination size="sm" v-model="settings.txsTable.currentPage" @input="saveSettings" :total-rows="filteredSortedTxs.length" :per-page="settings.txsTable.pageSize" style="height: 0;"></b-pagination>
-                </div>
-                <div class="mt-0 pl-1">
-                  <b-button size="sm" @click="showModalTxsOptions();" variant="outline" class="m-0 p-0">
-                    <b-icon-three-dots-vertical font-scale="1" variant="primary"></b-icon-three-dots-vertical>
-                  </b-button>
-                </div>
-              </div>
-
+                </b-nav-form>
+                <b-nav-form>
+                  <b-pagination size="sm" v-model="settings.txsTable.currentPage" @input="saveSettings" :total-rows="filteredSortedTxs.length" :per-page="settings.txsTable.pageSize" limit="3" class="m-0 p-0 ml-md-1"></b-pagination>
+                </b-nav-form>
+                <b-navbar-toggle target="txs-nav-collapse" class="m-0 p-0"></b-navbar-toggle>
+                <b-collapse id="txs-nav-collapse" is-nav>
+                  <b-navbar-nav small class="ml-auto">
+                    <b-nav-form>
+                      <b-form-select size="sm" id="txsoptions-sort" v-model="settings.txsTable.sortOption" @change="saveSettings" :options="sortOptions" style="max-width: 12.0rem;" class="mx-1 my-1 my-md-0"></b-form-select>
+                      <b-form-select size="sm" id="txsoptions-pagesize" v-model="settings.txsTable.pageSize" @change="saveSettings" :options="pageSizes" style="max-width: 6.0rem;" class="mx-1 my-1 my-md-0"></b-form-select>
+                    </b-nav-form>
+                  </b-navbar-nav>
+                </b-collapse>
+              </b-navbar>
               <b-card-group deck class="m-1 ml-0 p-0">
                 <div v-for="(item, index) of pagedFilteredSortedTxs" v-bind:key="index">
                   <b-card no-body class="m-1 p-0 border-0">
@@ -1362,10 +1350,6 @@
             this.modalNFT.item = item;
             this.$bvModal.show('modal-nft');
             await this.modalNFTRetrieveParameters();
-          },
-          showModalTxsOptions() {
-            // console.log(moment().format("HH:mm:ss") + " showModalTxsOptions");
-            this.$bvModal.show('modal-txsoptions');
           },
           showModalAddress(address) {
             // console.log(moment().format("HH:mm:ss") + " showModalAddress: " + address);
