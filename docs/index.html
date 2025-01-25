@@ -539,6 +539,7 @@
                   <font size="-1">{{ nameOrShortAddress(activeAddress) }}</font>
                 </b-link>
                 <b-dropdown size="sm" text="" variant="link" class="m-0 p-0">
+                  <b-dropdown-text>{{ activeAddress.substring(0, 10) + '...' + activeAddress.slice(-8) }}</b-dropdown-text>
                   <b-dropdown-item @click="copyToClipboard(activeAddress);">Copy to clipboard</b-dropdown-item>
                   <b-dropdown-item :href="'https://etherscan.io/address/' + activeAddress" target="_blank">View in Etherscan.io</b-dropdown-item>
                   <b-dropdown-item :href="'https://opensea.io/' + activeAddress" target="_blank">View in OpenSea.io</b-dropdown-item>
