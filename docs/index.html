@@ -169,7 +169,7 @@
         </b-modal>
 
         <!-- :MODALADDRESSES -->
-        <b-modal visible id="modal-addresses" hide-footer size="lg" body-class="m-0 p-1" body-bg-variant="light">
+        <b-modal id="modal-addresses" hide-footer size="lg" body-class="m-0 p-1" body-bg-variant="light">
           <template #modal-title>
             Addresses
           </template>
@@ -344,19 +344,6 @@
               <b-button size="sm" :disabled="!modalNFT.to || (modalNFT.item && modalNFT.item.type == 'erc1155' && modalNFT.tokens == 0)" @click="modalNFTTransfer()" variant="warning">Scan NFC & Transfer</b-button>
             </b-form-group>
           </div>
-        </b-modal>
-
-        <!-- :MODALNFTSOPTIONS -->
-        <b-modal id="modal-nftsoptions" hide-footer size="md" body-class="m-0 p-1 pt-2" body-bg-variant="light">
-          <template #modal-title>
-            NFTs Options
-          </template>
-          <b-form-group label="Sort:" label-for="modalnfts-sort" label-size="sm" label-align="right" label-cols="4" content-cols="8">
-            <b-form-select size="sm" id="modalnfts-sort" v-model="settings.nftsTable.sortOption" @change="saveSettings" :options="sortOptions" class="w-50"></b-form-select>
-          </b-form-group>
-          <b-form-group label="Page size:" label-for="modalnfts-pagesize" label-size="sm" label-align="right" label-cols="4" content-cols="8">
-            <b-form-select size="sm" id="modalnfts-pagesize" v-model="settings.nftsTable.pageSize" @change="saveSettings" :options="pageSizes" class="w-25"></b-form-select>
-          </b-form-group>
         </b-modal>
 
         <!-- :MODALTXSOPTIONS -->
@@ -552,26 +539,28 @@
 
             <!-- NFTs View -->
             <b-card-body v-if="settings.tabIndex == 0" class="m-0 p-1" body-bg-variant="white">
-              <div class="d-flex flex-wrap m-0 p-0">
-                <div class="mt-0 pr-1">
+              <b-navbar toggleable="md" type="light" variant="none" class="m-0 p-0">
+                <b-nav-form>
+                  <b-form-input type="text" size="sm" v-model.trim="settings.nftsTable.filter" @change="saveSettings" debounce="1200" placeholder="🔍 name" style="max-width: 7.0rem;"></b-form-input>
+                </b-nav-form>
+                <b-nav-form>
                   <b-button v-if="activeAddress" size="sm" @click="downloadFromReservoir(activeAddress);" variant="outline">
                     <b-icon-cloud-download shift-v="+1" font-scale="1" variant="primary"></b-icon-cloud-download>
                   </b-button>
-                </div>
-                <!-- <div class="mt-0 pr-1" style="max-width: 8.0rem;">
-                  <b-form-input type="text" size="sm" v-model.trim="settings.nftsTable.filter" @change="saveSettings" debounce="1200" placeholder="🔍 addr/name"></b-form-input>
-                </div> -->
-                <div class="mt-0 flex-grow-1">
-                </div>
-                <div class="mt-0">
-                  <b-pagination size="sm" v-model="settings.nftsTable.currentPage" @input="saveSettings" :total-rows="filteredSortedNFTs.length" :per-page="settings.nftsTable.pageSize" style="height: 0;"></b-pagination>
-                </div>
-                <div class="mt-0 pl-1">
-                  <b-button size="sm" @click="showModalNFTsOptions();" variant="outline" class="m-0 p-0">
-                    <b-icon-three-dots-vertical font-scale="1" variant="primary"></b-icon-three-dots-vertical>
-                  </b-button>
-                </div>
-              </div>
+                </b-nav-form>
+                <b-nav-form>
+                  <b-pagination size="sm" v-model="settings.nftsTable.currentPage" @input="saveSettings" :total-rows="filteredSortedNFTs.length" :per-page="settings.nftsTable.pageSize" limit="3" class="m-0 p-0 ml-md-1"></b-pagination>
+                </b-nav-form>
+                <b-navbar-toggle target="nfts-nav-collapse" class="m-0 p-0"></b-navbar-toggle>
+                <b-collapse id="nfts-nav-collapse" is-nav>
+                  <b-navbar-nav small class="ml-auto">
+                    <b-nav-form>
+                      <b-form-select size="sm" id="nftsoptions-sort" v-model="settings.nftsTable.sortOption" @change="saveSettings" :options="sortOptions" style="max-width: 12.0rem;" class="mx-1 my-1 my-md-0"></b-form-select>
+                      <b-form-select size="sm" id="nftsoptions-pagesize" v-model="settings.nftsTable.pageSize" @change="saveSettings" :options="pageSizes" style="max-width: 6.0rem;" class="mx-1 my-1 my-md-0"></b-form-select>
+                    </b-nav-form>
+                  </b-navbar-nav>
+                </b-collapse>
+              </b-navbar>
               <b-card-group deck class="m-1 ml-0 p-0">
                 <div v-for="(item, index) of pagedFilteredSortedNFTs" v-bind:key="index">
                   <b-card no-body header-class="p-1" img-top class="m-1 p-0 border-0">
@@ -1373,10 +1362,6 @@
             this.modalNFT.item = item;
             this.$bvModal.show('modal-nft');
             await this.modalNFTRetrieveParameters();
-          },
-          showModalNFTsOptions() {
-            // console.log(moment().format("HH:mm:ss") + " showModalNFTsOptions");
-            this.$bvModal.show('modal-nftsoptions');
           },
           showModalTxsOptions() {
             // console.log(moment().format("HH:mm:ss") + " showModalTxsOptions");
