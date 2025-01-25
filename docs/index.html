@@ -91,7 +91,7 @@
               </b-navbar-nav>
             </b-collapse>
           </b-navbar>
-          <b-table small fixed striped responsive hover :fields="cardsFields" :items="filteredSortedCards" show-empty empty-html="Press Escape. Then scan your Burner.pro NFC card to begin" head-variant="light" class="mx-0 my-0 mt-1">
+          <b-table small fixed striped responsive hover :fields="cardsFields" :items="pagedFilteredSortedCards" show-empty empty-html="Press Escape. Then scan your Burner.pro NFC card to begin" head-variant="light" class="mx-0 my-0 mt-1">
             <template #cell(select)="data">
               <b-form-checkbox size="sm" :checked="settings.selectedCard == data.item.cardId" @change="updateSelectedCard(data.item.cardId)">
               </b-form-checkbox>
@@ -1174,9 +1174,24 @@
 
           filteredSortedCards() {
             const results = [];
+            let regex = null;
+            if (this.settings.cardsTable.filter != null && this.settings.cardsTable.filter.length > 0) {
+              try {
+                regex = new RegExp(this.settings.cardsTable.filter, 'i');
+              } catch (e) {
+                console.log(moment().format("HH:mm:ss") + " filteredSortedCards - regex error: " + e.message);
+                regex = new RegExp(/thequickbrowndogjumpsoverthelazyfox/, 'i');
+              }
+            }
             for (const [cardId, cardData] of Object.entries(this.settings.cards)) {
+              let include = true;
               const address = cardData.initialised ? cardData.slots[cardData.selectedSlot].address : "Uninitialised";
-              results.push( { cardId, ...cardData, address } );
+              if (regex && !regex.test(address) && !regex.test(cardData.name)) {
+                include = false;
+              }
+              if (include) {
+                results.push( { cardId, ...cardData, address } );
+              }
             }
             if (this.settings.cardsTable.sortOption == 'addressasc') {
               results.sort((a, b) => {
@@ -1196,7 +1211,7 @@
                 const addressB = b.initialised ? b.slots[b.selectedSlot].address : "Uninitialised";
                 const nameA = a.initialised ? a.name || addressA.substring(0, 10) : "Uninitialised";
                 const nameB = b.initialised ? b.name || addressB.substring(0, 10) : "Uninitialised";
-                return ('' + addressA).localeCompare(addressB);
+                return ('' + nameA).localeCompare(nameB);
               });
             } else if (this.settings.cardsTable.sortOption == 'namedsc') {
               results.sort((a, b) => {
@@ -1204,15 +1219,29 @@
                 const addressB = b.initialised ? b.slots[b.selectedSlot].address : "Uninitialised";
                 const nameA = a.initialised ? a.name || addressA.substring(0, 10) : "Uninitialised";
                 const nameB = b.initialised ? b.name || addressB.substring(0, 10) : "Uninitialised";
-                return ('' + addressB).localeCompare(addressA);
+                return ('' + nameB).localeCompare(nameA);
               });
             }
+            return results;
+          },
+          pagedFilteredSortedCards() {
+            const results = this.filteredSortedCards.slice((this.settings.cardsTable.currentPage - 1) * this.settings.cardsTable.pageSize, this.settings.cardsTable.currentPage * this.settings.cardsTable.pageSize);
+            console.log(moment().format("HH:mm:ss") + " pagedFilteredSortedCards - results: " + JSON.stringify(results, null, 2));
             return results;
           },
 
           filteredSortedAddresses() {
             console.log(moment().format("HH:mm:ss") + " filteredSortedAddresses - this.settings.addresses: " + JSON.stringify(this.settings.addresses, null, 2));
             const results = [];
+            let regex = null;
+            if (this.settings.addressesTable.filter != null && this.settings.addressesTable.filter.length > 0) {
+              try {
+                regex = new RegExp(this.settings.addressesTable.filter, 'i');
+              } catch (e) {
+                console.log(moment().format("HH:mm:ss") + " filteredSortedAddresses - regex error: " + e.message);
+                regex = new RegExp(/thequickbrowndogjumpsoverthelazyfox/, 'i');
+              }
+            }
             const nfcCardAddresses = {};
             for (const [cardId, cardData] of Object.entries(this.settings.cards)) {
               for (const [slot, slotData] of Object.entries(cardData.slots)) {
@@ -1223,17 +1252,8 @@
             }
             for (const [address, addressData] of Object.entries(this.settings.addresses)) {
               let include = true;
-              if (this.settings.addressesTable.filter != null && this.settings.addressesTable.filter.length > 0) {
-                let regex = null;
-                try {
-                  regex = new RegExp(this.settings.addressesTable.filter, 'i');
-                } catch (e) {
-                  console.log("filteredSortedAddresses - regex error: " + e.message);
-                  regex = new RegExp(/thequickbrowndogjumpsoverthelazyfox/, 'i');
-                }
-                if (!regex.test(address) && !regex.test(addressData.name)) {
-                  include = false;
-                }
+              if (regex && !regex.test(address) && !regex.test(addressData.name)) {
+                include = false;
               }
               let type = addressData.type;
               if (address in nfcCardAddresses) {
