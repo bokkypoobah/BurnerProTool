@@ -219,7 +219,8 @@
                     <b-dropdown-divider></b-dropdown-divider>
                     <b-dropdown-item @click="copyToClipboard(data.item.address);">Copy to clipboard</b-dropdown-item>
                     <b-dropdown-item :href="'https://etherscan.io/address/' + data.item.address" target="_blank">View in Etherscan.io</b-dropdown-item>
-                    <!-- <b-dropdown-item :href="'https://opensea.io/' + data.item.address" target="_blank">View in OpenSea.io</b-dropdown-item> -->
+                    <b-dropdown-item v-if="['nfccard'].includes(data.item.type)" :href="'https://opensea.io/' + data.item.address" target="_blank">View address in OpenSea.io</b-dropdown-item>
+                    <b-dropdown-item v-if="data.item.slug" :href="'https://opensea.io/collection/' + data.item.slug" target="_blank">View collection in OpenSea.io</b-dropdown-item>
                     <!-- <b-dropdown-item :href="'https://blur.io/' + data.item.address" target="_blank">View in Blur.io</b-dropdown-item> -->
                   </b-dropdown>
                   <font size="-1">{{ nameOrShortAddress(data.item.address) }}</font>
