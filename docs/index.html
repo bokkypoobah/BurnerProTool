@@ -63,22 +63,35 @@
           <template #modal-title>
             Cards
           </template>
-          <div class="d-flex flex-wrap m-0 p-0">
-            <div class="mt-0 pr-1" style="max-width: 8.0rem;">
-              <b-form-input type="text" size="sm" v-model.trim="settings.cardsTable.filter" @change="saveSettings" debounce="1200" placeholder="🔍 addr/name"></b-form-input>
-            </div>
-            <div class="mt-0 flex-grow-1">
-            </div>
-            <div class="mt-0 pr-1" style="max-width: 6.0rem;">
-              <b-form-select size="sm" v-model="settings.cardsTable.sortOption" @change="saveSettings" :options="sortOptions"></b-form-select>
-            </div>
-            <div class="mt-0">
-              <b-pagination size="sm" v-model="settings.cardsTable.currentPage" @input="saveSettings" :total-rows="filteredSortedCards.length" :per-page="settings.cardsTable.pageSize" style="height: 0;"></b-pagination>
-            </div>
-            <!-- <div class="mt-0 pl-1">
-              <b-form-select size="sm" v-model="settings.cardsTable.pageSize" @change="saveSettings" :options="pageSizes"></b-form-select>
-            </div> -->
-          </div>
+
+          <b-navbar toggleable="md" type="light" variant="light" class="m-0 p-0">
+            <b-nav-form>
+              <b-form-input type="text" size="sm" v-model.trim="settings.cardsTable.filter" @change="saveSettings" debounce="1200" placeholder="🔍 addr/name" style="max-width: 7.0rem;"></b-form-input>
+            </b-nav-form>
+            <b-nav-form>
+              <b-pagination size="sm" v-model="settings.cardsTable.currentPage" @input="saveSettings" :total-rows="filteredSortedCards.length" :per-page="settings.cardsTable.pageSize" limit="3" class="m-0 p-0 ml-md-1"></b-pagination>
+            </b-nav-form>
+            <b-navbar-toggle target="modalcards-nav-collapse" class="m-0 p-0 border-0" style="outline: none;">
+              <template #default="{ expanded }">
+                <b-icon v-if="expanded" icon="three-dots-vertical" variant="primary"></b-icon>
+                <b-icon v-else icon="three-dots-vertical" variant="primary"></b-icon>
+              </template>
+            </b-navbar-toggle>
+            <b-collapse id="modalcards-nav-collapse" is-nav>
+              <b-navbar-nav small class="ml-auto">
+                <b-nav-form>
+                  <div class="d-flex mt-1 mt-md-0">
+                    <div class="m-0 p-0">
+                      <b-form-select size="sm" v-model="settings.cardsTable.sortOption" @change="saveSettings" :options="sortOptions" style="max-width: 12.0rem;"></b-form-select>
+                    </div>
+                    <div class="m-0 ml-1 p-0">
+                      <b-form-select size="sm" v-model="settings.cardsTable.pageSize" @change="saveSettings" :options="pageSizes" style="max-width: 6.0rem;"></b-form-select>
+                    </div>
+                  </div>
+                </b-nav-form>
+              </b-navbar-nav>
+            </b-collapse>
+          </b-navbar>
           <b-table small fixed striped responsive hover :fields="cardsFields" :items="filteredSortedCards" show-empty empty-html="Press Escape. Then scan your Burner.pro NFC card to begin" head-variant="light" class="mx-0 my-0 mt-1">
             <template #cell(select)="data">
               <b-form-checkbox size="sm" :checked="settings.selectedCard == data.item.cardId" @change="updateSelectedCard(data.item.cardId)">
