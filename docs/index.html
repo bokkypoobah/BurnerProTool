@@ -169,7 +169,7 @@
         </b-modal>
 
         <!-- :MODALADDRESSES -->
-        <b-modal visible id="modal-addresses" hide-footer size="md" body-class="m-0 p-1" body-bg-variant="light">
+        <b-modal visible id="modal-addresses" hide-footer size="lg" body-class="m-0 p-1" body-bg-variant="light">
           <template #modal-title>
             Addresses
           </template>
@@ -184,7 +184,7 @@
             <b-collapse id="modaladdresses-nav-collapse" is-nav>
               <b-navbar-nav small class="ml-auto">
                 <b-nav-form>
-                  <b-form-select size="sm" id="modaladdressesoptions-sort" v-model="settings.addressesTable.sortOption" @change="saveSettings" :options="sortOptions" style="max-width: 12.0rem;" class="mx-1 mt-1 my-md-0"></b-form-select>
+                  <b-form-select size="sm" id="modaladdressesoptions-sort" v-model="settings.addressesTable.sortOption" @change="saveSettings" :options="sortOptions" style="max-width: 12.0rem;" class="mx-1 my-1 my-md-0"></b-form-select>
                   <b-form-select size="sm" id="modaladdressesoptions-pagesize" v-model="settings.addressesTable.pageSize" @change="saveSettings" :options="pageSizes" style="max-width: 6.0rem;" class="mx-1 my-1 my-md-0"></b-form-select>
                 </b-nav-form>
               </b-navbar-nav>
