@@ -571,15 +571,23 @@
               </span>
               <div class="mt-0 flex-grow-1">
               </div>
-              <b-tabs small v-model="settings.tabIndex" @input="saveSettings" align="right" class="text-right" content-class="m-0 p-0" >
+              <b-tabs small v-model="settings.tabIndex" @input="saveSettings" align="right" class="text-right" content-class="m-0 p-0">
+                <b-tab title="Tokens" no-body></b-tab>
                 <b-tab title="NFTs" no-body></b-tab>
                 <b-tab title="Txs" no-body></b-tab>
-                <b-tab title="Card" no-body></b-tab>
+                <!-- <b-tab title="Tokens" no-body title-item-class="mx-0 px-1" title-link-class="mx-0 px-1"></b-tab>
+                <b-tab title="NFTs" no-body title-item-class="mx-0 px-1" title-link-class="mx-0 px-1"></b-tab>
+                <b-tab title="Txs" no-body title-item-class="mx-0 px-1" title-link-class="mx-0 px-1"></b-tab>
+                <b-tab title="Card" no-body title-item-class="mx-0 px-1" title-link-class="mx-0 px-1"></b-tab> -->
               </b-tabs>
             </div>
 
             <!-- NFTs View -->
             <b-card-body v-if="settings.tabIndex == 0" class="m-0 p-1" body-bg-variant="white">
+            </b-card-body>
+
+            <!-- NFTs View -->
+            <b-card-body v-if="settings.tabIndex == 1" class="m-0 p-1" body-bg-variant="white">
               <b-navbar toggleable="md" type="light" variant="none" class="m-0 p-0">
                 <b-nav-form>
                   <b-form-input type="text" size="sm" v-model.trim="settings.nftsTable.filter" @change="saveSettings" debounce="1200" placeholder="🔍 name" style="max-width: 7.0rem;"></b-form-input>
@@ -645,8 +653,7 @@
             </b-card-body>
 
             <!-- Txs View -->
-            <b-card-body v-if="settings.tabIndex == 1" class="m-0 p-1" body-bg-variant="white">
-
+            <b-card-body v-if="settings.tabIndex == 2" class="m-0 p-1" body-bg-variant="white">
               <b-navbar toggleable="md" type="light" variant="none" class="m-0 p-0">
                 <b-nav-form>
                   <b-form-input type="text" size="sm" v-model.trim="settings.nftsTable.filter" @change="saveSettings" debounce="1200" placeholder="🔍 name" style="max-width: 7.0rem;"></b-form-input>
@@ -752,7 +759,7 @@
             </b-card-body>
 
             <!-- Card View --->
-            <b-card-body v-if="settings.tabIndex == 2" class="m-0 p-1" body-bg-variant="white">
+            <b-card-body v-if="settings.tabIndex == 3" class="m-0 p-1" body-bg-variant="white">
               <b-form-group label="Name:" label-for="card-name" class="mt-2">
                 <b-input-group>
                   <b-form-input readonly id="card-name" :value="activeCardName"></b-form-input>
@@ -933,6 +940,12 @@
               pageSize: 10,
               sortOption: 'nameasc',
             },
+            tokensTable: {
+              filter: null,
+              currentPage: 1,
+              pageSize: 10,
+              sortOption: 'nameasc',
+            },
             nftsTable: {
               filter: null,
               currentPage: 1,
@@ -945,7 +958,7 @@
               pageSize: 10,
               sortOption: 'nameasc',
             },
-            version: 6,
+            version: 7,
           },
 
           // TODO: Rename to modalCard, add card functions to this dialog including set graffiti, delete from db and card status (duplicated, duplicate)
@@ -1154,7 +1167,7 @@
           cardsOptions() {
             const results = [];
             if (Object.keys(this.settings.cards) == 0) {
-              results.push({ value: null, text: "(Scan NFC card to begin)" });
+              results.push({ value: null, text: "(Scan NFC to begin)" });
             }
             for (const [cardId, cardData] of Object.entries(this.settings.cards)) {
               const address = cardData.initialised ? cardData.slots[cardData.selectedSlot].address : "(Uninitialised)";
