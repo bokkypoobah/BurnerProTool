@@ -1243,12 +1243,12 @@
           },
           pagedFilteredSortedCards() {
             const results = this.filteredSortedCards.slice((this.settings.cardsTable.currentPage - 1) * this.settings.cardsTable.pageSize, this.settings.cardsTable.currentPage * this.settings.cardsTable.pageSize);
-            console.log(moment().format("HH:mm:ss") + " pagedFilteredSortedCards - results: " + JSON.stringify(results, null, 2));
+            // console.log(moment().format("HH:mm:ss") + " pagedFilteredSortedCards - results: " + JSON.stringify(results, null, 2));
             return results;
           },
 
           filteredSortedAddresses() {
-            console.log(moment().format("HH:mm:ss") + " filteredSortedAddresses - this.settings.addresses: " + JSON.stringify(this.settings.addresses, null, 2));
+            // console.log(moment().format("HH:mm:ss") + " filteredSortedAddresses - this.settings.addresses: " + JSON.stringify(this.settings.addresses, null, 2));
             const results = [];
             let regex = null;
             if (this.settings.addressesTable.filter != null && this.settings.addressesTable.filter.length > 0) {
@@ -1308,7 +1308,7 @@
           },
           pagedFilteredSortedAddresses() {
             const results = this.filteredSortedAddresses.slice((this.settings.addressesTable.currentPage - 1) * this.settings.addressesTable.pageSize, this.settings.addressesTable.currentPage * this.settings.addressesTable.pageSize);
-            console.log(moment().format("HH:mm:ss") + " pagedFilteredSortedAddresses - results: " + JSON.stringify(results, null, 2));
+            // console.log(moment().format("HH:mm:ss") + " pagedFilteredSortedAddresses - results: " + JSON.stringify(results, null, 2));
             return results;
           },
 
@@ -1426,11 +1426,12 @@
           },
 
           tokens() {
+            console.log(moment().format("HH:mm:ss") + " tokens - this.activeAddress: " + this.activeAddress);
             const results = [];
             for (const [chainId, chainData] of Object.entries(this.activeAddress && this.etherscanData[this.activeAddress] || {})) {
-              // console.log(chainId + " => " + JSON.stringify(chainData).substring(0, 200));
+              console.log(chainId + " => " + JSON.stringify(chainData).substring(0, 200));
               for (const [txHash, txData] of Object.entries(chainData)) {
-                // console.log(chainId + "/" + txHash.substring(0, 20) + " => " + JSON.stringify(txData).substring(0, 200));
+                console.log(chainId + "/" + txHash.substring(0, 20) + " => " + JSON.stringify(txData).substring(0, 200));
                 const info = inferTxInfo(txData);
                 results.push({
                   ...info,
@@ -2802,7 +2803,7 @@
           },
 
           saveSettings() {
-            console.log(moment().format("HH:mm:ss") + " saveSettings: " + JSON.stringify(this.settings, null, 2));
+            // console.log(moment().format("HH:mm:ss") + " saveSettings: " + JSON.stringify(this.settings, null, 2));
             localStorage.burnerProToolSettings = JSON.stringify(this.settings);
           },
           async processNewBlock(blockNumber) {
