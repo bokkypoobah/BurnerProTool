@@ -60,3 +60,41 @@ function inferTxInfo(tx) {
   // console.log(moment().format("HH:mm:ss") + " inferTxInfo - result: " + JSON.stringify(result, null, 2).substring(0, 2000));
   return result;
 }
+
+function getTxFlows(chainId, txHash, tx, address) {
+  const results = [];
+  if (tx.tx && tx.tx.value && tx.tx.value > 0) {
+    console.log(moment().format("HH:mm:ss") + " getTxFlows - tx: " + JSON.stringify(tx, null, 2).substring(0, 2000));
+    results.push({
+      chainId,
+      txHash,
+      blockNumber: tx.blockNumber,
+      timestamp: tx.timestamp,
+      type: "value",
+      from: tx.tx && tx.tx.from || null,
+      to: tx.tx && tx.tx.to || null,
+      token: null,
+      tokens: tx.tx.value,
+    });
+  }
+  if (tx.internal.length > 0) {
+    console.log(moment().format("HH:mm:ss") + " getTxFlows - tx: " + JSON.stringify(tx, null, 2).substring(0, 2000));
+    for (const i of tx.internal) {
+      results.push({
+        chainId,
+        txHash,
+        blockNumber: tx.blockNumber,
+        timestamp: tx.timestamp,
+        type: "internal",
+        from: i.from,
+        to: i.to,
+        token: null,
+        tokens: i.value
+      });
+    }
+  }
+  if (results.length > 0) {
+    console.log(moment().format("HH:mm:ss") + " getTxFlows - results: " + JSON.stringify(results, null, 2).substring(0, 2000));
+  }
+  return results;
+}
