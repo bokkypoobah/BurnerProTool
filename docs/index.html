@@ -1443,6 +1443,48 @@
                 return a.blockNumber - b.blockNumber;
               }
             });
+            const collator = {};
+            for (const txFlow of txFlows) {
+              if (!(txFlow.chainId in collator)) {
+                collator[txFlow.chainId] = {};
+              }
+              if (txFlow.from == this.activeAddress || txFlow.to == this.activeAddress) {
+                if (txFlow.type == "value" || txFlow.type == "internal" || txFlow.type == "gas") {
+                  if (!("eth" in collator[txFlow.chainId])) {
+                    collator[txFlow.chainId]["eth"] = {
+                      balance: 0,
+                      flows: [],
+                    };
+                  }
+                  if (txFlow.from == this.activeAddress) {
+                    collator[txFlow.chainId]["eth"].balance = ethers.BigNumber.from(collator[txFlow.chainId]["eth"].balance).sub(txFlow.tokens).toString();
+                    collator[txFlow.chainId]["eth"].flows.push({ tokens: ethers.BigNumber.from("0").sub(txFlow.tokens).toString(), timestamp: txFlow.timestamp, txHash: txFlow.txHash });
+                  }
+                  if (txFlow.to == this.activeAddress) {
+                    collator[txFlow.chainId]["eth"].balance = ethers.BigNumber.from(collator[txFlow.chainId]["eth"].balance).add(txFlow.tokens).toString();
+                    collator[txFlow.chainId]["eth"].flows.push({ tokens: ethers.BigNumber.from(txFlow.tokens).toString(), timestamp: txFlow.timestamp, txHash: txFlow.txHash });
+                  }
+                  console.log(JSON.stringify(txFlow));
+                } else if (txFlow.type == "erc20") {
+                  if (!(txFlow.token in collator[txFlow.chainId])) {
+                    collator[txFlow.chainId][txFlow.token] = {
+                      balance: "0",
+                      flows: [],
+                    };
+                  }
+                  if (txFlow.from == this.activeAddress) {
+                    collator[txFlow.chainId][txFlow.token].balance = ethers.BigNumber.from(collator[txFlow.chainId][txFlow.token].balance).sub(txFlow.tokens).toString();
+                    collator[txFlow.chainId][txFlow.token].flows.push({ tokens: ethers.BigNumber.from("0").sub(txFlow.tokens).toString(), timestamp: txFlow.timestamp, txHash: txFlow.txHash });
+                  }
+                  if (txFlow.to == this.activeAddress) {
+                    collator[txFlow.chainId][txFlow.token].balance = ethers.BigNumber.from(collator[txFlow.chainId][txFlow.token].balance).add(txFlow.tokens).toString();
+                    collator[txFlow.chainId][txFlow.token].flows.push({ tokens: ethers.BigNumber.from(txFlow.tokens).toString(), timestamp: txFlow.timestamp, txHash: txFlow.txHash });
+                  }
+                  console.log(JSON.stringify(txFlow));
+                }
+              }
+            }
+            console.log("collator: " + JSON.stringify(collator, null, 2));
             return txFlows;
           },
           filteredSortedTokens() {

@@ -63,8 +63,25 @@ function inferTxInfo(tx) {
 
 function getTxFlows(chainId, txHash, tx, address) {
   const results = [];
+  if (tx.tx && tx.tx.from == address) {
+    console.log(moment().format("HH:mm:ss") + " getTxFlows - txHash: " + txHash + ", tx: " + JSON.stringify(tx, null, 2).substring(0, 200));
+    const gasUsed = tx.tx.gasUsed || null;
+    const gasPrice = tx.tx.gasPrice || null;
+    const gas = ethers.BigNumber.from(gasUsed).mul(gasPrice).toString()
+    console.log("gasUsed: " + gasUsed + ", gasPrice: " + gasPrice + ", gas: " + gas);
+    results.push({
+      chainId,
+      txHash,
+      blockNumber: tx.blockNumber,
+      timestamp: tx.timestamp,
+      type: "gas",
+      from: tx.tx && tx.tx.from || null,
+      to: null,
+      token: null,
+      tokens: gas,
+    });
+  }
   if (tx.tx && tx.tx.value && tx.tx.value > 0) {
-    // console.log(moment().format("HH:mm:ss") + " getTxFlows - tx: " + JSON.stringify(tx, null, 2).substring(0, 200));
     results.push({
       chainId,
       txHash,
@@ -76,9 +93,25 @@ function getTxFlows(chainId, txHash, tx, address) {
       token: null,
       tokens: tx.tx.value,
     });
+    // WETH Deposit - generate WETH.Transfer(0x0, tx.from, tx.value)
+    if (tx.tx && tx.tx.to == "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2") {
+      // console.log(moment().format("HH:mm:ss") + " getTxFlows - txHash: " + txHash + ", tx: " + JSON.stringify(tx, null, 2).substring(0, 20000));
+      results.push({
+        chainId,
+        txHash,
+        blockNumber: tx.blockNumber,
+        timestamp: tx.timestamp,
+        type: "erc20",
+        from: ADDRESS0,
+        to: tx.tx && tx.tx.from || null,
+        token: tx.tx && tx.tx.to || null,
+        tokens: tx.tx.value,
+      });
+    }
   }
   if (tx.internal.length > 0) {
-    // console.log(moment().format("HH:mm:ss") + " getTxFlows - tx: " + JSON.stringify(tx, null, 2).substring(0, 200));
+    // TODO: WETH Withdrawal - generate WETH.Transfer(tx.from, 0x0, tx.value)
+    // console.log(moment().format("HH:mm:ss") + " getTxFlows - txHash: " + txHash + ", tx: " + JSON.stringify(tx, null, 2).substring(0, 200));
     for (const i of tx.internal) {
       results.push({
         chainId,
@@ -94,7 +127,7 @@ function getTxFlows(chainId, txHash, tx, address) {
     }
   }
   if (tx.erc20.length > 0) {
-    // console.log(moment().format("HH:mm:ss") + " getTxFlows - tx: " + JSON.stringify(tx, null, 2).substring(0, 200));
+    // console.log(moment().format("HH:mm:ss") + " getTxFlows - txHash: " + txHash + ", tx: " + JSON.stringify(tx, null, 2).substring(0, 200));
     for (const i of tx.erc20) {
       results.push({
         chainId,
@@ -110,7 +143,7 @@ function getTxFlows(chainId, txHash, tx, address) {
     }
   }
   if (tx.erc721.length > 0) {
-    // console.log(moment().format("HH:mm:ss") + " getTxFlows - tx: " + JSON.stringify(tx, null, 2).substring(0, 200));
+    // console.log(moment().format("HH:mm:ss") + " getTxFlows - txHash: " + txHash + ", tx: " + JSON.stringify(tx, null, 2).substring(0, 200));
     for (const i of tx.erc721) {
       results.push({
         chainId,
@@ -126,7 +159,7 @@ function getTxFlows(chainId, txHash, tx, address) {
     }
   }
   if (tx.erc1155.length > 0) {
-    // console.log(moment().format("HH:mm:ss") + " getTxFlows - tx: " + JSON.stringify(tx, null, 2).substring(0, 200));
+    // console.log(moment().format("HH:mm:ss") + " getTxFlows - txHash: " + txHash + ", tx: " + JSON.stringify(tx, null, 2).substring(0, 200));
     for (const i of tx.erc1155) {
       results.push({
         chainId,
