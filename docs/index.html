@@ -279,15 +279,14 @@
         </b-card> -->
 
         <b-card no-body class="p-0 mt-0 border-0" style="min-height: 666px;">
-
-          <!-- HERE -->
+          <!-- :MENU -->
           <div class="d-flex flex-wrap m-0 mt-1 p-0 px-1 bg-white">
             <div class="mt-0 pr-0">
               <b-form-select size="sm" v-model="settings.selectedCard" :options="cardsOptions" @change="saveSettings" style="max-width: 30.0rem;"></b-form-select>
             </div>
             <div class="mt-0 flex-grow-1">
             </div>
-            <div class="mt-0 pl-2">
+            <div class="mt-0">
               <b-button-group size="sm">
                 <b-button size="sm" @click="scanNFC();" variant="outline">
                   <!-- <b-iconstack font-scale="1" animation="cylon"> -->
@@ -345,53 +344,8 @@
             </div>
           </div>
 
-          <div v-if="false" class="d-flex flex-wrap m-0 mt-1 p-0 px-1 bg-white">
-            <div class="mt-0 pr-0">
-              <b-form-select size="sm" v-model="settings.selectedCard" :options="cardsOptions" @change="saveSettings" style="max-width: 30.0rem;"></b-form-select>
-            </div>
-            <!-- <div class="mt-0 pr-1">
-              <b-button size="sm" @click="showModalCards();" variant="outline">
-                <b-iconstack font-scale="1">
-                  <b-icon stacked icon="lock" shift-h="-1" shift-v="-1" variant="primary" scale="0.6"></b-icon>
-                  <b-icon stacked icon="files" variant="primary" scale="1.0"></b-icon>
-                </b-iconstack>
-              </b-button>
-            </div> -->
-            <!-- <div class="mt-0">
-              <b-button size="sm" @click="showModalAddresses();" variant="outline">
-                <b-icon-card-list shift-v="+1" font-scale="1.0" variant="primary"></b-icon-card-list>
-              </b-button>
-            </div> -->
-            <div class="mt-0 flex-grow-1">
-            </div>
-            <div class="mt-0 pr-1">
-              <b-button size="sm" @click="scanNFC();" variant="outline">
-                <!-- <b-iconstack font-scale="1" animation="cylon"> -->
-                <b-iconstack font-scale="1">
-                  <b-icon stacked icon="wifi" variant="primary" scale="0.8"></b-icon>
-                  <b-icon stacked icon="file" variant="primary" scale="1.5"></b-icon>
-                </b-iconstack>
-              </b-button>
-            </div>
-            <div class="mt-0 flex-grow-1">
-            </div>
-            <!-- <div class="mt-0 pr-1">
-              <b-button size="sm" :disabled="filteredSortedSlots.length == 0" @click="retrieveBalances();" variant="primary" v-b-popover.hover.bottom="'Retrieve Balances'">Retrieve Balances</b-button>
-            </div> -->
-            <!-- <div class="mt-0">
-              <b-button size="sm" :disabled="false" @click="settings.showInfo = !settings.showInfo; saveSettings();" @change="saveSettings" variant="none">
-                <b-icon :icon="settings.showInfo ? 'info-circle-fill' : 'info-circle'" shift-v="+1" font-scale="1.0" variant="primary"></b-icon>
-              </b-button>
-            </div> -->
-            <!-- <div class="mt-0 pl-1">
-              <b-button size="sm" @click="showModalConfig();" variant="outline">
-                <b-icon-gear shift-v="+1" font-scale="1.0" variant="primary"></b-icon-gear>
-              </b-button>
-            </div> -->
-          </div>
-
           <!-- :CARD -->
-          <b-card v-if="settings.mode == 'card'" no-body class="m-1 p-1" bg-variant="light">
+          <b-card v-if="settings.mode == 'card' && Object.keys(settings.cards).length > 0" no-body class="m-1 p-1" bg-variant="light">
             <div class="d-flex m-0 p-0">
               <span class="m-1">
                 <b-link v-if="activeAddress" @click="showModalAddress(activeAddress);">
@@ -415,7 +369,7 @@
               </b-tabs>
             </div>
 
-            <!-- [Fungible] Tokens View -->
+            <!-- :CARDTOKENS -->
             <b-card-body v-if="settings.tabIndex == 0" class="m-0 p-1" body-bg-variant="white">
               <b-navbar toggleable="md" type="light" variant="none" class="m-0 p-0">
                 <b-nav-form>
@@ -475,7 +429,7 @@
               </font>
             </b-card-body>
 
-            <!-- NFTs View -->
+            <!-- :CARDNFTS -->
             <b-card-body v-if="settings.tabIndex == 1" class="m-0 p-1" body-bg-variant="white">
               <b-navbar toggleable="md" type="light" variant="none" class="m-0 p-0">
                 <b-nav-form>
@@ -541,7 +495,7 @@
               </b-card-group>
             </b-card-body>
 
-            <!-- Txs View -->
+            <!-- :CARDTXS -->
             <b-card-body v-if="settings.tabIndex == 2" class="m-0 p-1" body-bg-variant="white">
               <b-navbar toggleable="md" type="light" variant="none" class="m-0 p-0">
                 <b-nav-form>
@@ -816,7 +770,7 @@
           </b-card>
 
           <!-- :INFO -->
-          <b-card v-if="settings.mode == 'info'" no-body class="m-1 p-1" bg-variant="light">
+          <b-card v-if="settings.mode == 'info' || (settings.mode == 'card' && Object.keys(settings.cards).length == 0)" no-body class="m-1 p-1" bg-variant="light">
             <b-card-body class="mt-1 p-1">
               <h6>Welcome to BurnerProTool (WIP)</h6>
               Tool to manage your Ethereum wallets on
@@ -826,7 +780,7 @@
               <b-iconstack font-scale="1">
                 <b-icon stacked icon="wifi" variant="primary" scale="0.8"></b-icon>
                 <b-icon stacked icon="file" variant="primary" scale="1.5"></b-icon>
-              </b-iconstack> Scan Burner.pro NFC card
+              </b-iconstack> Scan NFC
               <br />
               <b-iconstack font-scale="1">
                 <b-icon stacked :icon="settings.mode == 'card' ? 'lock-fill' : 'lock'" variant="primary" scale="0.6"></b-icon>
@@ -847,13 +801,21 @@
               <b-icon :icon="settings.mode == 'config' ? 'gear-fill' : 'gear'" font-scale="1.0" variant="primary"></b-icon> Config
               <br />
               <br />
-              Scan your NFC card to begin, then add your Etherscan and CryptoCompare API keys in Config.
-              To test without an NFC card, click [Insert Test Data] in Config.
-              <br />
-              <br />
-              Best used on a a mobile phone web browser with NFC and web3 support, e.g., <b-link href="https://brave.com/" target="_blank">Brave</b-link>.
-              <br />
-              <br />
+              Usage:
+              <ul>
+                <li>
+                  Best used on a a mobile phone web browser with NFC and web3 support, e.g., <b-link href="https://brave.com/" target="_blank">Brave</b-link>
+                </li>
+                <li>
+                  Scan your NFC card to begin
+                </li>
+                <li>
+                  To test without an NFC card, click [Insert Test Data] in <b-icon :icon="settings.mode == 'config' ? 'gear-fill' : 'gear'" font-scale="1.0" variant="primary"></b-icon> Config
+                </li>
+                <li>
+                  Add your Etherscan and CryptoCompare API keys in <b-icon :icon="settings.mode == 'config' ? 'gear-fill' : 'gear'" font-scale="1.0" variant="primary"></b-icon> Config
+                </li>
+              </ul>
               We are not affiliated with burner.pro .
               <br />
               <font size="-1">Enjoy!</font>
@@ -885,221 +847,7 @@
             </b-form-group>
           </b-card>
 
-          <b-card v-if="!settings.showInfo && Object.keys(settings.cards).length > 0" no-body class="m-1 p-1" bg-variant="light">
-            <!-- <div class="d-flex m-0 p-0">
-              <span class="m-1">
-                <b-link v-if="activeAddress" @click="showModalAddress(activeAddress);">
-                  <font size="-1">{{ nameOrShortAddress(activeAddress) }}</font>
-                </b-link>
-                <b-dropdown size="sm" text="" variant="link" class="m-0 p-0">
-                  <b-dropdown-text>{{ activeAddress.substring(0, 10) + '...' + activeAddress.slice(-8) }}</b-dropdown-text>
-                  <b-dropdown-divider></b-dropdown-divider>
-                  <b-dropdown-item @click="copyToClipboard(activeAddress);">Copy to clipboard</b-dropdown-item>
-                  <b-dropdown-item :href="'https://etherscan.io/address/' + activeAddress" target="_blank">View in Etherscan.io</b-dropdown-item>
-                  <b-dropdown-item :href="'https://opensea.io/' + activeAddress" target="_blank">View in OpenSea.io</b-dropdown-item>
-                  <b-dropdown-item :href="'https://blur.io/' + activeAddress" target="_blank">View in Blur.io</b-dropdown-item>
-                </b-dropdown>
-              </span>
-              <div class="mt-0 flex-grow-1">
-              </div>
-              <b-tabs small v-model="settings.tabIndex" @input="saveSettings" align="right" class="text-right" content-class="m-0 p-0">
-                <b-tab title="Tokens" no-body></b-tab>
-                <b-tab title="NFTs" no-body></b-tab>
-                <b-tab title="Txs" no-body></b-tab>
-              </b-tabs>
-            </div> -->
-
-            <!-- [Fungible] Tokens View -->
-            <!-- <b-card-body v-if="settings.tabIndex == 0" class="m-0 p-1" body-bg-variant="white">
-              <b-navbar toggleable="md" type="light" variant="none" class="m-0 p-0">
-                <b-nav-form>
-                  <b-form-input type="text" size="sm" v-model.trim="settings.tokensTable.filter" @change="saveSettings" debounce="1200" placeholder="🔍 name/addr" style="max-width: 7.0rem;"></b-form-input>
-                </b-nav-form>
-                <b-nav-form>
-                  <b-button v-if="activeAddress" size="sm" @click="downloadFromEtherscan(activeAddress);" variant="outline">
-                    <b-icon-cloud-download shift-v="+1" font-scale="1" variant="primary"></b-icon-cloud-download>
-                  </b-button>
-                </b-nav-form>
-                <b-nav-form>
-                  <b-pagination size="sm" v-model="settings.tokensTable.currentPage" @input="saveSettings" :total-rows="filteredSortedNFTs.length" :per-page="settings.tokensTable.pageSize" limit="3" class="m-0 p-0 ml-md-1"></b-pagination>
-                </b-nav-form>
-                <b-navbar-toggle target="tokens-nav-collapse" class="m-0 mr-1 p-0 border-0" style="outline: none;">
-                  <template #default="{ expanded }">
-                    <b-icon :icon="expanded ? 'chevron-double-up' : 'chevron-double-down'" variant="primary"></b-icon>
-                  </template>
-                </b-navbar-toggle>
-                <b-collapse id="tokens-nav-collapse" is-nav>
-                  <b-navbar-nav small class="ml-auto">
-                    <b-nav-form>
-                      <div class="d-flex mt-1 mt-md-0">
-                        <div class="m-0 p-0">
-                          <b-form-select size="sm" id="tokensoptions-sort" v-model="settings.tokensTable.sortOption" @change="saveSettings" :options="sortOptions" style="max-width: 12.0rem;"></b-form-select>
-                        </div>
-                        <div class="m-0 ml-1 p-0">
-                          <b-form-select size="sm" id="tokensoptions-pagesize" v-model="settings.tokensTable.pageSize" @change="saveSettings" :options="pageSizes" style="max-width: 6.0rem;"></b-form-select>
-                        </div>
-                      </div>
-                    </b-nav-form>
-                  </b-navbar-nav>
-                </b-collapse>
-              </b-navbar>
-              <b-table ref="tokensTable" small fixed striped responsive hover selectable select-mode="single" @row-selected='tokensRowSelected' :fields="tokensFields" :items="pagedFilteredSortedTokens" show-empty empty-html="Scan your Burner.pro NFC card and click the cloud download button to begin" head-variant="light" class="mx-0 my-0 mt-1" style="min-height: 333px;" thead-class="d-none">
-                <template #cell(one)="data">
-                  <b-row class="m-0 p-0">
-                    <b-col class="m-0 p-0">
-                      <font size="-1">{{ (parseInt(data.index) + ((settings.tokensTable.currentPage - 1) * settings.tokensTable.pageSize) + 1) + '.' }}</font>
-                    </b-col>
-                    <b-col cols="5" class="m-0 p-0">
-                      {{ nameOrShortAddress(data.item.token) }}
-                      <br />
-                      <b-badge pill variant="transparent" class="px-0">{{ data.item.chainId == 1 ? "ETH Mainnet" : ("chainId: " + data.item.chainId) }}</b-badge>
-                    </b-col>
-                    <b-col cols="6" class="m-0 p-0">
-                      <font size="-1">
-                        {{ formatTokens(data.item.token, data.item.balance, 0) }}
-                      </font>
-                    </b-col>
-                  </b-row>
-                </template>
-              </b-table>
-              <font size="-1">
-                <pre>
-{{ pagedFilteredSortedTokens }}
-                </pre>
-              </font>
-            </b-card-body> -->
-
-            <!-- NFTs View -->
-            <!-- <b-card-body v-if="settings.tabIndex == 1" class="m-0 p-1" body-bg-variant="white">
-              <b-navbar toggleable="md" type="light" variant="none" class="m-0 p-0">
-                <b-nav-form>
-                  <b-form-input type="text" size="sm" v-model.trim="settings.nftsTable.filter" @change="saveSettings" debounce="1200" placeholder="🔍 name" style="max-width: 7.0rem;"></b-form-input>
-                </b-nav-form>
-                <b-nav-form>
-                  <b-button v-if="activeAddress" size="sm" @click="downloadFromReservoir(activeAddress);" variant="outline">
-                    <b-icon-cloud-download shift-v="+1" font-scale="1" variant="primary"></b-icon-cloud-download>
-                  </b-button>
-                </b-nav-form>
-                <b-nav-form>
-                  <b-pagination size="sm" v-model="settings.nftsTable.currentPage" @input="saveSettings" :total-rows="filteredSortedNFTs.length" :per-page="settings.nftsTable.pageSize" limit="3" class="m-0 p-0 ml-md-1"></b-pagination>
-                </b-nav-form>
-                <b-navbar-toggle target="nfts-nav-collapse" class="m-0 mr-1 p-0 border-0" style="outline: none;">
-                  <template #default="{ expanded }">
-                    <b-icon :icon="expanded ? 'chevron-double-up' : 'chevron-double-down'" variant="primary"></b-icon>
-                  </template>
-                </b-navbar-toggle>
-                <b-collapse id="nfts-nav-collapse" is-nav>
-                  <b-navbar-nav small class="ml-auto">
-                    <b-nav-form>
-                      <div class="d-flex mt-1 mt-md-0">
-                        <div class="m-0 p-0">
-                          <b-form-select size="sm" id="nftsoptions-sort" v-model="settings.nftsTable.sortOption" @change="saveSettings" :options="sortOptions" style="max-width: 12.0rem;"></b-form-select>
-                        </div>
-                        <div class="m-0 ml-1 p-0">
-                          <b-form-select size="sm" id="nftsoptions-pagesize" v-model="settings.nftsTable.pageSize" @change="saveSettings" :options="pageSizes" style="max-width: 6.0rem;"></b-form-select>
-                        </div>
-                      </div>
-                    </b-nav-form>
-                  </b-navbar-nav>
-                </b-collapse>
-              </b-navbar>
-              <b-card-group deck class="m-1 ml-0 p-0">
-                <div v-for="(item, index) of pagedFilteredSortedNFTs" v-bind:key="index">
-                  <b-card no-body header-class="p-1" img-top class="m-1 p-0 border-0">
-                    <div class="d-flex m-0 p-0">
-                      <div class="mt-0 pr-1">
-                        <b-avatar button rounded @click="showModalNFT(item);" size="10rem" :src="item.image"></b-avatar>
-                      </div>
-                      <div class="flex-fill mt-0 pl-1">
-                        <b-link :href="'https://opensea.io/assets/ethereum/' + item.contract + '/' + item.tokenId" target="_blank">
-                          {{ item.name }}
-                        </b-link>
-                        <b-badge pill v-if="item.type == 'erc1155'" variant="light">{{ 'x' + item.count }}</b-badge>
-                        <br />
-                        <b-link :href="'https://opensea.io/collection/' + item.collectionSlug" target="_blank">
-                          <font size="-1">{{ item.collectionName }}</font>
-                        </b-link>
-                        <br />
-                        <font size="-1">
-                          <b-badge pill v-if="item.lastSale" variant="light" class="m-0 p-0">{{ 'Last: ' + item.lastSale.amount + (item.lastSale.currency == "ETH" ? "e" : " " + item.lastSale.currency) }}</b-badge>
-                          <b-badge pill v-if="item.price" variant="light" class="m-0 p-0">{{ 'Price: ' + item.price.amount + (item.price.currency == "ETH" ? "e": " " + item.price.currency) }}</b-badge>
-                          <b-badge pill v-if="item.price" variant="light" class="m-0 p-0">{{ 'Bid: ' + item.topBid.amount + (item.topBid.currency == "WETH" ? "w": " " + item.topBid.currency) }}</b-badge>
-                        </font>
-                        <br />
-                        <b-textarea :value="item.description" class="m-0 p-1" style="font-size: 12px; border: none;" rows="3" max-rows="4"></b-textarea>
-                      </div>
-                    </div>
-                  </b-card>
-                </div>
-              </b-card-group>
-            </b-card-body> -->
-
-            <!-- Txs View -->
-            <!-- <b-card-body v-if="settings.tabIndex == 2" class="m-0 p-1" body-bg-variant="white">
-              <b-navbar toggleable="md" type="light" variant="none" class="m-0 p-0">
-                <b-nav-form>
-                  <b-form-input type="text" size="sm" v-model.trim="settings.txsTable.filter" @change="saveSettings" debounce="1200" placeholder="🔍 name" style="max-width: 7.0rem;"></b-form-input>
-                </b-nav-form>
-                <b-nav-form>
-                  <b-button v-if="activeAddress" size="sm" @click="downloadFromEtherscan(activeAddress);" variant="outline">
-                    <b-icon-cloud-download shift-v="+1" font-scale="1" variant="primary"></b-icon-cloud-download>
-                  </b-button>
-                </b-nav-form>
-                <b-nav-form>
-                  <b-pagination size="sm" v-model="settings.txsTable.currentPage" @input="saveSettings" :total-rows="filteredSortedTxs.length" :per-page="settings.txsTable.pageSize" limit="3" class="m-0 p-0 ml-md-1"></b-pagination>
-                </b-nav-form>
-                <b-navbar-toggle target="txs-nav-collapse" class="m-0 mr-1 p-0 border-0" style="outline: none;">
-                  <template #default="{ expanded }">
-                    <b-icon :icon="expanded ? 'chevron-double-up' : 'chevron-double-down'" variant="primary"></b-icon>
-                  </template>
-                </b-navbar-toggle>
-                <b-collapse id="txs-nav-collapse" is-nav>
-                  <b-navbar-nav small class="ml-auto">
-                    <b-nav-form>
-                      <div class="d-flex mt-1 mt-md-0">
-                        <div class="m-0 p-0">
-                          <b-form-select size="sm" id="txsoptions-sort" v-model="settings.txsTable.sortOption" @change="saveSettings" :options="sortOptions" style="max-width: 12.0rem;"></b-form-select>
-                        </div>
-                        <div class="m-0 ml-1 p-0">
-                          <b-form-select size="sm" id="txsoptions-pagesize" v-model="settings.txsTable.pageSize" @change="saveSettings" :options="pageSizes" style="max-width: 6.0rem;"></b-form-select>
-                        </div>
-                      </div>
-                    </b-nav-form>
-                  </b-navbar-nav>
-                </b-collapse>
-              </b-navbar>
-              <b-card-group deck class="m-1 ml-0 p-0">
-                <div v-for="(item, index) of pagedFilteredSortedTxs" v-bind:key="index">
-                  <b-card no-body class="m-1 p-0 border-0">
-                    <div>
-                      <font size="-1">{{ (parseInt(index) + ((settings.txsTable.currentPage - 1) * settings.txsTable.pageSize) + 1) + '.' }}</font>
-                      <b-link :href="'https://etherscan.io/tx/' + item.txHash" target="_blank">
-                        <font size="-1">{{ formatTimestamp(item.timestamp) }}</font>
-                      </b-link>
-                      <b-link v-if="item.from" @click="showModalAddress(item.from)">
-                        <font size="-1">{{ nameOrShortAddress(item.from) }}</font>
-                      </b-link>
-                      <br />
-                      <b-icon-arrow-right font-scale="0.9" variant="secondary" class="ml-3"></b-icon-arrow-right>
-                      <b-link v-if="item.contract" @click="showModalAddress(item.contract)">
-                        <font size="-1">{{ nameOrShortAddress(item.contract) }}</font>
-                      </b-link>
-                      <br />
-                      <b-badge v-if="item.action" pill variant="light" class="m-0 ml-3 p-0">{{ item.action }}</b-badge>
-                      <b-badge v-if="item.value" pill variant="light" class="m-0 p-0">{{ item.value }}</b-badge>
-                    </div>
-                    <b-textarea readonly :value="JSON.stringify(item, null, 2)" class="m-0 ml-2 p-1" style="font-size: 12px; border: 1;" rows="3" max-rows="7" class="w-100"></b-textarea>
-                  </b-card>
-                </div>
-              </b-card-group>
-              <hr />
-              <b-form-group label="CryptoCompare:" label-cols="5" label-align="right" description="Set API Key in the Config menu">
-                <b-button v-if="activeAddress" size="sm" @click="downloadFromCryptoCompare();" variant="outline">
-                  <b-icon-cloud-download shift-v="+2" font-scale="1" variant="primary"></b-icon-cloud-download>
-                </b-button>
-              </b-form-group>
-            </b-card-body> -->
-
+          <b-card v-if="false" no-body class="m-1 p-1" bg-variant="light">
             <!-- Card View --->
             <b-card-body v-if="settings.tabIndex == 3" class="m-0 p-1" body-bg-variant="white">
               <b-form-group label="Name:" label-for="card-name" class="mt-2">
@@ -1264,7 +1012,6 @@
           settings: {
             mode: 'card', // 'card', 'cards', 'addresses', 'info', 'config'
             tabIndex: 0,
-            showInfo: false, // TODO: Delete
             cards: {},
             addresses: {},
             selectedCard: null,
@@ -1301,7 +1048,7 @@
               pageSize: 10,
               sortOption: 'nameasc',
             },
-            version: 8,
+            version: 9,
           },
 
           // TODO: Rename to modalCard, add card functions to this dialog including set graffiti, delete from db and card status (duplicated, duplicate)
