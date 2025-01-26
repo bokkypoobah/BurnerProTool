@@ -582,8 +582,13 @@
               </b-tabs>
             </div>
 
-            <!-- NFTs View -->
+            <!-- [Fungible] Tokens View -->
             <b-card-body v-if="settings.tabIndex == 0" class="m-0 p-1" body-bg-variant="white">
+              <font size="-1">
+                <pre>
+{{ pagedFilteredSortedTokens }}
+                </pre>
+              </font>
             </b-card-body>
 
             <!-- NFTs View -->
@@ -1418,6 +1423,44 @@
               return CUSTOMNAMES[this.modalAddress.address][3];
             }
             return null;
+          },
+
+          tokens() {
+            const results = [];
+            for (const [chainId, chainData] of Object.entries(this.activeAddress && this.etherscanData[this.activeAddress] || {})) {
+              // console.log(chainId + " => " + JSON.stringify(chainData).substring(0, 200));
+              for (const [txHash, txData] of Object.entries(chainData)) {
+                // console.log(chainId + "/" + txHash.substring(0, 20) + " => " + JSON.stringify(txData).substring(0, 200));
+                const info = inferTxInfo(txData);
+                results.push({
+                  ...info,
+                  chainId,
+                  txHash,
+                  ...txData,
+                });
+                // break;
+              }
+              // for (const [contract, contractData] of Object.entries(chainData)) {
+              //   for (const [tokenId, tokenData] of Object.entries(contractData.tokens)) {
+              //     results.push({
+              //       chainId,
+              //       contract,
+              //       type: contractData.type,
+              //       collectionName: contractData.name,
+              //       collectionSlug: contractData.slug,
+              //       tokenId,
+              //       ...tokenData,
+              //     });
+              //   }
+              // }
+            }
+            return results;
+          },
+          filteredSortedTokens() {
+            return this.tokens;
+          },
+          pagedFilteredSortedTokens() {
+            return this.filteredSortedTokens.slice((this.settings.tokensTable.currentPage - 1) * this.settings.tokensTable.pageSize, this.settings.tokensTable.currentPage * this.settings.tokensTable.pageSize);
           },
 
           nfts() {
