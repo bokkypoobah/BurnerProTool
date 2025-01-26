@@ -58,82 +58,6 @@
           </b-navbar-nav>
         </b-navbar>
 
-        <!-- :MODALCARDS -->
-        <b-modal id="modal-cards" hide-footer size="md" body-class="m-0 p-1" body-bg-variant="light">
-          <template #modal-title>
-            Cards
-          </template>
-          <b-navbar toggleable="md" type="light" variant="light" class="m-0 p-0">
-            <b-nav-form>
-              <b-form-input type="text" size="sm" v-model.trim="settings.cardsTable.filter" @change="saveSettings" debounce="1200" placeholder="🔍 addr/name" style="max-width: 7.0rem;"></b-form-input>
-            </b-nav-form>
-            <b-nav-form>
-              <b-pagination size="sm" v-model="settings.cardsTable.currentPage" @input="saveSettings" :total-rows="filteredSortedCards.length" :per-page="settings.cardsTable.pageSize" limit="3" class="m-0 p-0 ml-md-1"></b-pagination>
-            </b-nav-form>
-            <b-navbar-toggle target="modalcards-nav-collapse" class="m-0 mr-1 p-0 border-0" style="outline: none;">
-              <template #default="{ expanded }">
-                <b-icon :icon="expanded ? 'chevron-double-up' : 'chevron-double-down'" variant="primary"></b-icon>
-              </template>
-            </b-navbar-toggle>
-            <b-collapse id="modalcards-nav-collapse" is-nav>
-              <b-navbar-nav small class="ml-auto">
-                <b-nav-form>
-                  <div class="d-flex mt-1 mt-md-0">
-                    <div class="m-0 p-0">
-                      <b-form-select size="sm" v-model="settings.cardsTable.sortOption" @change="saveSettings" :options="sortOptions" style="max-width: 12.0rem;"></b-form-select>
-                    </div>
-                    <div class="m-0 ml-1 p-0">
-                      <b-form-select size="sm" v-model="settings.cardsTable.pageSize" @change="saveSettings" :options="pageSizes" style="max-width: 6.0rem;"></b-form-select>
-                    </div>
-                  </div>
-                </b-nav-form>
-              </b-navbar-nav>
-            </b-collapse>
-          </b-navbar>
-          <b-table small fixed striped responsive hover :fields="cardsFields" :items="pagedFilteredSortedCards" show-empty empty-html="Press Escape. Then scan your Burner.pro NFC card to begin" head-variant="light" class="mx-0 my-0 mt-1" style="min-height: 333px;">
-            <template #cell(select)="data">
-              <b-form-checkbox size="sm" :checked="settings.selectedCard == data.item.cardId" @change="updateSelectedCard(data.item.cardId)">
-              </b-form-checkbox>
-            </template>
-            <template #cell(name)="data">
-              <b-form-input type="text" size="sm" v-model.trim="data.item.name" @change="updateName(data.item.cardId, $event)" debounce="1200" placeholder="name"></b-form-input>
-            </template>
-            <template #cell(address)="data">
-              <div v-if="data.item.initialised">
-                <b-link @click="showModalAddress(data.item.address)" target="_blank">
-                  <font size="-1">{{ nameOrShortAddress(data.item.address) }}</font>
-                </b-link>
-                <b-button size="sm" @click="copyToClipboard(data.item.address);" variant="outline">
-                  <b-icon-clipboard shift-v="+2" font-scale="0.9" variant="primary"></b-icon-clipboard>
-                </b-button>
-              </div>
-              <div v-else>
-                <font size="-1">(Uninitialised)</font>
-              </div>
-            </template>
-            <template #cell(card)="data">
-              <b-button size="sm" @click="showModalCard(data.item.cardId, data.item.name);" variant="outline">
-                <b-iconstack font-scale="1">
-                  <b-icon stacked icon="lock" shift-h="0" shift-v="0" variant="primary" scale="0.6"></b-icon>
-                  <b-icon stacked icon="file" variant="primary" scale="1.0"></b-icon>
-                </b-iconstack>
-              </b-button>
-            </template>
-            <!-- <template #cell(slot)="data">
-              <b-badge pill variant="transparent" class="px-0">{{ data.item.slot }}</b-badge>
-            </template> -->
-            <!-- <template #cell(address)="data">
-              <b-link :href="'https://etherscan.io/address/' + data.item.address" target="_blank" v-b-popover.hover="data.item.address">
-                {{ data.item.address.substring(0, 8) + '...' + data.item.address.slice(-6) }}
-              </b-link>
-              <br />
-              <font v-if="data.item.balance" size="-1">
-                Balance: {{ formatETH(data.item.balance) }}
-              </font>
-            </template> -->
-          </b-table>
-        </b-modal>
-
         <!-- :MODALCARD -->
         <b-modal id="modal-card" hide-footer size="md" body-class="m-0 p-1" body-bg-variant="light">
           <template #modal-title>
@@ -176,126 +100,6 @@
             <b-button size="sm" @click="modalCardDeleteCard(modalCard.cardId, modalCard.name);" variant="warning">
               Delete
             </b-button>
-          </b-form-group>
-        </b-modal>
-
-        <!-- :MODALADDRESSES -->
-        <b-modal id="modal-addresses" hide-footer size="lg" body-class="m-0 p-1" body-bg-variant="light">
-          <template #modal-title>
-            Addresses
-          </template>
-          <b-navbar toggleable="md" type="light" variant="light" class="m-0 p-0">
-            <b-nav-form>
-              <b-form-input type="text" size="sm" v-model.trim="settings.addressesTable.filter" @change="saveSettings" debounce="1200" placeholder="🔍 addr/name" style="max-width: 7.0rem;"></b-form-input>
-            </b-nav-form>
-            <b-nav-form>
-              <b-pagination size="sm" v-model="settings.addressesTable.currentPage" @input="saveSettings" :total-rows="filteredSortedAddresses.length" :per-page="settings.addressesTable.pageSize" limit="3" class="m-0 p-0 ml-md-1"></b-pagination>
-            </b-nav-form>
-            <b-navbar-toggle target="modaladdresses-nav-collapse" class="m-0 mr-1 p-0 border-0" style="outline: none;">
-              <template #default="{ expanded }">
-                <b-icon :icon="expanded ? 'chevron-double-up' : 'chevron-double-down'" variant="primary"></b-icon>
-              </template>
-            </b-navbar-toggle>
-            <b-collapse id="modaladdresses-nav-collapse" is-nav>
-              <b-navbar-nav small class="ml-auto">
-                <b-nav-form>
-                  <div class="d-flex mt-1 mt-md-0">
-                    <div class="m-0 p-0">
-                      <b-form-select size="sm" v-model="settings.addressesTable.addressType" @change="saveSettings" :options="addressTypeFilterOptions" style="max-width: 12.0rem;"></b-form-select>
-                    </div>
-                    <div class="m-0 ml-1 p-0">
-                      <b-form-select size="sm" v-model="settings.addressesTable.sortOption" @change="saveSettings" :options="sortOptions" style="max-width: 12.0rem;"></b-form-select>
-                    </div>
-                    <div class="m-0 ml-1 p-0">
-                      <b-form-select size="sm" v-model="settings.addressesTable.pageSize" @change="saveSettings" :options="pageSizes" style="max-width: 6.0rem;"></b-form-select>
-                    </div>
-                  </div>
-                </b-nav-form>
-              </b-navbar-nav>
-            </b-collapse>
-          </b-navbar>
-          <b-table ref="addressesTable" small fixed striped responsive hover selectable select-mode="single" @row-selected='addressesRowSelected':fields="addressesFields" :items="pagedFilteredSortedAddresses" show-empty empty-html="Press Escape. Then scan your Burner.pro NFC card to begin" head-variant="light" class="mx-0 my-0 mt-1" style="min-height: 333px;" thead-class="d-none">
-            <template #cell(one)="data">
-              <b-row class="m-0 p-0">
-                <b-col class="m-0 p-0">
-                  <font size="-1">{{ (parseInt(data.index) + ((settings.addressesTable.currentPage - 1) * settings.addressesTable.pageSize) + 1) + '.' }}</font>
-                </b-col>
-                <b-col cols="11" class="m-0 p-0">
-                  <!-- <b-link @click="showModalAddress(data.item.address)" target="_blank"> -->
-                    <font size="-1">{{ data.item.address.substring(0, 6) + '...' + data.item.address.slice(-4) }}</font>
-                  <!-- </b-link> -->
-                  <b-dropdown size="sm" text="" variant="link" class="m-0 p-0">
-                    <b-dropdown-text>{{ data.item.address.substring(0, 10) + '...' + data.item.address.slice(-8) }}</b-dropdown-text>
-                    <b-dropdown-divider></b-dropdown-divider>
-                    <b-dropdown-item @click="copyToClipboard(data.item.address);">Copy to clipboard</b-dropdown-item>
-                    <b-dropdown-item :href="'https://etherscan.io/address/' + data.item.address" target="_blank">View in Etherscan.io</b-dropdown-item>
-                    <b-dropdown-item v-if="['nfccard'].includes(data.item.type)" :href="'https://opensea.io/' + data.item.address" target="_blank">View address in OpenSea.io</b-dropdown-item>
-                    <b-dropdown-item v-if="data.item.slug" :href="'https://opensea.io/collection/' + data.item.slug" target="_blank">View collection in OpenSea.io</b-dropdown-item>
-                    <!-- <b-dropdown-item :href="'https://blur.io/' + data.item.address" target="_blank">View in Blur.io</b-dropdown-item> -->
-                  </b-dropdown>
-                  <font size="-1">{{ nameOrShortAddress(data.item.address) }}</font>
-                  <br />
-                  <b-badge pill variant="transparent" class="m-0 p-0">
-                    {{ addressTypeOptions.filter((e) => e.value == data.item.type)[0] && addressTypeOptions.filter((e) => e.value == data.item.type)[0].text }}
-                  </b-badge>
-                </b-col>
-              </b-row>
-              <!-- <b-form-checkbox size="sm" :checked="settings.selectedCard == data.item.cardId" @change="updateSelectedCard(data.item.cardId)">
-              </b-form-checkbox> -->
-            </template>
-            <!-- <template #cell(select)="data">
-              <b-form-checkbox size="sm" :checked="settings.selectedCard == data.item.cardId" @change="updateSelectedCard(data.item.cardId)">
-              </b-form-checkbox>
-            </template> -->
-            <!-- <template #cell(name)="data">
-              <b-form-input type="text" size="sm" v-model.trim="data.item.name" @change="updateName(data.item.cardId, $event)" debounce="1200" placeholder="name"></b-form-input>
-            </template> -->
-            <!-- <template #cell(address)="data">
-              <div v-if="data.item.initialised">
-                <b-link @click="showModalAddress(data.item.address)" target="_blank">
-                  <font size="-1">{{ nameOrShortAddress(data.item.address) }}</font>
-                </b-link>
-                <b-button size="sm" @click="copyToClipboard(data.item.address);" variant="outline">
-                  <b-icon-clipboard shift-v="+2" font-scale="0.9" variant="primary"></b-icon-clipboard>
-                </b-button>
-              </div>
-              <div v-else>
-                <font size="-1">(Uninitialised)</font>
-              </div>
-            </template> -->
-            <!-- <template #cell(card)="data">
-              <b-button size="sm" @click="showModalCard(data.item.cardId, data.item.name);" variant="outline">
-                <b-iconstack font-scale="1">
-                  <b-icon stacked icon="lock" shift-h="0" shift-v="0" variant="primary" scale="0.6"></b-icon>
-                  <b-icon stacked icon="file" variant="primary" scale="1.0"></b-icon>
-                </b-iconstack>
-              </b-button>
-            </template> -->
-          </b-table>
-        </b-modal>
-
-        <!-- :MODALCONFIG -->
-        <b-modal id="modal-config" hide-footer size="md" body-class="m-0 p-1" body-bg-variant="light">
-          <template #modal-title>
-            Configuration
-          </template>
-          <b-form-group label="API Keys" label-size="md" label-class="font-weight-bold pt-0" class="mt-3 mb-0">
-            <b-form-group label="Etherscan:" label-for="etherscan-apikey">
-              <b-form-input type="text" size="sm" id="etherscan-apikey" v-model.trim="settings.etherscanAPIKey" @change="saveSettings();" placeholder="See https://etherscan.io/apis"></b-form-input>
-            </b-form-group>
-            <b-form-group label="CryptoCompare:" label-for="cryptocompar ie-apikey">
-              <b-form-input type="text" size="sm" id="cryptocompare-apikey" v-model.trim="settings.cryptoCompareAPIKey" @change="saveSettings();" placeholder="See https://www.cryptocompare.com/cryptopian/api-keys"></b-form-input>
-            </b-form-group>
-          </b-form-group>
-          <b-form-group label="Test Data" label-size="md" label-class="font-weight-bold pt-0" class="mt-3 mb-0">
-            <b-form-group label="Insert test data:" label-cols="5" label-align="right">
-              <b-button size="sm" @click="insertTestData()" variant="primary">Insert</b-button>
-            </b-form-group>
-          </b-form-group>
-          <b-form-group label-cols-lg="2" label="Reset Data" label-size="md" label-class="font-weight-bold pt-0" class="mt-3 mb-0">
-            <b-form-group label="Reset data:" label-cols="5" label-align="right">
-              <b-button size="sm" @click="resetData()" variant="warning">Reset</b-button>
-            </b-form-group>
           </b-form-group>
         </b-modal>
 
@@ -484,13 +288,18 @@
             <div class="mt-0 flex-grow-1">
             </div>
             <div class="mt-0 pr-1">
-              <b-button size="sm" @click="scanNFC();" variant="outline">
-                <!-- <b-iconstack font-scale="1" animation="cylon"> -->
-                <b-iconstack font-scale="1">
-                  <b-icon stacked icon="wifi" variant="primary" scale="0.8"></b-icon>
-                  <b-icon stacked icon="file" variant="primary" scale="1.5"></b-icon>
-                </b-iconstack>
-              </b-button>
+              <b-button-group size="sm">
+                <b-button size="sm" @click="scanNFC();" variant="outline">
+                  <!-- <b-iconstack font-scale="1" animation="cylon"> -->
+                  <b-iconstack font-scale="1">
+                    <b-icon stacked icon="wifi" variant="primary" scale="0.8"></b-icon>
+                    <b-icon stacked icon="file" variant="primary" scale="1.5"></b-icon>
+                  </b-iconstack>
+                </b-button>
+                <font size="-1" class="mt-1 text-muted d-none d-sm-block">
+                  Scan NFC
+                </font>
+              </b-button-group>
             </div>
             <div class="mt-0 flex-grow-1">
             </div>
@@ -502,7 +311,7 @@
                     <b-icon stacked icon="file" variant="primary" scale="1.2"></b-icon>
                   </b-iconstack>
                 </b-button>
-                <font size="-1" class="mt-1 text-muted d-none d-sm-block">
+                <font size="-1" class="mt-1 d-none d-sm-block" :class="{'text-muted': settings.mode != 'card'}">
                   Card
                 </font>
                 <b-button @click="settings.mode = 'cards'; saveSettings();" variant="none">
@@ -511,50 +320,48 @@
                     <b-icon stacked icon="files" variant="primary" scale="1.0"></b-icon>
                   </b-iconstack>
                 </b-button>
-                <font size="-1" class="mt-1 text-muted d-none d-sm-block">
+                <font size="-1" class="mt-1 d-none d-sm-block" :class="{'text-muted': settings.mode != 'cards'}">
                   Cards
                 </font>
                 <b-button @click="settings.mode = 'addresses'; saveSettings();" variant="link">
                   <b-icon :icon="settings.mode == 'addresses' ? 'people-fill' : 'people'" font-scale="1.0" variant="primary"></b-icon>
                 </b-button>
-                <font size="-1" class="mt-1 text-muted d-none d-sm-block">
+                <font size="-1" class="mt-1 d-none d-sm-block" :class="{'text-muted': settings.mode != 'addresses'}">
                   Addresses
                 </font>
                 <b-button @click="settings.mode = 'info'; saveSettings();" variant="link">
                   <b-icon :icon="settings.mode == 'info' ? 'info-circle-fill' : 'info-circle'" font-scale="1.0" variant="primary"></b-icon>
                 </b-button>
-                <font size="-1" class="mt-1 text-muted d-none d-sm-block">
+                <font size="-1" class="mt-1 d-none d-sm-block" :class="{'text-muted': settings.mode != 'info'}">
                   Info
                 </font>
                 <b-button @click="settings.mode = 'config'; saveSettings();" variant="link">
                   <b-icon :icon="settings.mode == 'config' ? 'gear-fill' : 'gear'" font-scale="1.0" variant="primary"></b-icon>
                 </b-button>
-                <font size="-1" class="mt-1 text-muted d-none d-sm-block">
+                <font size="-1" class="mt-1 d-none d-sm-block" :class="{'text-muted': settings.mode != 'config'}">
                   Config
                 </font>
               </b-button-group>
             </div>
           </div>
 
-          <div class="d-flex flex-wrap m-0 mt-1 p-0 px-1 bg-white">
+          <div v-if="false" class="d-flex flex-wrap m-0 mt-1 p-0 px-1 bg-white">
             <div class="mt-0 pr-0">
               <b-form-select size="sm" v-model="settings.selectedCard" :options="cardsOptions" @change="saveSettings" style="max-width: 30.0rem;"></b-form-select>
             </div>
-            <div class="mt-0 pr-1">
+            <!-- <div class="mt-0 pr-1">
               <b-button size="sm" @click="showModalCards();" variant="outline">
-                <!-- <b-icon-files shift-v="+1" font-scale="1.0" variant="primary"></b-icon-files> -->
-                <!-- <b-icon-grip-vertical shift-v="+1" font-scale="1.0" variant="primary"></b-icon-grip-vertical> -->
                 <b-iconstack font-scale="1">
                   <b-icon stacked icon="lock" shift-h="-1" shift-v="-1" variant="primary" scale="0.6"></b-icon>
                   <b-icon stacked icon="files" variant="primary" scale="1.0"></b-icon>
                 </b-iconstack>
               </b-button>
-            </div>
-            <div class="mt-0">
+            </div> -->
+            <!-- <div class="mt-0">
               <b-button size="sm" @click="showModalAddresses();" variant="outline">
                 <b-icon-card-list shift-v="+1" font-scale="1.0" variant="primary"></b-icon-card-list>
               </b-button>
-            </div>
+            </div> -->
             <div class="mt-0 flex-grow-1">
             </div>
             <div class="mt-0 pr-1">
@@ -571,45 +378,226 @@
             <!-- <div class="mt-0 pr-1">
               <b-button size="sm" :disabled="filteredSortedSlots.length == 0" @click="retrieveBalances();" variant="primary" v-b-popover.hover.bottom="'Retrieve Balances'">Retrieve Balances</b-button>
             </div> -->
-            <div class="mt-0">
+            <!-- <div class="mt-0">
               <b-button size="sm" :disabled="false" @click="settings.showInfo = !settings.showInfo; saveSettings();" @change="saveSettings" variant="none">
                 <b-icon :icon="settings.showInfo ? 'info-circle-fill' : 'info-circle'" shift-v="+1" font-scale="1.0" variant="primary"></b-icon>
               </b-button>
-            </div>
-            <div class="mt-0 pl-1">
+            </div> -->
+            <!-- <div class="mt-0 pl-1">
               <b-button size="sm" @click="showModalConfig();" variant="outline">
                 <b-icon-gear shift-v="+1" font-scale="1.0" variant="primary"></b-icon-gear>
               </b-button>
-            </div>
+            </div> -->
           </div>
 
-          <b-card v-if="settings.showInfo || Object.keys(settings.cards).length == 0" no-body class="m-1 p-1" bg-variant="light">
+          <!-- :CARD -->
+          <b-card v-if="settings.mode == 'card'" no-body class="m-1 p-1" bg-variant="light">
+            Card
+          </b-card>
+
+          <!-- :CARDS -->
+          <b-card v-if="settings.mode == 'cards'" no-body class="m-1 p-1" bg-variant="light">
+            <!-- <h6>Cards</h6> -->
+            <b-navbar toggleable="md" type="light" variant="light" class="m-0 p-0">
+              <b-nav-form>
+                <b-form-input type="text" size="sm" v-model.trim="settings.cardsTable.filter" @change="saveSettings" debounce="1200" placeholder="🔍 addr/name" style="max-width: 7.0rem;"></b-form-input>
+              </b-nav-form>
+              <b-nav-form>
+                <b-pagination size="sm" v-model="settings.cardsTable.currentPage" @input="saveSettings" :total-rows="filteredSortedCards.length" :per-page="settings.cardsTable.pageSize" limit="3" class="m-0 p-0 ml-md-1"></b-pagination>
+              </b-nav-form>
+              <b-navbar-toggle target="modalcards-nav-collapse" class="m-0 mr-1 p-0 border-0" style="outline: none;">
+                <template #default="{ expanded }">
+                  <b-icon :icon="expanded ? 'chevron-double-up' : 'chevron-double-down'" variant="primary"></b-icon>
+                </template>
+              </b-navbar-toggle>
+              <b-collapse id="modalcards-nav-collapse" is-nav>
+                <b-navbar-nav small class="ml-auto">
+                  <b-nav-form>
+                    <div class="d-flex mt-1 mt-md-0">
+                      <div class="m-0 p-0">
+                        <b-form-select size="sm" v-model="settings.cardsTable.sortOption" @change="saveSettings" :options="sortOptions" style="max-width: 12.0rem;"></b-form-select>
+                      </div>
+                      <div class="m-0 ml-1 p-0">
+                        <b-form-select size="sm" v-model="settings.cardsTable.pageSize" @change="saveSettings" :options="pageSizes" style="max-width: 6.0rem;"></b-form-select>
+                      </div>
+                    </div>
+                  </b-nav-form>
+                </b-navbar-nav>
+              </b-collapse>
+            </b-navbar>
+            <b-table small fixed striped responsive hover :fields="cardsFields" :items="pagedFilteredSortedCards" show-empty empty-html="Press Escape. Then scan your Burner.pro NFC card to begin" head-variant="light" class="mx-0 my-0 mt-1" style="min-height: 333px;">
+              <template #cell(select)="data">
+                <b-form-checkbox size="sm" :checked="settings.selectedCard == data.item.cardId" @change="updateSelectedCard(data.item.cardId)">
+                </b-form-checkbox>
+              </template>
+              <template #cell(name)="data">
+                <b-form-input type="text" size="sm" v-model.trim="data.item.name" @change="updateName(data.item.cardId, $event)" debounce="1200" placeholder="name"></b-form-input>
+              </template>
+              <template #cell(address)="data">
+                <div v-if="data.item.initialised">
+                  <b-link @click="showModalAddress(data.item.address)" target="_blank">
+                    <font size="-1">{{ nameOrShortAddress(data.item.address) }}</font>
+                  </b-link>
+                  <b-button size="sm" @click="copyToClipboard(data.item.address);" variant="outline">
+                    <b-icon-clipboard shift-v="+2" font-scale="0.9" variant="primary"></b-icon-clipboard>
+                  </b-button>
+                </div>
+                <div v-else>
+                  <font size="-1">(Uninitialised)</font>
+                </div>
+              </template>
+              <template #cell(card)="data">
+                <b-button size="sm" @click="showModalCard(data.item.cardId, data.item.name);" variant="outline">
+                  <b-iconstack font-scale="1">
+                    <b-icon stacked icon="lock" shift-h="0" shift-v="0" variant="primary" scale="0.6"></b-icon>
+                    <b-icon stacked icon="file" variant="primary" scale="1.0"></b-icon>
+                  </b-iconstack>
+                </b-button>
+              </template>
+              <!-- <template #cell(slot)="data">
+                <b-badge pill variant="transparent" class="px-0">{{ data.item.slot }}</b-badge>
+              </template> -->
+              <!-- <template #cell(address)="data">
+                <b-link :href="'https://etherscan.io/address/' + data.item.address" target="_blank" v-b-popover.hover="data.item.address">
+                  {{ data.item.address.substring(0, 8) + '...' + data.item.address.slice(-6) }}
+                </b-link>
+                <br />
+                <font v-if="data.item.balance" size="-1">
+                  Balance: {{ formatETH(data.item.balance) }}
+                </font>
+              </template> -->
+            </b-table>
+          </b-card>
+
+          <!-- :ADDRESSES -->
+          <b-card v-if="settings.mode == 'addresses'" no-body class="m-1 p-1" bg-variant="light">
+            <b-navbar toggleable="md" type="light" variant="light" class="m-0 p-0">
+              <b-nav-form>
+                <b-form-input type="text" size="sm" v-model.trim="settings.addressesTable.filter" @change="saveSettings" debounce="1200" placeholder="🔍 addr/name" style="max-width: 7.0rem;"></b-form-input>
+              </b-nav-form>
+              <b-nav-form>
+                <b-pagination size="sm" v-model="settings.addressesTable.currentPage" @input="saveSettings" :total-rows="filteredSortedAddresses.length" :per-page="settings.addressesTable.pageSize" limit="3" class="m-0 p-0 ml-md-1"></b-pagination>
+              </b-nav-form>
+              <b-navbar-toggle target="modaladdresses-nav-collapse" class="m-0 mr-1 p-0 border-0" style="outline: none;">
+                <template #default="{ expanded }">
+                  <b-icon :icon="expanded ? 'chevron-double-up' : 'chevron-double-down'" variant="primary"></b-icon>
+                </template>
+              </b-navbar-toggle>
+              <b-collapse id="modaladdresses-nav-collapse" is-nav>
+                <b-navbar-nav small class="ml-auto">
+                  <b-nav-form>
+                    <div class="d-flex mt-1 mt-md-0">
+                      <div class="m-0 p-0">
+                        <b-form-select size="sm" v-model="settings.addressesTable.addressType" @change="saveSettings" :options="addressTypeFilterOptions" style="max-width: 12.0rem;"></b-form-select>
+                      </div>
+                      <div class="m-0 ml-1 p-0">
+                        <b-form-select size="sm" v-model="settings.addressesTable.sortOption" @change="saveSettings" :options="sortOptions" style="max-width: 12.0rem;"></b-form-select>
+                      </div>
+                      <div class="m-0 ml-1 p-0">
+                        <b-form-select size="sm" v-model="settings.addressesTable.pageSize" @change="saveSettings" :options="pageSizes" style="max-width: 6.0rem;"></b-form-select>
+                      </div>
+                    </div>
+                  </b-nav-form>
+                </b-navbar-nav>
+              </b-collapse>
+            </b-navbar>
+            <b-table ref="addressesTable" small fixed striped responsive hover selectable select-mode="single" @row-selected='addressesRowSelected':fields="addressesFields" :items="pagedFilteredSortedAddresses" show-empty empty-html="Press Escape. Then scan your Burner.pro NFC card to begin" head-variant="light" class="mx-0 my-0 mt-1" style="min-height: 333px;" thead-class="d-none">
+              <template #cell(one)="data">
+                <b-row class="m-0 p-0">
+                  <b-col class="m-0 p-0">
+                    <font size="-1">{{ (parseInt(data.index) + ((settings.addressesTable.currentPage - 1) * settings.addressesTable.pageSize) + 1) + '.' }}</font>
+                  </b-col>
+                  <b-col cols="11" class="m-0 p-0">
+                    <!-- <b-link @click="showModalAddress(data.item.address)" target="_blank"> -->
+                      <font size="-1">{{ data.item.address.substring(0, 6) + '...' + data.item.address.slice(-4) }}</font>
+                    <!-- </b-link> -->
+                    <b-dropdown size="sm" text="" variant="link" class="m-0 p-0">
+                      <b-dropdown-text>{{ data.item.address.substring(0, 10) + '...' + data.item.address.slice(-8) }}</b-dropdown-text>
+                      <b-dropdown-divider></b-dropdown-divider>
+                      <b-dropdown-item @click="copyToClipboard(data.item.address);">Copy to clipboard</b-dropdown-item>
+                      <b-dropdown-item :href="'https://etherscan.io/address/' + data.item.address" target="_blank">View in Etherscan.io</b-dropdown-item>
+                      <b-dropdown-item v-if="['nfccard'].includes(data.item.type)" :href="'https://opensea.io/' + data.item.address" target="_blank">View address in OpenSea.io</b-dropdown-item>
+                      <b-dropdown-item v-if="data.item.slug" :href="'https://opensea.io/collection/' + data.item.slug" target="_blank">View collection in OpenSea.io</b-dropdown-item>
+                      <!-- <b-dropdown-item :href="'https://blur.io/' + data.item.address" target="_blank">View in Blur.io</b-dropdown-item> -->
+                    </b-dropdown>
+                    <font size="-1">{{ nameOrShortAddress(data.item.address) }}</font>
+                    <br />
+                    <b-badge pill variant="transparent" class="m-0 p-0">
+                      {{ addressTypeOptions.filter((e) => e.value == data.item.type)[0] && addressTypeOptions.filter((e) => e.value == data.item.type)[0].text }}
+                    </b-badge>
+                  </b-col>
+                </b-row>
+                <!-- <b-form-checkbox size="sm" :checked="settings.selectedCard == data.item.cardId" @change="updateSelectedCard(data.item.cardId)">
+                </b-form-checkbox> -->
+              </template>
+              <!-- <template #cell(select)="data">
+                <b-form-checkbox size="sm" :checked="settings.selectedCard == data.item.cardId" @change="updateSelectedCard(data.item.cardId)">
+                </b-form-checkbox>
+              </template> -->
+              <!-- <template #cell(name)="data">
+                <b-form-input type="text" size="sm" v-model.trim="data.item.name" @change="updateName(data.item.cardId, $event)" debounce="1200" placeholder="name"></b-form-input>
+              </template> -->
+              <!-- <template #cell(address)="data">
+                <div v-if="data.item.initialised">
+                  <b-link @click="showModalAddress(data.item.address)" target="_blank">
+                    <font size="-1">{{ nameOrShortAddress(data.item.address) }}</font>
+                  </b-link>
+                  <b-button size="sm" @click="copyToClipboard(data.item.address);" variant="outline">
+                    <b-icon-clipboard shift-v="+2" font-scale="0.9" variant="primary"></b-icon-clipboard>
+                  </b-button>
+                </div>
+                <div v-else>
+                  <font size="-1">(Uninitialised)</font>
+                </div>
+              </template> -->
+              <!-- <template #cell(card)="data">
+                <b-button size="sm" @click="showModalCard(data.item.cardId, data.item.name);" variant="outline">
+                  <b-iconstack font-scale="1">
+                    <b-icon stacked icon="lock" shift-h="0" shift-v="0" variant="primary" scale="0.6"></b-icon>
+                    <b-icon stacked icon="file" variant="primary" scale="1.0"></b-icon>
+                  </b-iconstack>
+                </b-button>
+              </template> -->
+            </b-table>
+          </b-card>
+
+          <!-- :INFO -->
+          <b-card v-if="settings.mode == 'info'" no-body class="m-1 p-1" bg-variant="light">
             <b-card-body class="mt-1 p-1">
               <h6>Welcome to BurnerProTool (WIP)</h6>
-              This tool is being built to provide an alternative method to manage your Ethereum wallets on
+              Tool to manage your Ethereum wallets on
               <b-link href="https://burner.pro" target="_blank">burner.pro</b-link> NFC cards.
               <br />
-              <br />
-              Optimised for use on a mobile phone web browser with NFC and web3 support, e.g., Brave from <b-link href="https://brave.com/" target="_blank">brave.com</b-link>.
-              <br />
-              <br />
-              <!-- <b-icon-files shift-v="+1" font-scale="1.0" variant="primary"></b-icon-files> View cards -->
-              <b-iconstack font-scale="1">
-                <b-icon stacked icon="lock" shift-h="-1" shift-v="-1" variant="primary" scale="0.6"></b-icon>
-                <b-icon stacked icon="files" variant="primary" scale="1.0"></b-icon>
-              </b-iconstack>
-              View cards
-              <br />
-              <b-icon-card-list shift-v="+1" font-scale="1.0" variant="primary"></b-icon-card-list> View addresses
               <br />
               <b-iconstack font-scale="1">
                 <b-icon stacked icon="wifi" variant="primary" scale="0.8"></b-icon>
                 <b-icon stacked icon="file" variant="primary" scale="1.5"></b-icon>
               </b-iconstack> Scan Burner.pro NFC card
               <br />
-              <b-icon :icon="settings.showInfo ? 'info-circle-fill' : 'info-circle'" shift-v="+1" font-scale="1.0" variant="primary"></b-icon> View info
+              <b-iconstack font-scale="1">
+                <b-icon stacked :icon="settings.mode == 'card' ? 'lock-fill' : 'lock'" variant="primary" scale="0.6"></b-icon>
+                <b-icon stacked icon="file" variant="primary" scale="1.2"></b-icon>
+              </b-iconstack> Card
               <br />
-              <b-icon-gear shift-v="+1" font-scale="1.0" variant="primary"></b-icon-gear> Config - load test data; set Etherscan and CryptoCompare API keys
+              <!-- <b-icon-files shift-v="+1" font-scale="1.0" variant="primary"></b-icon-files> View cards -->
+              <b-iconstack font-scale="1">
+                <b-icon stacked :icon="settings.mode == 'cards' ? 'lock-fill' : 'lock'" shift-h="-1" shift-v="-1" variant="primary" scale="0.6"></b-icon>
+                <b-icon stacked icon="files" variant="primary" scale="1.0"></b-icon>
+              </b-iconstack>
+              Cards
+              <br />
+              <b-icon :icon="settings.mode == 'addresses' ? 'people-fill' : 'people'" font-scale="1.0" variant="primary"></b-icon> Addresses
+              <br />
+              <b-icon :icon="settings.mode == 'info' ? 'info-circle-fill' : 'info-circle'" font-scale="1.0" variant="primary"></b-icon> Info
+              <br />
+              <b-icon :icon="settings.mode == 'config' ? 'gear-fill' : 'gear'" font-scale="1.0" variant="primary"></b-icon> Config
+              <br />
+              <br />
+              Scan your NFC card to begin, then add your Etherscan and CryptoCompare API keys in Config.
+              To test without an NFC card, click [Insert Test Data] in Config.
+              <br />
+              <br />
+              Best used on a a mobile phone web browser with NFC and web3 support, e.g., <b-link href="https://brave.com/" target="_blank">Brave</b-link>.
               <br />
               <br />
               We are not affiliated with burner.pro .
@@ -618,6 +606,29 @@
               <br />
               <font size="-1">(c) BokkyPooBah / Bok Consulting Pty Ltd 2024</font>
             </b-card-body>
+          </b-card>
+
+          <!-- :CONFIG -->
+          <b-card v-if="settings.mode == 'config'" no-body class="m-1 p-1" bg-variant="light">
+            <!-- <h5>Configuration</h5> -->
+            <b-form-group label="API Keys" label-size="md" label-class="font-weight-bold pt-0" class="mt-3 mb-0">
+              <b-form-group label="Etherscan:" label-for="etherscan-apikey">
+                <b-form-input type="text" size="sm" id="etherscan-apikey" v-model.trim="settings.etherscanAPIKey" @change="saveSettings();" placeholder="See https://etherscan.io/apis"></b-form-input>
+              </b-form-group>
+              <b-form-group label="CryptoCompare:" label-for="cryptocompar ie-apikey">
+                <b-form-input type="text" size="sm" id="cryptocompare-apikey" v-model.trim="settings.cryptoCompareAPIKey" @change="saveSettings();" placeholder="See https://www.cryptocompare.com/cryptopian/api-keys"></b-form-input>
+              </b-form-group>
+            </b-form-group>
+            <b-form-group label="Test Data" label-size="md" label-class="font-weight-bold pt-0" class="mt-3 mb-0">
+              <b-form-group label="Insert test data:" label-cols="5" label-align="right">
+                <b-button size="sm" @click="insertTestData()" variant="primary">Insert</b-button>
+              </b-form-group>
+            </b-form-group>
+            <b-form-group label-cols-lg="2" label="Reset Data" label-size="md" label-class="font-weight-bold pt-0" class="mt-3 mb-0">
+              <b-form-group label="Reset data:" label-cols="5" label-align="right">
+                <b-button size="sm" @click="resetData()" variant="warning">Reset</b-button>
+              </b-form-group>
+            </b-form-group>
           </b-card>
 
           <b-card v-if="!settings.showInfo && Object.keys(settings.cards).length > 0" no-body class="m-1 p-1" bg-variant="light">
@@ -1055,7 +1066,7 @@
           settings: {
             mode: 'card', // 'card', 'cards', 'addresses', 'info', 'config'
             tabIndex: 0,
-            showInfo: false,
+            showInfo: false, // TODO: Delete
             cards: {},
             addresses: {},
             selectedCard: null,
@@ -1820,12 +1831,6 @@
             this.settings.selectedCard = selectedCard;
             this.saveSettings();
           },
-          showModalCards() {
-            this.$bvModal.show('modal-cards');
-          },
-          showModalAddresses() {
-            this.$bvModal.show('modal-addresses');
-          },
           showModalCard(cardId, name) {
             console.log(moment().format("HH:mm:ss") + " showModalCard - cardId: " + cardId + ", name: " + name);
             this.modalCard.cardId = cardId;
@@ -1857,9 +1862,6 @@
               .catch(err => {
                 // An error occurred
               });
-          },
-          showModalConfig() {
-            this.$bvModal.show('modal-config');
           },
           showModalGraffiti() {
             this.modalGraffiti.graffiti = this.activeCardGraffiti;
