@@ -346,7 +346,7 @@
 
           <!-- :CARD -->
           <b-card v-if="settings.mode == 'card' && Object.keys(settings.cards).length > 0" no-body class="m-1 p-1" bg-variant="light">
-            <div class="d-flex m-0 p-0">
+            <!-- <div class="d-flex m-0 p-0">
               <span class="m-1">
                 <b-link v-if="activeAddress" @click="showModalAddress(activeAddress);">
                   <font size="-1">{{ nameOrShortAddress(activeAddress) }}</font>
@@ -361,13 +361,26 @@
                 </b-dropdown>
               </span>
               <div class="mt-0 flex-grow-1">
-              </div>
-              <b-tabs small v-model="settings.tabIndex" @input="saveSettings" align="right" class="text-right" content-class="m-0 p-0">
+              </div> -->
+              <b-tabs small v-model="settings.tabIndex" @input="saveSettings" class="text-right" content-class="m-0 p-0">
+                <template #tabs-end>
+                  <b-link v-if="activeAddress" @click="showModalAddress(activeAddress);" class="ml-5 mt-2">
+                    <font size="-1">{{ nameOrShortAddress(activeAddress) }}</font>
+                  </b-link>
+                  <b-dropdown v-if="activeAddress" size="sm" right text="" variant="link" class="m-0 p-0">
+                    <b-dropdown-text>{{ activeAddress.substring(0, 10) + '...' + activeAddress.slice(-8) }}</b-dropdown-text>
+                    <b-dropdown-divider></b-dropdown-divider>
+                    <b-dropdown-item @click="copyToClipboard(activeAddress);">Copy to clipboard</b-dropdown-item>
+                    <b-dropdown-item :href="'https://etherscan.io/address/' + activeAddress" target="_blank">View in Etherscan.io</b-dropdown-item>
+                    <b-dropdown-item :href="'https://opensea.io/' + activeAddress" target="_blank">View in OpenSea.io</b-dropdown-item>
+                    <b-dropdown-item :href="'https://blur.io/' + activeAddress" target="_blank">View in Blur.io</b-dropdown-item>
+                  </b-dropdown>
+                </template>
                 <b-tab title="Tokens" no-body></b-tab>
                 <b-tab title="NFTs" no-body></b-tab>
                 <b-tab title="Txs" no-body></b-tab>
               </b-tabs>
-            </div>
+            <!-- </div> -->
 
             <!-- :CARDTOKENS -->
             <b-card-body v-if="settings.tabIndex == 0" class="m-0 p-1" body-bg-variant="white">
