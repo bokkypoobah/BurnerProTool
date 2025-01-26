@@ -476,6 +476,66 @@
 
         <b-card no-body class="p-0 mt-0 border-0" style="min-height: 666px;">
 
+          <!-- HERE -->
+          <div class="d-flex flex-wrap m-0 mt-1 p-0 px-1 bg-white">
+            <div class="mt-0 pr-0">
+              <b-form-select size="sm" v-model="settings.selectedCard" :options="cardsOptions" @change="saveSettings" style="max-width: 30.0rem;"></b-form-select>
+            </div>
+            <div class="mt-0 flex-grow-1">
+            </div>
+            <div class="mt-0 pr-1">
+              <b-button size="sm" @click="scanNFC();" variant="outline">
+                <!-- <b-iconstack font-scale="1" animation="cylon"> -->
+                <b-iconstack font-scale="1">
+                  <b-icon stacked icon="wifi" variant="primary" scale="0.8"></b-icon>
+                  <b-icon stacked icon="file" variant="primary" scale="1.5"></b-icon>
+                </b-iconstack>
+              </b-button>
+            </div>
+            <div class="mt-0 flex-grow-1">
+            </div>
+            <div class="mt-0 pr-0">
+              <b-button-group size="sm">
+                <b-button @click="settings.mode = 'card'; saveSettings();" variant="link">
+                  <b-iconstack font-scale="1">
+                    <b-icon stacked :icon="settings.mode == 'card' ? 'lock-fill' : 'lock'" variant="primary" scale="0.6"></b-icon>
+                    <b-icon stacked icon="file" variant="primary" scale="1.2"></b-icon>
+                  </b-iconstack>
+                </b-button>
+                <font size="-1" class="mt-1 text-muted d-none d-md-block">
+                  Card
+                </font>
+                <b-button @click="settings.mode = 'cards'; saveSettings();" variant="none">
+                  <b-iconstack font-scale="1">
+                    <b-icon stacked :icon="settings.mode == 'cards' ? 'lock-fill' : 'lock'" shift-h="-1" shift-v="-1" variant="primary" scale="0.6"></b-icon>
+                    <b-icon stacked icon="files" variant="primary" scale="1.0"></b-icon>
+                  </b-iconstack>
+                </b-button>
+                <font size="-1" class="mt-1 text-muted d-none d-md-block">
+                  Cards
+                </font>
+                <b-button @click="settings.mode = 'addresses'; saveSettings();" variant="link">
+                  <b-icon :icon="settings.mode == 'addresses' ? 'people-fill' : 'people'" font-scale="1.0" variant="primary"></b-icon>
+                </b-button>
+                <font size="-1" class="mt-1 text-muted d-none d-md-block">
+                  Addresses
+                </font>
+                <b-button @click="settings.mode = 'info'; saveSettings();" variant="link">
+                  <b-icon :icon="settings.mode == 'info' ? 'info-circle-fill' : 'info-circle'" font-scale="1.0" variant="primary"></b-icon>
+                </b-button>
+                <font size="-1" class="mt-1 text-muted d-none d-md-block">
+                  Info
+                </font>
+                <b-button @click="settings.mode = 'config'; saveSettings();" variant="link">
+                  <b-icon :icon="settings.mode == 'config' ? 'gear-fill' : 'gear'" font-scale="1.0" variant="primary"></b-icon>
+                </b-button>
+                <font size="-1" class="mt-1 text-muted d-none d-md-block">
+                  Config
+                </font>
+              </b-button-group>
+            </div>
+          </div>
+
           <div class="d-flex flex-wrap m-0 mt-1 p-0 px-1 bg-white">
             <div class="mt-0 pr-0">
               <b-form-select size="sm" v-model="settings.selectedCard" :options="cardsOptions" @change="saveSettings" style="max-width: 30.0rem;"></b-form-select>
@@ -993,6 +1053,7 @@
           forceRefresh: 0,
 
           settings: {
+            mode: 'card', // 'card', 'cards', 'addresses', 'info', 'config'
             tabIndex: 0,
             showInfo: false,
             cards: {},
@@ -1031,7 +1092,7 @@
               pageSize: 10,
               sortOption: 'nameasc',
             },
-            version: 7,
+            version: 8,
           },
 
           // TODO: Rename to modalCard, add card functions to this dialog including set graffiti, delete from db and card status (duplicated, duplicate)
