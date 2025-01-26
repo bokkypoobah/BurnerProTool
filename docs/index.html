@@ -584,6 +584,55 @@
 
             <!-- [Fungible] Tokens View -->
             <b-card-body v-if="settings.tabIndex == 0" class="m-0 p-1" body-bg-variant="white">
+
+              <b-navbar toggleable="md" type="light" variant="none" class="m-0 p-0">
+                <b-nav-form>
+                  <b-form-input type="text" size="sm" v-model.trim="settings.tokensTable.filter" @change="saveSettings" debounce="1200" placeholder="🔍 name/addr" style="max-width: 7.0rem;"></b-form-input>
+                </b-nav-form>
+                <b-nav-form>
+                  <b-button v-if="activeAddress" size="sm" @click="downloadFromEtherscan(activeAddress);" variant="outline">
+                    <b-icon-cloud-download shift-v="+1" font-scale="1" variant="primary"></b-icon-cloud-download>
+                  </b-button>
+                </b-nav-form>
+                <b-nav-form>
+                  <b-pagination size="sm" v-model="settings.tokensTable.currentPage" @input="saveSettings" :total-rows="filteredSortedNFTs.length" :per-page="settings.tokensTable.pageSize" limit="3" class="m-0 p-0 ml-md-1"></b-pagination>
+                </b-nav-form>
+                <b-navbar-toggle target="tokens-nav-collapse" class="m-0 mr-1 p-0 border-0" style="outline: none;">
+                  <template #default="{ expanded }">
+                    <b-icon :icon="expanded ? 'chevron-double-up' : 'chevron-double-down'" variant="primary"></b-icon>
+                  </template>
+                </b-navbar-toggle>
+                <b-collapse id="tokens-nav-collapse" is-nav>
+                  <b-navbar-nav small class="ml-auto">
+                    <b-nav-form>
+                      <div class="d-flex mt-1 mt-md-0">
+                        <div class="m-0 p-0">
+                          <b-form-select size="sm" id="tokensoptions-sort" v-model="settings.tokensTable.sortOption" @change="saveSettings" :options="sortOptions" style="max-width: 12.0rem;"></b-form-select>
+                        </div>
+                        <div class="m-0 ml-1 p-0">
+                          <b-form-select size="sm" id="tokensoptions-pagesize" v-model="settings.tokensTable.pageSize" @change="saveSettings" :options="pageSizes" style="max-width: 6.0rem;"></b-form-select>
+                        </div>
+                      </div>
+                    </b-nav-form>
+                  </b-navbar-nav>
+                </b-collapse>
+              </b-navbar>
+
+              <b-table ref="tokensTable" small fixed striped responsive hover selectable select-mode="single" @row-selected='addressesRowSelected':fields="addressesFields" :items="pagedFilteredSortedTokens" show-empty empty-html="Press Escape. Then scan your Burner.pro NFC card to begin" head-variant="light" class="mx-0 my-0 mt-1" style="min-height: 333px;" thead-class="d-none">
+                <template #cell(one)="data">
+                  <b-row class="m-0 p-0">
+                    <b-col class="m-0 p-0">
+                      <font size="-1">{{ (parseInt(data.index) + ((settings.tokensTable.currentPage - 1) * settings.tokensTable.pageSize) + 1) + '.' }}</font>
+                    </b-col>
+                    <b-col cols="11" class="m-0 p-0">
+                      {{ nameOrShortAddress(data.item.token) }} {{ data.item.balance }}
+                      <br />
+                      chainId: {{ data.item.chainId }} 
+                    </b-col>
+                  </b-row>
+                </template>
+              </b-table>
+
               <font size="-1">
                 <pre>
 {{ pagedFilteredSortedTokens }}
@@ -661,7 +710,7 @@
             <b-card-body v-if="settings.tabIndex == 2" class="m-0 p-1" body-bg-variant="white">
               <b-navbar toggleable="md" type="light" variant="none" class="m-0 p-0">
                 <b-nav-form>
-                  <b-form-input type="text" size="sm" v-model.trim="settings.nftsTable.filter" @change="saveSettings" debounce="1200" placeholder="🔍 name" style="max-width: 7.0rem;"></b-form-input>
+                  <b-form-input type="text" size="sm" v-model.trim="settings.txsTable.filter" @change="saveSettings" debounce="1200" placeholder="🔍 name" style="max-width: 7.0rem;"></b-form-input>
                 </b-nav-form>
                 <b-nav-form>
                   <b-button v-if="activeAddress" size="sm" @click="downloadFromEtherscan(activeAddress);" variant="outline">
@@ -2893,6 +2942,9 @@
           },
           nameOrShortAddress(address, length = 0) {
             let result = null;
+            if (address == "eth") {
+              return "ETH";
+            }
             if (address in this.settings.addresses) {
               result = this.settings.addresses[address].name;
             }
