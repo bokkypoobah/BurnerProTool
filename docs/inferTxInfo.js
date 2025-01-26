@@ -93,6 +93,7 @@ function getTxFlows(chainId, txHash, tx, address) {
       token: null,
       tokens: tx.tx.value,
     });
+    // TODO: Generalise for different chains
     // WETH Deposit - generate WETH.Transfer(0x0, tx.from, tx.value)
     if (tx.tx && tx.tx.to == "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2") {
       // console.log(moment().format("HH:mm:ss") + " getTxFlows - txHash: " + txHash + ", tx: " + JSON.stringify(tx, null, 2).substring(0, 20000));
