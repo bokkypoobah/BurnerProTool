@@ -64,11 +64,11 @@ function inferTxInfo(tx) {
 function getTxFlows(chainId, txHash, tx, address) {
   const results = [];
   if (tx.tx && tx.tx.from == address) {
-    console.log(moment().format("HH:mm:ss") + " getTxFlows - txHash: " + txHash + ", tx: " + JSON.stringify(tx, null, 2).substring(0, 200));
+    // console.log(moment().format("HH:mm:ss") + " getTxFlows - txHash: " + txHash + ", tx: " + JSON.stringify(tx, null, 2).substring(0, 200));
     const gasUsed = tx.tx.gasUsed || null;
     const gasPrice = tx.tx.gasPrice || null;
     const gas = ethers.BigNumber.from(gasUsed).mul(gasPrice).toString()
-    console.log("gasUsed: " + gasUsed + ", gasPrice: " + gasPrice + ", gas: " + gas);
+    // console.log("gasUsed: " + gasUsed + ", gasPrice: " + gasPrice + ", gas: " + gas);
     results.push({
       chainId,
       txHash,
