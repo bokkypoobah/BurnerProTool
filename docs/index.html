@@ -502,7 +502,7 @@
                     <b-icon stacked icon="file" variant="primary" scale="1.2"></b-icon>
                   </b-iconstack>
                 </b-button>
-                <font size="-1" class="mt-1 text-muted d-none d-md-block">
+                <font size="-1" class="mt-1 text-muted d-none d-sm-block">
                   Card
                 </font>
                 <b-button @click="settings.mode = 'cards'; saveSettings();" variant="none">
@@ -511,25 +511,25 @@
                     <b-icon stacked icon="files" variant="primary" scale="1.0"></b-icon>
                   </b-iconstack>
                 </b-button>
-                <font size="-1" class="mt-1 text-muted d-none d-md-block">
+                <font size="-1" class="mt-1 text-muted d-none d-sm-block">
                   Cards
                 </font>
                 <b-button @click="settings.mode = 'addresses'; saveSettings();" variant="link">
                   <b-icon :icon="settings.mode == 'addresses' ? 'people-fill' : 'people'" font-scale="1.0" variant="primary"></b-icon>
                 </b-button>
-                <font size="-1" class="mt-1 text-muted d-none d-md-block">
+                <font size="-1" class="mt-1 text-muted d-none d-sm-block">
                   Addresses
                 </font>
                 <b-button @click="settings.mode = 'info'; saveSettings();" variant="link">
                   <b-icon :icon="settings.mode == 'info' ? 'info-circle-fill' : 'info-circle'" font-scale="1.0" variant="primary"></b-icon>
                 </b-button>
-                <font size="-1" class="mt-1 text-muted d-none d-md-block">
+                <font size="-1" class="mt-1 text-muted d-none d-sm-block">
                   Info
                 </font>
                 <b-button @click="settings.mode = 'config'; saveSettings();" variant="link">
                   <b-icon :icon="settings.mode == 'config' ? 'gear-fill' : 'gear'" font-scale="1.0" variant="primary"></b-icon>
                 </b-button>
-                <font size="-1" class="mt-1 text-muted d-none d-md-block">
+                <font size="-1" class="mt-1 text-muted d-none d-sm-block">
                   Config
                 </font>
               </b-button-group>
