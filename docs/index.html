@@ -1427,37 +1427,23 @@
 
           tokens() {
             // console.log(moment().format("HH:mm:ss") + " tokens - this.activeAddress: " + this.activeAddress);
-            const results = [];
+            const txFlows = [];
             for (const [chainId, chainData] of Object.entries(this.activeAddress && this.etherscanData[this.activeAddress] || {})) {
-              // console.log(chainId + " => " + JSON.stringify(chainData).substring(0, 200));
               for (const [txHash, txData] of Object.entries(chainData)) {
-                // console.log(chainId + "/" + txHash.substring(0, 20) + " => " + JSON.stringify(txData).substring(0, 200));
                 const info = getTxFlows(chainId, txHash, txData, this.activeAddress);
                 if (info.length > 0) {
-                  results.push([
-                    ...info,
-                    // chainId,
-                    // txHash,
-                    // ...txData,
-                  ]);
+                  txFlows.push(...info);
                 }
-                // break;
               }
-              // for (const [contract, contractData] of Object.entries(chainData)) {
-              //   for (const [tokenId, tokenData] of Object.entries(contractData.tokens)) {
-              //     results.push({
-              //       chainId,
-              //       contract,
-              //       type: contractData.type,
-              //       collectionName: contractData.name,
-              //       collectionSlug: contractData.slug,
-              //       tokenId,
-              //       ...tokenData,
-              //     });
-              //   }
-              // }
             }
-            return results;
+            txFlows.sort((a, b) => {
+              if (a.blockNumber == b.blockNumber) {
+                return ('' + a.txHash).localeCompare(b.txHash);
+              } else {
+                return a.blockNumber - b.blockNumber;
+              }
+            });
+            return txFlows;
           },
           filteredSortedTokens() {
             return this.tokens;
