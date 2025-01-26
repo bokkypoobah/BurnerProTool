@@ -2936,7 +2936,7 @@
               return tokens.toFixed(precision);
             } else {
               if (token in this.settings.addresses) {
-                const decimals = this.settings.addresses[token].decimals || 1;
+                const decimals = this.settings.addresses[token].decimals || 18;
                 try {
                   if (precision == 0) {
                     return tokens ? ethers.utils.formatUnits(tokens, decimals) : null;
