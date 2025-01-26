@@ -618,16 +618,22 @@
                 </b-collapse>
               </b-navbar>
 
-              <b-table ref="tokensTable" small fixed striped responsive hover selectable select-mode="single" @row-selected='addressesRowSelected':fields="addressesFields" :items="pagedFilteredSortedTokens" show-empty empty-html="Press Escape. Then scan your Burner.pro NFC card to begin" head-variant="light" class="mx-0 my-0 mt-1" style="min-height: 333px;" thead-class="d-none">
+              <!-- <b-table ref="tokensTable" small fixed striped responsive hover selectable select-mode="single" @row-selected='addressesRowSelected':fields="tokensFields" :items="pagedFilteredSortedTokens" show-empty empty-html="Press Escape. Then scan your Burner.pro NFC card to begin" head-variant="light" class="mx-0 my-0 mt-1" style="min-height: 333px;" thead-class="d-none"> -->
+              <b-table ref="tokensTable" small fixed striped responsive hover :fields="tokensFields" :items="pagedFilteredSortedTokens" show-empty empty-html="Press Escape. Then scan your Burner.pro NFC card to begin" head-variant="light" class="mx-0 my-0 mt-1" style="min-height: 333px;" thead-class="d-none">
                 <template #cell(one)="data">
                   <b-row class="m-0 p-0">
                     <b-col class="m-0 p-0">
                       <font size="-1">{{ (parseInt(data.index) + ((settings.tokensTable.currentPage - 1) * settings.tokensTable.pageSize) + 1) + '.' }}</font>
                     </b-col>
-                    <b-col cols="11" class="m-0 p-0">
-                      {{ nameOrShortAddress(data.item.token) }} {{ data.item.balance }}
+                    <b-col cols="5" class="m-0 p-0">
+                      {{ nameOrShortAddress(data.item.token) }}
                       <br />
-                      chainId: {{ data.item.chainId }} 
+                      <b-badge pill variant="transparent" class="px-0">{{ data.item.chainId == 1 ? "ETH Mainnet" : ("chainId: " + data.item.chainId) }}</b-badge>
+                    </b-col>
+                    <b-col cols="6" class="m-0 p-0">
+                      <font size="-1">
+                        {{ formatTokens(data.item.token, data.item.balance, 0) }}
+                      </font>
                     </b-col>
                   </b-row>
                 </template>
@@ -1163,6 +1169,14 @@
           ],
 
           addressesFields: [
+            { key: 'one', label: '', sortable: false, thStyle: 'width: 100%;', tdClass: 'text-left' },
+            // { key: 'select', label: '', sortable: false, thStyle: 'width: 10%;', tdClass: 'text-truncate' },
+            // { key: 'address', label: 'Address', sortable: false, thStyle: 'width: 45%;', tdClass: 'text-truncate' },
+            // { key: 'name', label: 'Name', sortable: false, thStyle: 'width: 30%;', tdClass: 'text-truncate' },
+            // { key: 'card', label: 'Card', sortable: false, thStyle: 'width: 15%;', thClass: 'text-left', tdClass: 'text-left' },
+          ],
+
+          tokensFields: [
             { key: 'one', label: '', sortable: false, thStyle: 'width: 100%;', tdClass: 'text-left' },
             // { key: 'select', label: '', sortable: false, thStyle: 'width: 10%;', tdClass: 'text-truncate' },
             // { key: 'address', label: 'Address', sortable: false, thStyle: 'width: 45%;', tdClass: 'text-truncate' },
@@ -2908,6 +2922,33 @@
               return Number(n).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 });
             }
             return null;
+          },
+          formatTokens(token, tokens, precision = 9) {
+            if (token == "eth") {
+              try {
+                if (precision == 0) {
+                  return tokens ? ethers.utils.formatEther(tokens) : null;
+                } else {
+                  return tokens ? parseFloat(ethers.utils.formatEther(tokens)).toFixed(precision) : null;
+                }
+              } catch (err) {
+              }
+              return tokens.toFixed(precision);
+            } else {
+              if (token in this.settings.addresses) {
+                const decimals = this.settings.addresses[token].decimals || 1;
+                try {
+                  if (precision == 0) {
+                    return tokens ? ethers.utils.formatUnits(tokens, decimals) : null;
+                  } else {
+                    return tokens ? parseFloat(ethers.utils.formatUnits(tokens, decimals)).toFixed(precision) : null;
+                  }
+                } catch (err) {
+                }
+                return tokens.toFixed(precision);
+              }
+            }
+            return tokens;
           },
           formatETH(e, precision = 9) {
             try {
