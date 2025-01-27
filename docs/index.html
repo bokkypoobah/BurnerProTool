@@ -2430,10 +2430,8 @@
             console.log(moment().format("HH:mm:ss") + " syncIt - activeAddress: " + this.activeAddress);
             this.sync.total = 5;
             this.sync.completed = 0;
-            this.sync.section = "Reservoir";
-            await this.downloadFromReservoir(this.activeAddress);
-            this.sync.section = "Etherscan";
             await this.downloadFromEtherscan(this.activeAddress);
+            await this.downloadFromReservoir(this.activeAddress);
             this.sync.section = null;
           },
 
@@ -2445,6 +2443,7 @@
 
             const etherscanData = {};
 
+            this.sync.section = "Transactions from Etherscan";
             let getTransactionsResult;
             if (!useCache || !localStorage.cachedGetTransactionsResult) {
               const getTransactionsUrl = "https://api.etherscan.io/v2/api?chainId=" + chainId + "&module=account&action=txlist&address=" + this.activeAddress + "&startblock=0&endblock=99999999&page=1&offset=100&sort=desc&apikey=" + this.settings.etherscanAPIKey;
@@ -2468,6 +2467,7 @@
             console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - etherscanData: " + JSON.stringify(etherscanData, null, 2).substring(0, 200));
             this.sync.completed++;
 
+            this.sync.section = "Internal Transactions from Etherscan";
             let getInternalTransactionsResult;
             if (!useCache || !localStorage.cachedGetInternalTransactionsResult) {
               await delay(1000);
@@ -2492,6 +2492,7 @@
             console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - etherscanData: " + JSON.stringify(etherscanData, null, 2).substring(0, 200));
             this.sync.completed++;
 
+            this.sync.section = "ERC-20 Transfers from Etherscan";
             let getERC20TransfersResult;
             if (!useCache || !localStorage.cachedGetERC20TransfersResult) {
               await delay(1000);
@@ -2516,6 +2517,7 @@
             console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - etherscanData: " + JSON.stringify(etherscanData, null, 2).substring(0, 200));
             this.sync.completed++;
 
+            this.sync.section = "ERC-721 Transfers from Etherscan";
             let getERC721TransfersResult;
             if (!useCache || !localStorage.cachedGetERC721TransfersResult) {
               await delay(1000);
@@ -2540,6 +2542,7 @@
             console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - etherscanData: " + JSON.stringify(etherscanData, null, 2).substring(0, 200));
             this.sync.completed++;
 
+            this.sync.section = "ERC-1155 Transfers from Etherscan";
             let getERC1155TransfersResult;
             if (!useCache || !localStorage.cachedGetERC1155TransfersResult) {
               await delay(1000);
@@ -2652,6 +2655,7 @@
 
           async downloadFromReservoir(address) {
             console.log(moment().format("HH:mm:ss") + " downloadFromReservoir - address: " + address);
+            this.sync.section = "NFTs from Reservoir";
             const reservoirData = {};
             let continuation = null;
             do {
