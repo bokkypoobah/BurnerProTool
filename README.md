@@ -6,6 +6,21 @@ See the [Burner.pro Review](./Review.md) (WIP).
 
 We are not affiliated with burner.pro . This tool is under development, so test it with small amounts first.
 
+TODO:
+* Complete modalNewAddress
+* Addresses - transferFrom, transferTo, transfer permissions?
+* Transfer out ETH
+* Wrap and unwrap ETH?
+* Transfer out ERC-20
+* Transfer out ERC-721/1155 - select address from 'eoa' and 'nfccard' addresses
+* Transactions - summarise using flows
+* Tidy address links
+* Sync progress - handle errors
+* Sync CryptoCompare data and convert ETH amounts to desired currency
+* Handle lack of web3 connection gracefully
+* ENS name syncing
+* Big tidy
+
 <br />
 
 ---
