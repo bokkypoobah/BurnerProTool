@@ -18,9 +18,63 @@ Load on NFC reader enabled mobile phone, with Burner.pro NFC card: https://bokky
 
 #### Sample Screens
 
-Initial page
+Intro page
 
-<kbd><img src="images/burnerprotoolblah.png" width="200" /></kbd>
+<kbd><img src="images/burnerprotoolintro01.png" width="200" /></kbd>
+
+Click on the [Scan NFC card] button
+
+<kbd><img src="images/burnerprotoolscannfc01.png" width="200" /></kbd>
+
+After scanning my first NFC card
+
+<kbd><img src="images/burnerprotoolscannfc02.png" width="200" /></kbd>
+
+Click to the [Cards] tab to name the card
+
+<kbd><img src="images/burnerprotoolscannfc03.png" width="200" /></kbd>
+
+Click on the address to name the address
+
+<kbd><img src="images/burnerprotoolscannfc04.png" width="200" /></kbd>
+
+After scanning my second NFC card
+
+<kbd><img src="images/burnerprotoolscannfc05.png" width="200" /></kbd>
+
+Click on the [Card] on my first NFC card. Note that this card has been duplicated.
+
+<kbd><img src="images/burnerprotoolscannfc06.png" width="200" /></kbd>
+
+Click on the [Card] on my second NFC card. Note that this card is the duplicate of the first card
+
+<kbd><img src="images/burnerprotoolscannfc07.png" width="200" /></kbd>
+
+Click to the [Config] tab and enter your Etherscan and CryptoCompare API keys.
+
+You can click on [Insert Test Data] to test this application with my NFC card addresses above.
+
+<kbd><img src="images/burnerprotoolconfig01.png" width="200" /></kbd>
+
+Click on the [Card] tab and click on the [Download] icon to view the fungible tokens
+
+<kbd><img src="images/burnerprotooltokens01.png" width="200" /></kbd>
+
+Click on the [NFTs] tab to view the list of owned NFTs
+
+<kbd><img src="images/burnerprotoolnfts01.png" width="200" /></kbd>
+
+Click on an NFT image to view the NFT details
+
+<kbd><img src="images/burnerprotoolnfts02.png" width="200" /></kbd>
+
+Click on the Transfer tab to transfer your NFT to a new address
+
+<kbd><img src="images/burnerprotoolnfts03.png" width="200" /></kbd>
+
+Click on the [Txs] tab and click on the [Download] icon to view the transactions
+
+<kbd><img src="images/burnerprotooltxs01.png" width="200" /></kbd>
 
 
 <br />
