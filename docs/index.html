@@ -61,7 +61,7 @@
         <!-- :MODALCARD -->
         <b-modal id="modal-card" hide-footer size="md" body-class="m-0 p-1" body-bg-variant="light">
           <template #modal-title>
-            Card {{ modalCard.name && ("'" + modalCard.name + "'") }}
+            Card {{ modalCard.cardId && settings.cards[modalCard.cardId] && ("'" + settings.cards[modalCard.cardId].name + "'") }}
           </template>
           <b-alert v-if="modalCard.cardId && settings.cards[modalCard.cardId] && settings.cards[modalCard.cardId].initialised && settings.cards[modalCard.cardId].selectedSlot != 9" size="sm" dismissible variant="warning" show class="m-0">
             <span v-if="settings.cards[modalCard.cardId].selectedSlot == 8">
@@ -71,7 +71,10 @@
               WARNING: os.burner.pro only uses slot 9, and slots 1 & 2 are not password protected
             </span>
           </b-alert>
-          <b-form-group label="Status:" label-cols="3" label-align="right" :description="modalCardCardStatus.message" class="m-0 mt-2">
+          <b-form-group label="Name:" label-cols="3" label-align="right" class="m-0 mt-2">
+            <b-form-input type="text" size="sm" :value="modalCard.cardId && settings.cards[modalCard.cardId] && settings.cards[modalCard.cardId].name" @change="updateName(modalCard.cardId, $event)" debounce="1200" placeholder="name" class="w-50"></b-form-input>
+          </b-form-group>
+          <b-form-group label="Status:" label-cols="3" label-align="right" :description="modalCardCardStatus.message" class="m-0 mt-1">
             <b-form-select size="sm" disabled :value="modalCardCardStatus.code" :options="cardStatusOptions" class="w-50"></b-form-select>
           </b-form-group>
           <b-table small fixed striped responsive hover :fields="slotsFields" :items="slots" show-empty head-variant="light" class="mx-0 my-0 mt-1">
@@ -346,12 +349,12 @@
 
           <!-- :CARD -->
           <b-card v-if="settings.mode == 'card' && Object.keys(settings.cards).length > 0" no-body class="m-1 p-1" bg-variant="light">
-            <!-- <div class="d-flex m-0 p-0">
-              <span class="m-1">
-                <b-link v-if="activeAddress" @click="showModalAddress(activeAddress);">
+            <b-tabs small v-model="settings.tabIndex" @input="saveSettings" class="text-right" content-class="m-0 p-0">
+              <template #tabs-end>
+                <b-link v-if="activeAddress" @click="showModalAddress(activeAddress);" class="ml-5 mt-2">
                   <font size="-1">{{ nameOrShortAddress(activeAddress) }}</font>
                 </b-link>
-                <b-dropdown v-if="activeAddress" size="sm" text="" variant="link" class="m-0 p-0">
+                <b-dropdown v-if="activeAddress" size="sm" right text="" variant="link" class="m-0 p-0">
                   <b-dropdown-text>{{ activeAddress.substring(0, 10) + '...' + activeAddress.slice(-8) }}</b-dropdown-text>
                   <b-dropdown-divider></b-dropdown-divider>
                   <b-dropdown-item @click="copyToClipboard(activeAddress);">Copy to clipboard</b-dropdown-item>
@@ -359,28 +362,11 @@
                   <b-dropdown-item :href="'https://opensea.io/' + activeAddress" target="_blank">View in OpenSea.io</b-dropdown-item>
                   <b-dropdown-item :href="'https://blur.io/' + activeAddress" target="_blank">View in Blur.io</b-dropdown-item>
                 </b-dropdown>
-              </span>
-              <div class="mt-0 flex-grow-1">
-              </div> -->
-              <b-tabs small v-model="settings.tabIndex" @input="saveSettings" class="text-right" content-class="m-0 p-0">
-                <template #tabs-end>
-                  <b-link v-if="activeAddress" @click="showModalAddress(activeAddress);" class="ml-5 mt-2">
-                    <font size="-1">{{ nameOrShortAddress(activeAddress) }}</font>
-                  </b-link>
-                  <b-dropdown v-if="activeAddress" size="sm" right text="" variant="link" class="m-0 p-0">
-                    <b-dropdown-text>{{ activeAddress.substring(0, 10) + '...' + activeAddress.slice(-8) }}</b-dropdown-text>
-                    <b-dropdown-divider></b-dropdown-divider>
-                    <b-dropdown-item @click="copyToClipboard(activeAddress);">Copy to clipboard</b-dropdown-item>
-                    <b-dropdown-item :href="'https://etherscan.io/address/' + activeAddress" target="_blank">View in Etherscan.io</b-dropdown-item>
-                    <b-dropdown-item :href="'https://opensea.io/' + activeAddress" target="_blank">View in OpenSea.io</b-dropdown-item>
-                    <b-dropdown-item :href="'https://blur.io/' + activeAddress" target="_blank">View in Blur.io</b-dropdown-item>
-                  </b-dropdown>
-                </template>
-                <b-tab title="Tokens" no-body></b-tab>
-                <b-tab title="NFTs" no-body></b-tab>
-                <b-tab title="Txs" no-body></b-tab>
-              </b-tabs>
-            <!-- </div> -->
+              </template>
+              <b-tab title="Tokens" no-body></b-tab>
+              <b-tab title="NFTs" no-body></b-tab>
+              <b-tab title="Txs" no-body></b-tab>
+            </b-tabs>
 
             <!-- :CARDTOKENS -->
             <b-card-body v-if="settings.tabIndex == 0" class="m-0 p-1" body-bg-variant="white">
@@ -618,7 +604,6 @@
 
           <!-- :CARDS -->
           <b-card v-if="settings.mode == 'cards'" no-body class="m-1 p-1" bg-variant="light">
-            <!-- <h6>Cards</h6> -->
             <b-navbar toggleable="md" type="light" variant="light" class="m-0 p-0">
               <b-nav-form>
                 <b-form-input type="text" size="sm" v-model.trim="settings.cardsTable.filter" @change="saveSettings" debounce="1200" placeholder="🔍 addr/name" style="max-width: 7.0rem;"></b-form-input>
@@ -646,15 +631,13 @@
                 </b-navbar-nav>
               </b-collapse>
             </b-navbar>
-            <b-table small fixed striped responsive hover :fields="cardsFields" :items="pagedFilteredSortedCards" show-empty empty-html="Press Escape. Then scan your Burner.pro NFC card to begin" head-variant="light" class="mx-0 my-0 mt-1" style="min-height: 333px;">
-              <template #cell(select)="data">
-                <b-form-checkbox size="sm" :checked="settings.selectedCard == data.item.cardId" @change="updateSelectedCard(data.item.cardId)">
-                </b-form-checkbox>
+            <b-table ref="cardsTable" small fixed striped responsive hover selectable select-mode="single" @row-selected='cardsRowSelected' :fields="cardsFields" :items="pagedFilteredSortedCards" show-empty empty-html="Press Escape. Then scan your Burner.pro NFC card to begin" head-variant="light" class="mx-0 my-0 mt-1" style="min-height: 333px;">
+              <template #cell(index)="data">
+                <font size="-1">{{ (parseInt(data.index) + ((settings.cardsTable.currentPage - 1) * settings.cardsTable.pageSize) + 1) + '.' }}</font>
               </template>
-              <template #cell(name)="data">
-                <b-form-input type="text" size="sm" v-model.trim="data.item.name" @change="updateName(data.item.cardId, $event)" debounce="1200" placeholder="name"></b-form-input>
-              </template>
-              <template #cell(address)="data">
+              <template #cell(card)="data">
+                {{ data.item.name }}
+                <br />
                 <div v-if="data.item.initialised">
                   <b-link @click="showModalAddress(data.item.address)" target="_blank">
                     <font size="-1">{{ nameOrShortAddress(data.item.address) }}</font>
@@ -667,26 +650,10 @@
                   <font size="-1">(Uninitialised)</font>
                 </div>
               </template>
-              <template #cell(card)="data">
-                <b-button size="sm" @click="showModalCard(data.item.cardId, data.item.name);" variant="outline">
-                  <b-iconstack font-scale="1">
-                    <b-icon stacked icon="lock" shift-h="0" shift-v="0" variant="primary" scale="0.6"></b-icon>
-                    <b-icon stacked icon="file" variant="primary" scale="1.0"></b-icon>
-                  </b-iconstack>
-                </b-button>
+              <template #cell(active)="data">
+                <b-form-checkbox size="sm" :checked="settings.selectedCard == data.item.cardId" @change="updateSelectedCard(data.item.cardId)">
+                </b-form-checkbox>
               </template>
-              <!-- <template #cell(slot)="data">
-                <b-badge pill variant="transparent" class="px-0">{{ data.item.slot }}</b-badge>
-              </template> -->
-              <!-- <template #cell(address)="data">
-                <b-link :href="'https://etherscan.io/address/' + data.item.address" target="_blank" v-b-popover.hover="data.item.address">
-                  {{ data.item.address.substring(0, 8) + '...' + data.item.address.slice(-6) }}
-                </b-link>
-                <br />
-                <font v-if="data.item.balance" size="-1">
-                  Balance: {{ formatETH(data.item.balance) }}
-                </font>
-              </template> -->
             </b-table>
           </b-card>
 
@@ -1068,10 +1035,8 @@
             version: 9,
           },
 
-          // TODO: Rename to modalCard, add card functions to this dialog including set graffiti, delete from db and card status (duplicated, duplicate)
           modalCard: {
-            cardId: "0x55aD5cd29e7409ed9215186056eF1a40a51b25FC", // TODO: null
-            name: "test", // TODO: null
+            cardId: null,
           },
 
           modalGraffiti: {
@@ -1080,10 +1045,10 @@
           },
 
           modalToken: {
-            chainId: null, // "eth", // TODO: null,
-            token: null, // "eth", // TODO: null,
-            balance: null, // "123", // TODO: null,
-            flows: [], // TODO: null,
+            chainId: null,
+            token: null,
+            balance: null,
+            flows: [],
           },
 
           modalNFT: {
@@ -1216,10 +1181,9 @@
           ],
 
           cardsFields: [
-            { key: 'select', label: '', sortable: false, thStyle: 'width: 10%;', tdClass: 'text-truncate' },
-            { key: 'name', label: 'Name', sortable: false, thStyle: 'width: 30%;', tdClass: 'text-truncate' },
-            { key: 'address', label: 'Address', sortable: false, thStyle: 'width: 45%;', tdClass: 'text-truncate' },
-            { key: 'card', label: 'Card', sortable: false, thStyle: 'width: 15%;', thClass: 'text-left', tdClass: 'text-left' },
+            { key: 'index', label: '#', sortable: false, thStyle: 'width: 10%;', tdClass: 'text-truncate' },
+            { key: 'card', label: 'Card', sortable: false, thStyle: 'width: 70%;', tdClass: 'text-truncate' },
+            { key: 'active', label: 'Active', sortable: false, thStyle: 'width: 20%;', tdClass: 'text-truncate' },
           ],
 
           addressesFields: [
@@ -1703,6 +1667,15 @@
             this.$bvModal.show('modal-address');
           },
 
+          cardsRowSelected(item) {
+            console.log(moment().format("HH:mm:ss") + " cardsRowSelected - item: " + JSON.stringify(item, null, 2));
+            if (item && item.length > 0) {
+              this.modalCard.cardId = item[0].cardId;
+              this.$bvModal.show('modal-card');
+              this.$refs.cardsTable.clearSelected();
+            }
+          },
+
           addressesRowSelected(item) {
             console.log(moment().format("HH:mm:ss") + " addressesRowSelected - item: " + JSON.stringify(item, null, 2));
             if (item && item.length > 0) {
@@ -1796,7 +1769,7 @@
           showModalCard(cardId, name) {
             console.log(moment().format("HH:mm:ss") + " showModalCard - cardId: " + cardId + ", name: " + name);
             this.modalCard.cardId = cardId;
-            this.modalCard.name = name;
+            // this.modalCard.name = name;
             this.$bvModal.show('modal-card');
           },
           modalCardDeleteCard(cardId, name) {
