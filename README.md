@@ -76,6 +76,10 @@ Click on the [Txs] tab and click on the [Download] icon to view the transactions
 
 <kbd><img src="images/burnerprotooltxs01.png" width="200" /></kbd>
 
+Click on the [Addresses] tab to view your addresses, including ERC-20, ERC-721 and ERC-1155 contracts.
+
+<kbd><img src="images/burnerprotooladdresses01.png" width="200" /></kbd>
+
 
 <br />
 
