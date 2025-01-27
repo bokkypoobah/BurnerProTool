@@ -1,4 +1,4 @@
-# Burner.pro NFC Card Tool Review (WIP)
+# Burner.pro NFC Card Review (WIP)
 
 [burner.pro](https://burner.pro/) provides Ethereum wallet functionality on a [NFC](https://en.wikipedia.org/wiki/Near-field_communication) card
 
