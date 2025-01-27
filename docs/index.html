@@ -58,6 +58,12 @@
           </b-navbar-nav>
         </b-navbar>
 
+        <b-progress v-if="sync.section != null" height="2.5rem" :max="sync.total" show-progress :animated="sync.section != null" :variant="sync.section != null ? 'success' : 'secondary'" class="m-1 p-1">
+          <b-progress-bar :value="sync.completed">
+            {{ sync.total == null ? (sync.completed + ' ' + sync.section) : (sync.completed + '/' + sync.total + ' ' + ((sync.completed / sync.total) * 100).toFixed(0) + '% ' + sync.section) }}
+          </b-progress-bar>
+        </b-progress>
+
         <!-- :MODALCARD -->
         <b-modal id="modal-card" hide-footer size="md" body-class="m-0 p-1" body-bg-variant="light">
           <template #modal-title>
@@ -277,66 +283,59 @@
           <template #modal-title>
             New Address
           </template>
-          <b-form-group label="Address:" label-cols="3" label-align="right" class="mt-1" :state="!modalNewAddress.addressError" :invalid-feedback="modalNewAddress.addressError" :description="modalNewAddress.alt && modalNewAddress.alt.length == 42 ? modalNewAddress.alt.substring(0, 10) + '...' + modalNewAddress.alt.slice(-8) : modalNewAddress.alt">
-            <!-- <template #description>
-              TODO: Add hyperlink to description
-            </template> -->
-            <b-form-input size="sm" :value="modalNewAddress.address" @change="modalNewAddressAddressUpdated($event);" placeholder="Address or ENS name"></b-form-input>
-          </b-form-group>
+          <b-form>
+            <b-form-group label="Address:" label-cols="3" label-align="right" class="mt-1" :state="!modalNewAddress.addressError" :invalid-feedback="modalNewAddress.addressError" :description="modalNewAddress.alt && modalNewAddress.alt.length == 42 ? modalNewAddress.alt.substring(0, 10) + '...' + modalNewAddress.alt.slice(-8) : modalNewAddress.alt">
+              <!-- <template #description>
+                TODO: Add hyperlink to description
+              </template> -->
+              <b-form-input size="sm" :value="modalNewAddress.address" @change="modalNewAddressAddressUpdated($event);" placeholder="Address or ENS name"></b-form-input>
+            </b-form-group>
 
-          <b-form-group label="Name:" label-cols="3" label-align="right">
-            <b-form-input size="sm" vb-modal.trim="modalNewAddress.name" placeholder="Optional" class="w-50"></b-form-input>
-          </b-form-group>
+            <b-form-group label="Name:" label-cols="3" label-align="right">
+              <b-form-input size="sm" v-model.trim="modalNewAddress.name" placeholder="Optional" class="w-50"></b-form-input>
+            </b-form-group>
 
-          <b-form-group label="" label-cols="3" label-align="right">
-            <b-button-group vertical>
-              <b-button @click="modalNewAddress.canTransferFrom = !modalNewAddress.canTransferFrom" variant="none">
+            <b-form-group v-if="false" label="" label-cols="3" label-align="right">
+              <!-- <b-button-group vertical> -->
+              <b-button @click="modalNewAddress.canTransferFrom = !modalNewAddress.canTransferFrom" variant="transparent">
                 <b-icon :icon="modalNewAddress.canTransferFrom ? 'arrow-up-right-square-fill' : 'arrow-up-right-square'" shift-v="+1" font-scale="1.0" variant="primary"></b-icon>
                 <font size="-1">{{ modalNewAddress.canTransferFrom ? 'Transfer from permitted' : 'Transfer from not permitted' }}</font>
               </b-button>
-              <b-button @click="modalNewAddress.canTransferTo = !modalNewAddress.canTransferTo" variant="none">
+              <b-button @click="modalNewAddress.canTransferTo = !modalNewAddress.canTransferTo" variant="transparent">
                 <b-icon :icon="modalNewAddress.canTransferTo ? 'arrow-down-right-square-fill' : 'arrow-down-right-square'" shift-v="+1" font-scale="1.0" variant="primary"></b-icon>
                 <font size="-1">{{ modalNewAddress.canTransferTo ? 'Transfer to permitted' : 'Transfer to not permitted' }}</font>
               </b-button>
-              <b-button @click="modalNewAddress.canTransfer = !modalNewAddress.canTransfer" variant="none">
+              <b-button @click="modalNewAddress.canTransfer = !modalNewAddress.canTransfer" variant="transparent">
                 <b-icon :icon="modalNewAddress.canTransfer ? 'arrow-right-square-fill' : 'arrow-right-square'" shift-v="+1" font-scale="1.0" variant="primary"></b-icon>
                 <font size="-1">{{ modalNewAddress.canTransfer ? 'Transfer permitted' : 'Transfer not permitted' }}</font>
               </b-button>
-            </b-button-group>
-          </b-form-group>
-          <!-- canTransferFrom: false,
-          canTransferTo: false,
-          canTransfer: false,
-          junk: false, -->
+              <!-- </b-button-group> -->
+            </b-form-group>
 
-          <!-- <b-icon :icon="data.item.isPasswordProtected ? 'lock-fill' : 'unlock'" shift-v="+1" font-scale="1.0" :variant="data.item.isPasswordProtected ? 'primary' : 'secondary'" v-b-popover.hover="data.item.isPasswordProtected ? 'Password protected' : 'Not password protected'"></b-icon>
-          <b-icon icon="box-arrow-up-right" shift-v="+1" font-scale="1.0" :variant="data.item.isExported ? 'primary' : 'secondary'" v-b-popover.hover="data.item.isExported ? 'Exported' : 'Not exported'"></b-icon>
-          <b-icon icon="box-arrow-in-down-right" shift-v="+1" font-scale="1.0" :variant="data.item.isImported ? 'primary' : 'secondary'" v-b-popover.hover="data.item.isImported ? 'Imported' : 'Not imported'"></b-icon> -->
-
-
-          <b-form-group label="Type:" label-cols="3" label-align="right" class="m-0">
-            <b-form-select :disabled="modalAddressAddressOnCards.length > 0" size="sm" :value="modalAddressAddressType" @change="modalAddressAddressTypeSelected($event);" :options="addressTypeOptions" class="w-50"></b-form-select>
-          </b-form-group>
-          <!-- <b-form-group label="Name:" label-cols="3" label-align="right" class="m-0">
-            <b-form-input size="sm" :value="modalAddressAddressName" @change="modalAddressAddressNameUpdated($event);" class="w-75"></b-form-input>
-          </b-form-group> -->
-          <!-- <b-form-group v-if="modalAddressAddressType == 'erc20'" label="Decimals:" label-cols="3" label-align="right" class="m-0" description="0 to 18 decimal places">
-            <b-form-input size="sm" type="number" min="0" max="18" step="1" :value="modalAddressAddressDecimals" @change="modalAddressAddressDecimalsUpdated($event);" class="w-25"></b-form-input>
-          </b-form-group> -->
-          <!-- <b-form-group v-if="modalAddressAddressOnCards.length > 0" label="Cards:" label-cols="3" label-align="right" class="m-0">
-            <font size="-1">
-              <b-table small fixed striped responsive hover :fields="modalAddressAddressOnCardsFields" :items="modalAddressAddressOnCards" show-empty empty-html="n/a" head-variant="light" class="mx-0 my-0 mt-1">
-                <template #cell(card)="data">
-                  {{ data.item.name }}
-                </template>
-                <template #cell(slot)="data">
-                  <b-form-checkbox size="sm" disabled :checked="data.item.selected">
-                    {{ data.item.slot }}
-                  </b-form-checkbox>
-                </template>
-              </b-table>
-            </font>
-          </b-form-group> -->
+            <b-form-group label="Type:" label-cols="3" label-align="right" class="m-0">
+              <b-form-select size="sm" v-model="modalNewAddress.type" :options="addressTypeOptions.filter(e => e.value != 'nfccard')" class="w-50"></b-form-select>
+            </b-form-group>
+            <!-- <b-form-group label="Name:" label-cols="3" label-align="right" class="m-0">
+              <b-form-input size="sm" :value="modalAddressAddressName" @change="modalAddressAddressNameUpdated($event);" class="w-75"></b-form-input>
+            </b-form-group> -->
+            <!-- <b-form-group v-if="modalAddressAddressType == 'erc20'" label="Decimals:" label-cols="3" label-align="right" class="m-0" description="0 to 18 decimal places">
+              <b-form-input size="sm" type="number" min="0" max="18" step="1" :value="modalAddressAddressDecimals" @change="modalAddressAddressDecimalsUpdated($event);" class="w-25"></b-form-input>
+            </b-form-group> -->
+            <!-- <b-form-group v-if="modalAddressAddressOnCards.length > 0" label="Cards:" label-cols="3" label-align="right" class="m-0">
+              <font size="-1">
+                <b-table small fixed striped responsive hover :fields="modalAddressAddressOnCardsFields" :items="modalAddressAddressOnCards" show-empty empty-html="n/a" head-variant="light" class="mx-0 my-0 mt-1">
+                  <template #cell(card)="data">
+                    {{ data.item.name }}
+                  </template>
+                  <template #cell(slot)="data">
+                    <b-form-checkbox size="sm" disabled :checked="data.item.selected">
+                      {{ data.item.slot }}
+                    </b-form-checkbox>
+                  </template>
+                </b-table>
+              </font>
+            </b-form-group> -->
+          </b-form>
         </b-modal>
 
         <!-- <b-alert v-if="false" size="sm" dismissible variant="warning" show class="m-1 my-0">
@@ -1180,6 +1179,7 @@
             address: null,
             alt: null,
             name: null,
+            type: null,
 
             canTransferFrom: false,
             canTransferTo: false,
@@ -1190,9 +1190,9 @@
           },
 
           sync: {
-            section: null,
-            total: null,
-            completed: null,
+            section: "123", // TODO: null,
+            total: 4, // TODO: null,
+            completed: 2, // TODO: null,
             halt: false,
           },
 
@@ -1241,7 +1241,7 @@
           ],
 
           addressTypeOptions: [
-            { value: null, text: '(unknown)' },
+            { value: null, text: '(select)' },
             { value: 'nfccard', text: 'NFC Card' },
             { value: 'eoa', text: 'EOA' },
             { value: 'erc20', text: 'ERC-20' },
