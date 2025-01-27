@@ -351,7 +351,7 @@
           <!-- :MENU -->
           <div class="d-flex flex-wrap m-0 mt-1 p-0 px-1 bg-white">
             <div class="mt-0 pr-0">
-              <b-form-select size="sm" v-model="settings.selectedCard" :options="cardsOptions" @change="saveSettings" style="max-width: 30.0rem;"></b-form-select>
+              <b-form-select :disabled="sync.section != null" size="sm" v-model="settings.selectedCard" :options="cardsOptions" @change="saveSettings" style="max-width: 30.0rem;"></b-form-select>
             </div>
             <div class="mt-0 flex-grow-1">
             </div>
@@ -441,7 +441,7 @@
                   <b-form-input type="text" size="sm" v-model.trim="settings.tokensTable.filter" @change="saveSettings" debounce="1200" placeholder="🔍 name/addr" style="max-width: 7.0rem;"></b-form-input>
                 </b-nav-form>
                 <b-nav-form>
-                  <b-button v-if="activeAddress" size="sm" @click="downloadFromEtherscan(activeAddress);" variant="outline">
+                  <b-button v-if="activeAddress" :disabled="sync.section != null" size="sm" @click="syncIt();" variant="outline">
                     <b-icon-cloud-download shift-v="+1" font-scale="1" variant="primary"></b-icon-cloud-download>
                   </b-button>
                 </b-nav-form>
@@ -501,7 +501,7 @@
                   <b-form-input type="text" size="sm" v-model.trim="settings.nftsTable.filter" @change="saveSettings" debounce="1200" placeholder="🔍 name" style="max-width: 7.0rem;"></b-form-input>
                 </b-nav-form>
                 <b-nav-form>
-                  <b-button v-if="activeAddress" size="sm" @click="downloadFromReservoir(activeAddress);" variant="outline">
+                  <b-button v-if="activeAddress" :disabled="sync.section != null" size="sm" @click="syncIt();" variant="outline">
                     <b-icon-cloud-download shift-v="+1" font-scale="1" variant="primary"></b-icon-cloud-download>
                   </b-button>
                 </b-nav-form>
@@ -567,7 +567,7 @@
                   <b-form-input type="text" size="sm" v-model.trim="settings.txsTable.filter" @change="saveSettings" debounce="1200" placeholder="🔍 name" style="max-width: 7.0rem;"></b-form-input>
                 </b-nav-form>
                 <b-nav-form>
-                  <b-button v-if="activeAddress" size="sm" @click="downloadFromEtherscan(activeAddress);" variant="outline">
+                  <b-button v-if="activeAddress" :disabled="sync.section != null" size="sm" @click="syncIt();" variant="outline">
                     <b-icon-cloud-download shift-v="+1" font-scale="1" variant="primary"></b-icon-cloud-download>
                   </b-button>
                 </b-nav-form>
@@ -1190,10 +1190,11 @@
           },
 
           sync: {
-            section: "123", // TODO: null,
-            total: 4, // TODO: null,
-            completed: 2, // TODO: null,
-            halt: false,
+            section: null,
+            total: null,
+            completed: null,
+            error: null, // TODO
+            // halt: false,
           },
 
           reservoirData: {},
@@ -2425,6 +2426,17 @@
           //   console.log(moment().format("HH:mm:ss") + " signingTest1 - hash: " + JSON.stringify(hash, null, 2));
           // },
 
+          async syncIt() {
+            console.log(moment().format("HH:mm:ss") + " syncIt - activeAddress: " + this.activeAddress);
+            this.sync.total = 5;
+            this.sync.completed = 0;
+            this.sync.section = "Reservoir";
+            await this.downloadFromReservoir(this.activeAddress);
+            this.sync.section = "Etherscan";
+            await this.downloadFromEtherscan(this.activeAddress);
+            this.sync.section = null;
+          },
+
           async downloadFromEtherscan(address) {
             console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - address: " + address);
 
@@ -2454,6 +2466,7 @@
             }
             parseEtherscanGetTransactionsResult(getTransactionsResult, chainId, etherscanData);
             console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - etherscanData: " + JSON.stringify(etherscanData, null, 2).substring(0, 200));
+            this.sync.completed++;
 
             let getInternalTransactionsResult;
             if (!useCache || !localStorage.cachedGetInternalTransactionsResult) {
@@ -2477,6 +2490,7 @@
             }
             parseEtherscanGetInternalTransactionsResult(getInternalTransactionsResult, chainId, etherscanData);
             console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - etherscanData: " + JSON.stringify(etherscanData, null, 2).substring(0, 200));
+            this.sync.completed++;
 
             let getERC20TransfersResult;
             if (!useCache || !localStorage.cachedGetERC20TransfersResult) {
@@ -2500,6 +2514,7 @@
             }
             parseEtherscanGetERC20TransfersResult(getERC20TransfersResult, chainId, etherscanData);
             console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - etherscanData: " + JSON.stringify(etherscanData, null, 2).substring(0, 200));
+            this.sync.completed++;
 
             let getERC721TransfersResult;
             if (!useCache || !localStorage.cachedGetERC721TransfersResult) {
@@ -2523,6 +2538,7 @@
             }
             parseEtherscanGetERC721TransfersResult(getERC721TransfersResult, chainId, etherscanData);
             console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - etherscanData: " + JSON.stringify(etherscanData, null, 2).substring(0, 200));
+            this.sync.completed++;
 
             let getERC1155TransfersResult;
             if (!useCache || !localStorage.cachedGetERC1155TransfersResult) {
@@ -2546,6 +2562,7 @@
             }
             parseEtherscanGetERC1155TransfersResult(getERC1155TransfersResult, chainId, etherscanData);
             // console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - etherscanData: " + JSON.stringify(etherscanData, null, 2).substring(0, 200));
+            this.sync.completed++;
 
             Vue.set(this.etherscanData, address, etherscanData);
             console.log(moment().format("HH:mm:ss") + " downloadFromEtherscan - this.etherscanData: " + JSON.stringify(this.etherscanData, null, 2).substring(0, 200));
@@ -2679,6 +2696,7 @@
                 }
               }
             }
+            this.sync.completed++;
             this.saveSettings();
           },
 
@@ -2713,7 +2731,7 @@
             }
           },
 
-          async syncIt(devMode) {
+          async syncItOld(devMode) {
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const signer = provider.getSigner();
             this.coinbase = await signer.getAddress();
@@ -2722,7 +2740,7 @@
             localStorage.approvalToolChainId = network.chainId;
             const block = await provider.getBlock();
             const latestBlockNumber = block && block.number || null;
-            console.log(moment().format("HH:mm:ss") + " syncIt - latestBlockNumber: " + latestBlockNumber + ", chainId: " + this.chainId);
+            console.log(moment().format("HH:mm:ss") + " syncItOld - latestBlockNumber: " + latestBlockNumber + ", chainId: " + this.chainId);
 
             if (!devMode) {
               await this.syncEvents(provider, latestBlockNumber);
