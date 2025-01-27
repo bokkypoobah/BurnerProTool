@@ -278,7 +278,10 @@
             New Address
           </template>
           <b-form-group label="Address:" label-cols="3" label-align="right" class="mt-1" :state="!modalNewAddress.addressError" :invalid-feedback="modalNewAddress.addressError" :description="modalNewAddress.alt && modalNewAddress.alt.length == 42 ? modalNewAddress.alt.substring(0, 10) + '...' + modalNewAddress.alt.slice(-8) : modalNewAddress.alt">
-            <b-form-input size="sm" :value="modalNewAddress.address" @change="modalNewAddressAddressUpdated($event);"></b-form-input>
+            <!-- <template #description>
+              TODO: Add hyperlink to description
+            </template> -->
+            <b-form-input size="sm" :value="modalNewAddress.address" @change="modalNewAddressAddressUpdated($event);" placeholder="Address or ENS name"></b-form-input>
           </b-form-group>
           <b-form-group label="Type:" label-cols="3" label-align="right" class="m-0">
             <b-form-select :disabled="modalAddressAddressOnCards.length > 0" size="sm" :value="modalAddressAddressType" @change="modalAddressAddressTypeSelected($event);" :options="addressTypeOptions" class="w-50"></b-form-select>
@@ -1801,22 +1804,28 @@
             this.modalNewAddress.addressError = null;
             if (address) {
               const provider = new ethers.providers.Web3Provider(window.ethereum);
-              let validAddress = null;
               try {
-                validAddress = ethers.utils.getAddress(address);
+                this.modalAddress.address = ethers.utils.getAddress(address);
                 try {
-                  this.modalNewAddress.alt = await provider.lookupAddress(validAddress);
+                  this.modalNewAddress.alt = await provider.lookupAddress(this.modalAddress.address);
                 } catch (e1) {
                 }
               } catch (e1) {
                 try {
                   this.modalNewAddress.alt = await provider.resolveName(address);
-                  if (!this.modalNewAddress.alt) {
+                  if (this.modalNewAddress.alt) {
+                    this.modalAddress.address = address;
+                  } else {
                     this.modalNewAddress.addressError = "Invalid address";
                   }
                 } catch (e) {
                   this.modalNewAddress.addressError = "Invalid address";
                 }
+              }
+              if (this.modalAddress.address && this.modalAddress.address in this.settings.addresses) {
+                this.modalNewAddress.addressError = "Duplicate entry";
+              } else if (this.modalAddress.alt && this.modalAddress.alt in this.settings.addresses) {
+                this.modalNewAddress.addressError = "Duplicate entry";
               }
             }
           },
