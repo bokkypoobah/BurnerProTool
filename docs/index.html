@@ -2962,7 +2962,7 @@
             if (token == "eth") {
               try {
                 if (precision == 0) {
-                  return tokens ? ethers.utils.formatEther(tokens) : null;
+                  return tokens ? ethers.utils.formatEther(tokens).replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",") : null;
                 } else {
                   return tokens ? parseFloat(ethers.utils.formatEther(tokens)).toFixed(precision) : null;
                 }
@@ -2974,7 +2974,7 @@
                 const decimals = this.settings.addresses[token].decimals || 18;
                 try {
                   if (precision == 0) {
-                    return tokens ? ethers.utils.formatUnits(tokens, decimals) : null;
+                    return tokens ? ethers.utils.formatUnits(tokens, decimals).replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",") : null;
                   } else {
                     return tokens ? parseFloat(ethers.utils.formatUnits(tokens, decimals)).toFixed(precision) : null;
                   }
