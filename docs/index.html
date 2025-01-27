@@ -223,9 +223,9 @@
         <!-- :MODALADDRESS -->
         <b-modal id="modal-address" hide-footer size="md" body-class="m-0 p-1 pt-2" body-bg-variant="light">
           <template #modal-title>
-            Address {{ modalAddress.address.substring(0, 6) + '...' + modalAddress.address.slice(-4) }}
+            {{ modalAddress.mode == 'edit' ? ('Address ' + modalAddress.address.substring(0, 6) + '...' + modalAddress.address.slice(-4)) : 'New Address' }}
           </template>
-          <b-form-group label="Address:" label-cols="3" label-align="right" class="mt-1">
+          <b-form-group v-if="modalAddress.mode == 'edit'" label="Address:" label-cols="3" label-align="right" class="mt-1">
             <div class="d-flex m-0 p-0">
               <div class="mt-0 pr-1">
                 <b-button v-if="modalAddress.address" size="sm" :href="'https://etherscan.io/address/' + modalAddress.address" target="_blank" variant="link" class="mt-1">
@@ -240,6 +240,8 @@
                 </b-button>
               </div>
             </div>
+          </b-form-group>
+          <b-form-group v-if="modalAddress.mode == 'new'" label="Address:" label-cols="3" label-align="right" class="mt-1">
           </b-form-group>
           <b-form-group label="Type:" label-cols="3" label-align="right" class="m-0">
             <b-form-select :disabled="modalAddressAddressOnCards.length > 0" size="sm" :value="modalAddressAddressType" @change="modalAddressAddressTypeSelected($event);" :options="addressTypeOptions" class="w-50"></b-form-select>
@@ -662,6 +664,11 @@
             <b-navbar toggleable="md" type="light" variant="light" class="m-0 p-0">
               <b-nav-form>
                 <b-form-input type="text" size="sm" v-model.trim="settings.addressesTable.filter" @change="saveSettings" debounce="1200" placeholder="🔍 addr/name" style="max-width: 7.0rem;"></b-form-input>
+              </b-nav-form>
+              <b-nav-form>
+                <b-button size="sm" @click="showModalAddress(null);" variant="outline">
+                  <b-icon-plus shift-v="+1" font-scale="1" variant="primary"></b-icon-plus>
+                </b-button>
               </b-nav-form>
               <b-nav-form>
                 <b-pagination size="sm" v-model="settings.addressesTable.currentPage" @input="saveSettings" :total-rows="filteredSortedAddresses.length" :per-page="settings.addressesTable.pageSize" limit="3" class="m-0 p-0 ml-md-1"></b-pagination>
@@ -1101,6 +1108,7 @@
 
           modalAddress: {
             address: "0x8E872af87B462F2B3b6f42b76B2f1a5f4D240F5E", // TODO: null,
+            mode: 'edit', // 'view', 'edit'
           },
 
           sync: {
@@ -1662,7 +1670,8 @@
             await this.modalNFTRetrieveParameters();
           },
           showModalAddress(address) {
-            // console.log(moment().format("HH:mm:ss") + " showModalAddress: " + address);
+            this.modalAddress.mode = address ? 'edit' : 'new';
+            console.log(moment().format("HH:mm:ss") + " showModalAddress: " + address + ", mode: " + this.modalAddress.mode);
             this.modalAddress.address = address;
             this.$bvModal.show('modal-address');
           },
@@ -1679,10 +1688,9 @@
           addressesRowSelected(item) {
             console.log(moment().format("HH:mm:ss") + " addressesRowSelected - item: " + JSON.stringify(item, null, 2));
             if (item && item.length > 0) {
+              this.modalAddress.mode = 'edit';
               this.modalAddress.address = item[0].address;
               this.$bvModal.show('modal-address');
-            //   const account = item[0].account;
-            //   store.dispatch('viewAddress/viewAddress', item[0].account);
               this.$refs.addressesTable.clearSelected();
             }
           },
