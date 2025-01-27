@@ -278,7 +278,7 @@
           </b-card-text>
         </b-card> -->
 
-        <b-card no-body class="p-0 mt-0 border-0" style="min-height: 666px;">
+        <b-card no-body class="p-0 mt-0 border-0" style="min-height: 600px;">
           <!-- :MENU -->
           <div class="d-flex flex-wrap m-0 mt-1 p-0 px-1 bg-white">
             <div class="mt-0 pr-0">
@@ -435,11 +435,11 @@
                   </b-row>
                 </template>
               </b-table>
-              <font size="-1">
+              <!-- <font size="-1">
                 <pre>
 {{ pagedFilteredSortedTokens }}
                 </pre>
-              </font>
+              </font> -->
             </b-card-body>
 
             <!-- :CARDNFTS -->
@@ -786,8 +786,7 @@
           <b-card v-if="settings.mode == 'info' || (settings.mode == 'card' && Object.keys(settings.cards).length == 0)" no-body class="m-1 p-1" bg-variant="light">
             <b-card-body class="mt-1 p-1">
               <h6>Welcome to BurnerProTool (WIP)</h6>
-              Tool to manage your Ethereum wallets on
-              <b-link href="https://burner.pro" target="_blank">burner.pro</b-link> NFC cards.
+              For managing your <b-link href="https://burner.pro" target="_blank">burner.pro</b-link> NFC card Ethereum wallets.
               <br />
               <br />
               <b-iconstack font-scale="1">
@@ -817,7 +816,7 @@
               Usage:
               <ul>
                 <li>
-                  Best used on a a mobile phone web browser with NFC and web3 support, e.g., <b-link href="https://brave.com/" target="_blank">Brave</b-link>
+                  Best used on mobile phone web browsers with NFC and web3 support, e.g., <b-link href="https://brave.com/" target="_blank">Brave</b-link>
                 </li>
                 <li>
                   Scan your NFC card to begin
@@ -833,7 +832,7 @@
               <br />
               <font size="-1">Enjoy!</font>
               <br />
-              <font size="-1">(c) BokkyPooBah / Bok Consulting Pty Ltd 2024</font>
+              <font size="-1">(c) BokkyPooBah / Bok Consulting Pty Ltd 2024. The MIT Licence</font>
             </b-card-body>
           </b-card>
 
@@ -977,8 +976,10 @@
             </div>
             <div class="mt-0 flex-grow-1">
             </div>
-            <div class="mt-0 pl-1 pr-1">
-              gm, and enjoy! <i>BurnerProTool</i> &copy; Bok Consulting Pty Ltd 2024
+            <div v-if="settings.mode != 'info' && !(settings.mode == 'card' && Object.keys(settings.cards).length == 0)" class="mt-0 pl-1 pr-1">
+              <font size="-1">
+                gm, and enjoy! <i>BurnerProTool</i> &copy; Bok Consulting Pty Ltd 2024. The MIT Licence
+              </font>
             </div>
           </div>
         </b-card>
