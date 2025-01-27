@@ -223,9 +223,9 @@
         <!-- :MODALADDRESS -->
         <b-modal id="modal-address" hide-footer size="md" body-class="m-0 p-1 pt-2" body-bg-variant="light">
           <template #modal-title>
-            {{ modalAddress.mode == 'edit' ? ('Address ' + modalAddress.address.substring(0, 6) + '...' + modalAddress.address.slice(-4)) : 'New Address' }}
+            Address {{ modalAddress.address && (modalAddress.address.substring(0, 6) + '...' + modalAddress.address.slice(-4)) }}
           </template>
-          <b-form-group v-if="modalAddress.mode == 'edit'" label="Address:" label-cols="3" label-align="right" class="mt-1">
+          <b-form-group label="Address:" label-cols="3" label-align="right" class="mt-1">
             <div class="d-flex m-0 p-0">
               <div class="mt-0 pr-1">
                 <b-button v-if="modalAddress.address" size="sm" :href="'https://etherscan.io/address/' + modalAddress.address" target="_blank" variant="link" class="mt-1">
@@ -240,8 +240,6 @@
                 </b-button>
               </div>
             </div>
-          </b-form-group>
-          <b-form-group v-if="modalAddress.mode == 'new'" label="Address:" label-cols="3" label-align="right" class="mt-1">
           </b-form-group>
           <b-form-group label="Type:" label-cols="3" label-align="right" class="m-0">
             <b-form-select :disabled="modalAddressAddressOnCards.length > 0" size="sm" :value="modalAddressAddressType" @change="modalAddressAddressTypeSelected($event);" :options="addressTypeOptions" class="w-50"></b-form-select>
@@ -271,6 +269,39 @@
           </b-form-group>
           <b-form-group label="Page size:" label-for="modaltxs-pagesize" label-size="sm" label-align="right" label-cols="4" content-cols="8">
             <b-form-select size="sm" id="modaltxs-pagesize" v-model="settings.txsTable.pageSize" @change="saveSettings" :options="pageSizes" class="w-25"></b-form-select>
+          </b-form-group> -->
+        </b-modal>
+
+        <!-- :MODALNEWADDRESS -->
+        <b-modal id="modal-newaddress" hide-footer size="md" body-class="m-0 p-1 pt-2" body-bg-variant="light">
+          <template #modal-title>
+            New Address
+          </template>
+          <b-form-group label="Address:" label-cols="3" label-align="right" class="mt-1" :state="!modalNewAddress.addressError" :invalid-feedback="modalNewAddress.addressError" :description="modalNewAddress.addressMessage">
+            <b-form-input size="sm" :value="modalNewAddress.address" @change="modalNewAddressAddressUpdated($event);" class="w-75"></b-form-input>
+          </b-form-group>
+          <b-form-group label="Type:" label-cols="3" label-align="right" class="m-0">
+            <b-form-select :disabled="modalAddressAddressOnCards.length > 0" size="sm" :value="modalAddressAddressType" @change="modalAddressAddressTypeSelected($event);" :options="addressTypeOptions" class="w-50"></b-form-select>
+          </b-form-group>
+          <!-- <b-form-group label="Name:" label-cols="3" label-align="right" class="m-0">
+            <b-form-input size="sm" :value="modalAddressAddressName" @change="modalAddressAddressNameUpdated($event);" class="w-75"></b-form-input>
+          </b-form-group> -->
+          <!-- <b-form-group v-if="modalAddressAddressType == 'erc20'" label="Decimals:" label-cols="3" label-align="right" class="m-0" description="0 to 18 decimal places">
+            <b-form-input size="sm" type="number" min="0" max="18" step="1" :value="modalAddressAddressDecimals" @change="modalAddressAddressDecimalsUpdated($event);" class="w-25"></b-form-input>
+          </b-form-group> -->
+          <!-- <b-form-group v-if="modalAddressAddressOnCards.length > 0" label="Cards:" label-cols="3" label-align="right" class="m-0">
+            <font size="-1">
+              <b-table small fixed striped responsive hover :fields="modalAddressAddressOnCardsFields" :items="modalAddressAddressOnCards" show-empty empty-html="n/a" head-variant="light" class="mx-0 my-0 mt-1">
+                <template #cell(card)="data">
+                  {{ data.item.name }}
+                </template>
+                <template #cell(slot)="data">
+                  <b-form-checkbox size="sm" disabled :checked="data.item.selected">
+                    {{ data.item.slot }}
+                  </b-form-checkbox>
+                </template>
+              </b-table>
+            </font>
           </b-form-group> -->
         </b-modal>
 
@@ -666,7 +697,7 @@
                 <b-form-input type="text" size="sm" v-model.trim="settings.addressesTable.filter" @change="saveSettings" debounce="1200" placeholder="🔍 addr/name" style="max-width: 7.0rem;"></b-form-input>
               </b-nav-form>
               <b-nav-form>
-                <b-button size="sm" @click="showModalAddress(null);" variant="outline">
+                <b-button size="sm" @click="showModalNewAddress();" variant="outline">
                   <b-icon-plus shift-v="+1" font-scale="1" variant="primary"></b-icon-plus>
                 </b-button>
               </b-nav-form>
@@ -1108,7 +1139,13 @@
 
           modalAddress: {
             address: "0x8E872af87B462F2B3b6f42b76B2f1a5f4D240F5E", // TODO: null,
-            mode: 'edit', // 'view', 'edit'
+            newAddressError: null,
+            newAddressMessage: null, // null - no validation, false - error, true ok
+          },
+          modalNewAddress: {
+            address: null,
+            addressError: null,
+            addressDescription: null, // null - no validation, false - error, true ok
           },
 
           sync: {
@@ -1670,10 +1707,13 @@
             await this.modalNFTRetrieveParameters();
           },
           showModalAddress(address) {
-            this.modalAddress.mode = address ? 'edit' : 'new';
-            console.log(moment().format("HH:mm:ss") + " showModalAddress: " + address + ", mode: " + this.modalAddress.mode);
+            console.log(moment().format("HH:mm:ss") + " showModalAddress: " + address);
             this.modalAddress.address = address;
             this.$bvModal.show('modal-address');
+          },
+          showModalNewAddress(address) {
+            console.log(moment().format("HH:mm:ss") + " showModalNewAddress");
+            this.$bvModal.show('modal-newaddress');
           },
 
           cardsRowSelected(item) {
@@ -1688,7 +1728,6 @@
           addressesRowSelected(item) {
             console.log(moment().format("HH:mm:ss") + " addressesRowSelected - item: " + JSON.stringify(item, null, 2));
             if (item && item.length > 0) {
-              this.modalAddress.mode = 'edit';
               this.modalAddress.address = item[0].address;
               this.$bvModal.show('modal-address');
               this.$refs.addressesTable.clearSelected();
@@ -1754,6 +1793,11 @@
               Vue.set(this.settings.addresses[this.modalAddress.address], 'decimals', decimals);
             }
             this.saveSettings();
+          },
+          async modalNewAddressAddressUpdated(address) {
+            console.log(moment().format("HH:mm:ss") + " modalNewAddressAddressUpdated - address: " + address);
+            this.modalNewAddress.addressError = "Error";
+            this.modalNewAddress.addressMessage = "Hi hi";
           },
           updateName(cardId, name) {
             console.log(moment().format("HH:mm:ss") + " updateName: " + JSON.stringify(cardId) + ", name: " + JSON.stringify(name));
