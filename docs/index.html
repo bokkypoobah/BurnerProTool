@@ -277,8 +277,8 @@
           <template #modal-title>
             New Address
           </template>
-          <b-form-group label="Address:" label-cols="3" label-align="right" class="mt-1" :state="!modalNewAddress.addressError" :invalid-feedback="modalNewAddress.addressError" :description="modalNewAddress.addressMessage">
-            <b-form-input size="sm" :value="modalNewAddress.address" @change="modalNewAddressAddressUpdated($event);" class="w-75"></b-form-input>
+          <b-form-group label="Address:" label-cols="3" label-align="right" class="mt-1" :state="!modalNewAddress.addressError" :invalid-feedback="modalNewAddress.addressError" :description="modalNewAddress.alt && modalNewAddress.alt.length == 42 ? modalNewAddress.alt.substring(0, 10) + '...' + modalNewAddress.alt.slice(-8) : modalNewAddress.alt">
+            <b-form-input size="sm" :value="modalNewAddress.address" @change="modalNewAddressAddressUpdated($event);"></b-form-input>
           </b-form-group>
           <b-form-group label="Type:" label-cols="3" label-align="right" class="m-0">
             <b-form-select :disabled="modalAddressAddressOnCards.length > 0" size="sm" :value="modalAddressAddressType" @change="modalAddressAddressTypeSelected($event);" :options="addressTypeOptions" class="w-50"></b-form-select>
@@ -1144,6 +1144,7 @@
           },
           modalNewAddress: {
             address: null,
+            alt: null,
             addressError: null,
             addressDescription: null, // null - no validation, false - error, true ok
           },
@@ -1796,8 +1797,28 @@
           },
           async modalNewAddressAddressUpdated(address) {
             console.log(moment().format("HH:mm:ss") + " modalNewAddressAddressUpdated - address: " + address);
-            this.modalNewAddress.addressError = "Error";
-            this.modalNewAddress.addressMessage = "Hi hi";
+            this.modalNewAddress.alt = null;
+            this.modalNewAddress.addressError = null;
+            if (address) {
+              const provider = new ethers.providers.Web3Provider(window.ethereum);
+              let validAddress = null;
+              try {
+                validAddress = ethers.utils.getAddress(address);
+                try {
+                  this.modalNewAddress.alt = await provider.lookupAddress(validAddress);
+                } catch (e1) {
+                }
+              } catch (e1) {
+                try {
+                  this.modalNewAddress.alt = await provider.resolveName(address);
+                  if (!this.modalNewAddress.alt) {
+                    this.modalNewAddress.addressError = "Invalid address";
+                  }
+                } catch (e) {
+                  this.modalNewAddress.addressError = "Invalid address";
+                }
+              }
+            }
           },
           updateName(cardId, name) {
             console.log(moment().format("HH:mm:ss") + " updateName: " + JSON.stringify(cardId) + ", name: " + JSON.stringify(name));
