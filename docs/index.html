@@ -296,7 +296,7 @@
                   </b-iconstack>
                 </b-button>
                 <font size="-1" class="mt-1 text-muted d-none d-sm-block">
-                  Scan NFC
+                  Scan NFC card
                 </font>
               </b-button-group>
             </div>
@@ -792,7 +792,7 @@
               <b-iconstack font-scale="1">
                 <b-icon stacked icon="wifi" variant="primary" scale="0.8"></b-icon>
                 <b-icon stacked icon="file" variant="primary" scale="1.5"></b-icon>
-              </b-iconstack> Scan NFC
+              </b-iconstack> Scan NFC card
               <br />
               <b-iconstack font-scale="1">
                 <b-icon stacked :icon="settings.mode == 'card' ? 'lock-fill' : 'lock'" variant="primary" scale="0.6"></b-icon>
@@ -819,10 +819,13 @@
                   Best used on mobile phone web browsers with NFC and web3 support, e.g., <b-link href="https://brave.com/" target="_blank">Brave</b-link>
                 </li>
                 <li>
-                  Scan your NFC card to begin
+                  <b-iconstack font-scale="1">
+                    <b-icon stacked icon="wifi" variant="primary" scale="0.8"></b-icon>
+                    <b-icon stacked icon="file" variant="primary" scale="1.5"></b-icon>
+                  </b-iconstack> Scan NFC card to begin
                 </li>
                 <li>
-                  To test without an NFC card, click [Insert Test Data] in <b-icon :icon="settings.mode == 'config' ? 'gear-fill' : 'gear'" font-scale="1.0" variant="primary"></b-icon> Config
+                  To test without an NFC card, click <b-button size="sm" variant="primary">Insert Test Data</b-button> in <b-icon :icon="settings.mode == 'config' ? 'gear-fill' : 'gear'" font-scale="1.0" variant="primary"></b-icon> Config
                 </li>
                 <li>
                   Add your Etherscan and CryptoCompare API keys in <b-icon :icon="settings.mode == 'config' ? 'gear-fill' : 'gear'" font-scale="1.0" variant="primary"></b-icon> Config
