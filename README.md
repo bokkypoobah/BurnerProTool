@@ -629,4 +629,4 @@ If you fail the passcode 20 times the product will lock permanently - [reference
 
 Enjoy!
 
-(c) BokkyPooBah / Bok Consulting Pty Ltd 2024
+(c) BokkyPooBah / Bok Consulting Pty Ltd 2024. The MIT License
