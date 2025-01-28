@@ -1178,8 +1178,11 @@
           modalNewAddress: {
             address: null,
             alt: null,
-            name: null,
             type: null,
+            name: null,
+            description: null,
+            slug: null,
+            decimals: null,
 
             canTransferFrom: false,
             canTransferTo: false,
@@ -2581,35 +2584,32 @@
             for (const [chainId, chainData] of Object.entries(etherscanData)) {
               for (const [txHash, txData] of Object.entries(chainData)) {
                 for (const event of txData.erc20) {
-                  if (!(event.contractAddress in this.settings.addresses)) {
-                    Vue.set(this.settings.addresses, event.contractAddress, {
-                      type: "erc20",
-                      symbol: event.tokenSymbol, //  || event.tokenName,
-                      name: event.tokenSymbol,
-                      decimals: event.tokenDecimal,
-                      source: "etherscan",
-                    });
-                  }
+                  this.addOrUpdateAddress({
+                    address: event.contractAddress,
+                    type: "erc20",
+                    name: event.tokenSymbol,
+                    description: event.tokenName,
+                    decimals: event.tokenDecimal,
+                    source: "etherscan",
+                  });
                 }
                 for (const event of txData.erc721) {
-                  if (!(event.contractAddress in this.settings.addresses)) {
-                    Vue.set(this.settings.addresses, event.contractAddress, {
-                      type: "erc721",
-                      symbol: event.tokenSymbol || event.tokenName,
-                      name: event.tokenName,
-                      source: "etherscan",
-                    });
-                  }
+                  this.addOrUpdateAddress({
+                    address: event.contractAddress,
+                    type: "erc721",
+                    name: event.tokenName,
+                    description: event.tokenName,
+                    source: "etherscan",
+                  });
                 }
                 for (const event of txData.erc1155) {
-                  if (!(event.contractAddress in this.settings.addresses)) {
-                    Vue.set(this.settings.addresses, event.contractAddress, {
-                      type: "erc1155",
-                      symbol: event.tokenSymbol || event.tokenName,
-                      name: event.tokenName,
-                      source: "etherscan",
-                    });
-                  }
+                  this.addOrUpdateAddress({
+                    address: event.contractAddress,
+                    type: "erc1155",
+                    name: event.tokenName,
+                    description: event.tokenName,
+                    source: "etherscan",
+                  });
                 }
               }
             }
@@ -2689,19 +2689,39 @@
 
             for (const [chainId, chainData] of Object.entries(reservoirData)) {
               for (const [contract, contractData] of Object.entries(chainData)) {
-                if (!(contract in this.settings.addresses) || this.settings.addresses[contract].source == "etherscan") {
-                  Vue.set(this.settings.addresses, contract, {
-                    type: contractData.type,
-                    symbol: contractData.name,
-                    name: contractData.name,
-                    slug: contractData.slug,
-                    source: "reservoir",
-                  });
-                }
+                this.addOrUpdateAddress({
+                  address: contract,
+                  type: contractData.type,
+                  name: contractData.name,
+                  description: contractData.name,
+                  slug: contractData.slug,
+                  source: "reservoir",
+                });
               }
             }
             this.sync.completed++;
             this.saveSettings();
+          },
+
+          addOrUpdateAddress(item) {
+            // console.log(moment().format("HH:mm:ss") + " addOrUpdateAddress - item: " + JSON.stringify(item));
+            if (!(item.address in this.settings.addresses)) {
+              Vue.set(this.settings.addresses, item.address, {
+                type: item.type,
+                name: item.name,
+                description: item.description,
+                slug: item.slug || null,
+                decimals: item.decimals || null,
+                source: item.source,
+              });
+            } else {
+              if (item.source == "reservoir" && !this.settings.addresses[item.address].slug) {
+                Vue.set(this.settings.addresses[item.address], 'name', item.name);
+                Vue.set(this.settings.addresses[item.address], 'description', item.description);
+                Vue.set(this.settings.addresses[item.address], 'slug', item.slug);
+                Vue.set(this.settings.addresses[item.address], 'source', item.source);
+              }
+            }
           },
 
           async downloadFromCryptoCompare() {
